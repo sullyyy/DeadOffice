@@ -1,0 +1,82 @@
+/**
+Creates a basic class to hold a new rigid body model with a rectangular hull. <br/>
+<br/>
+This class allows the block <br/>
+- to be drawn with various attributes <br/>
+- to be placed as a rectangle "block" in the world as a physical Matter body <br/>
+
+@param {world} world - The Matter.js world object
+@param {object} attributes - Visual properties e.g. position, dimensions and color
+@param {object} [options] - Defines the behaviour e.g. mass, bouncyness or whether it can move
+
+*/
+
+class BlockCore {
+  constructor(world, attributes, options) {
+    this.world = world;
+    this.attributes = attributes;
+    this.options = options || {};
+    this.options.plugin = this.options.plugin || {};
+    this.options.plugin.block = this;
+    this.addBody();
+    if (this.body) {
+      Matter.World.add(this.world, this.body);
+      if (this.options.restitution) {
+        this.body.restitution = this.options.restitution;
+      }
+    }
+  }
+
+  addBody() {
+    this.body = Matter.Bodies.rectangle(this.attributes.x, this.attributes.y, this.attributes.w, this.attributes.h, this.options);
+  }
+
+  /**
+   * Draws the matter body to the p5 canvas
+   * @memberof BlockCore
+   */
+  draw() {
+    if (this.body) {
+      if (this.attributes.color) {
+        fill(this.attributes.color);
+      } else {
+        noFill();
+      }
+      if (this.attributes.stroke) {
+        stroke(this.attributes.stroke);
+        if (this.attributes.weight) {
+          strokeWeight(this.attributes.weight);
+        }
+      } else {
+        noStroke();
+      }
+      this.drawBody();
+    }
+  }
+
+  drawBody() {
+    if (this.body.parts && this.body.parts.length > 1) {
+      // skip index 0
+      for (let p = 1; p < this.body.parts.length; p++) {
+        this.drawVertices(this.body.parts[p].vertices);
+      }
+    } else {
+      if (this.body.type == "composite") {
+        for (let body of this.body.bodies) {
+          this.drawVertices(body.vertices);
+        }
+      } else {
+        this.drawVertices(this.body.vertices);
+      }
+    }
+  }
+
+  drawVertices(vertices) {
+    beginShape();
+    for (const vertice of vertices) {
+      vertex(vertice.x, vertice.y);
+    }
+    endShape(CLOSE);
+  }
+
+}
