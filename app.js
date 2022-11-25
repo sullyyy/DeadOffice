@@ -30,6 +30,9 @@ let hitDX, hitDY, hitDW, hitDH = 0;
 
 let z_index_map = [];
 
+let nbDwight = 20;
+let dwightPhy = [];
+
 
 let map_array_0 = [[3,2,12,24,4,3,2,4,3,4],
 		   [3,18,1,1,16,17,21,2,20,4],
@@ -66,7 +69,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  const canvas = createCanvas(windowWidth, windowHeight);
   frameRate(fr);
   
   textFont(font);
@@ -77,7 +80,6 @@ function setup() {
   
   convertMapArray();
  
-  
   map_array.push(map_array_0);
   //map_array.push(map_array_1);
   
@@ -86,8 +88,37 @@ function setup() {
   map.sort();
   
   Zombie.s_setState(STATE.IDLE);
-  
 
+  // create an engine
+  let engine = Matter.Engine.create();
+  let world = engine.world;
+
+  dwightImg = loadImage('assets/img/dwight.png')
+
+
+	const wrap = {
+		min: { x: 0, y: 0 },
+		max: { x: 800, y: 600 }
+	};
+
+	for (i=0; i<nbDwight; i++)
+	{
+		dwightPhy[i] = new Ball(world,
+			{ x: 400, y: 50 + i * 10, r: 50, image: dwightImg },
+			{ friction: 20, plugin: { wrap: wrap } }
+			);
+	}
+	// slide
+	slide = new Block(world,
+	{ x: 400, y: 600, w: 700, h: 10, color: 'black' },
+	{ isStatic: true, angle: 0, restitution: 0.5}
+	);
+
+	// setup mouse
+	mouse = new Mouse(engine, canvas);
+
+	// run the engine
+	Matter.Runner.run(engine);
 }
 
 function convertMapArray()
@@ -209,7 +240,6 @@ function setStartingPoint()
 }
 
 function draw() {
-  
   switch (gameState) {
 	  
 	  case MENU:
@@ -218,6 +248,13 @@ function draw() {
 	  camera.lookAtObj(dwight);
 	  camera.update();
 	  dwight.alive = true;
+
+	  slide.draw();
+	  for (i=0; i< nbDwight; i++)
+	  {
+		dwightPhy[i].draw();
+	  }
+	  mouse.draw();
 	  break;
 	  
 	  case PLAY:
@@ -231,7 +268,6 @@ function draw() {
 	  break;
 	  
 	  case GAME_OVER: 
-	  
 	  for(let i = 0; i < 2; i++)
 	  {
 		enemies[i].update();
@@ -245,7 +281,6 @@ function draw() {
 	  default:
 	  break;
   }
-
 }
 
 function windowResized() {
@@ -253,12 +288,10 @@ function windowResized() {
 }
 
 function mousePressed() {
-  
   if(gameState == MENU)
 	  gameState = PLAY;
   if(gameState == GAME_OVER)
 	  gameState = MENU;
 }
-
 
 
