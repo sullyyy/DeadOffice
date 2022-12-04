@@ -37,33 +37,8 @@
 			//going into a staircase door
 			if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 5)
 			{
-				/*console.log("travel to next floor");
-				let now = new Date().getTime();
-				let delta = now - last;
-                if (delta >= 200) {
-					last = now;
-					if(map.current_floor < 5 && map.current_floor >= 0)
-						map.current_floor+=sens;
-					if(map.current_floor == 0)
-						sens = 1;
-					if(map.current_floor == 5)
-						sens = -1;
-					gameState = LVL_TRANSITION;
-				}*/
-				//if(map.current_floor < 5 && map.current_floor >= 0)
-						//map.current_floor+=sens;
-				/*if(map.current_floor == 0)
-				{
-					message.set(0,0,"The door is locked...",true)
-					return false;
-				}
-					if(map.current_floor == 1)
-						sens = 1;
-					if(map.current_floor == 5)
-						sens = -1;
-				map.travelTo(map.current_floor+sens,8,2)*/
+				
 				gameState = DIALOG_BOX;
-				console.log("gameState ", gameState);
 				return false;
 				
 			}
@@ -72,7 +47,7 @@
 			{
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 10 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 11)
 				{
-					console.log("map.generatorOn ", map.generatorOn);
+					
 					if(map.generatorOn)
 					{
 						gameState = ELEVATOR_DIALOG;
@@ -80,7 +55,6 @@
 					else
 					{
 						message.set(0,0,"The elevator is not working...",true)
-						console.log("message");
 					}
 					return false;
 					
@@ -94,7 +68,7 @@
 				//going into basement outside access door
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 20)
 				{
-					//console.log("travel to next floor");
+					
 					map.travelTo(0,7,8)
 					return false;
 					
@@ -102,7 +76,7 @@
 				//going into open window
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 32)
 				{
-					//console.log("travel to next floor");
+					
 					if(map.cleaning_platform_pos == 0)
 						map.travelTo(4,2,9)
 					else
@@ -113,7 +87,7 @@
 				//going into cleaning_platform
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 33)
 				{
-					//console.log("travel to next floor");
+					
 					if(map.cleaning_platform_pos == 0)
 					{
 						map.cleaning_platform_pos = 1;
@@ -159,7 +133,7 @@
 			{
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 10 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 11)
 				{
-					console.log("map.generatorOn ", map.generatorOn);
+					
 					if(map.generatorOn)
 					{
 						gameState = ELEVATOR_DIALOG;
@@ -214,6 +188,11 @@
 				{
 					map.travelTo(5,4,14)
 					end = 1;
+					scale = 0.5;
+					
+					camera.lookAt(200,700);
+					let now = new Date().getTime();
+					time = now - start;
 					return false;
 					
 				}
@@ -303,11 +282,8 @@
 	//drawing character
 	draw()
 	{
-		textSize(10);
-		image(this.img, this.x + camera.offSetX, this.y + camera.offSetY, this.width, this.height);
-		//fill(0);
-		//textSize(10);
-		//text("z " + (this.y+70),this.x + camera.offSetX+20,this.y + camera.offSetY)
+		image(this.img, this.x*scale + camera.offSetX*scale, this.y*scale + camera.offSetY*scale, this.width*scale, this.height*scale);
+		
 	}
 	
 	
@@ -364,15 +340,6 @@ class Dwight extends Character{
 	
 	handleCollision(x,y)
 	{
-		
-		/*if(map.map_array[map.current_floor][floor((y+60)/100)][floor(x/100)].id == 11)
-		{
-			if(map.current_floor == 1)
-				map.current_floor = 0;
-			else
-				map.current_floor = 1;
-			
-		}*/
 		return super.handleCollision(x,y);
 	}
 	
@@ -462,7 +429,6 @@ class Zombie extends Character{
 		  this.chaseLine[0].set(v1.x, v1.y);
 		  this.chaseLine[1].set(v2.x, v2.y);
 		  
-		  //console.log("dwight.y ", dwight.y);
 		  if(dwight.y > 1000)
 			  return;
 		  

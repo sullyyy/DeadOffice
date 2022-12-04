@@ -8,13 +8,21 @@ class Tile_To_Draw {
 	}
 }
 
+class Editor {
+	constructor ()
+	{
+		this.selected = 0;
+		this.decalX = 0;
+	}
+}
+
 
 class Map {
     constructor (map_size_width,map_size_height, map_array, img_array,z_index_map) {
 		this.map_size_width = map_size_width;
 		this.map_size_height = map_size_height;
 		this.map_array = map_array;
-		this.current_floor = 3;
+		this.current_floor = 0;
 		this.img_array = img_array;
 		this.z_index_map = z_index_map;
 		this.cleaning_platform_pos = 1;
@@ -40,16 +48,11 @@ class Map {
 	//sorting map array by z index
 	sort(index,w,h)
 	{
-		/*console.log("index ", index);
-		console.log("w ", w);
-		console.log("h ", h);
-		console.log("this.current_floor ", this.current_floor);*/
-		
 		for(let i = 0; i < w; i++)
 		{
 			for(let j = 0; j < h; j++)
 			{
-				this.z_index_map[index].push(new Tile_To_Draw(i,j,i*100 + map_array[index][i][j].hitboxY + map_array[index][i][j].hitboxH,true,0))
+				this.z_index_map[index].push(new Tile_To_Draw(i,j,i*100 + this.map_array[index][i][j].hitboxY + this.map_array[index][i][j].hitboxH,true,0))
 			}
 		}
 		this.z_index_map[index].push(new Tile_To_Draw(floor(dwight.x/100),floor(dwight.y/100),dwight.y + dwight.height,false,1));
@@ -57,30 +60,15 @@ class Map {
 		this.z_index_map[index].push(new Tile_To_Draw(floor(enemies[1].x/100),floor(enemies[1].y/100),enemies[1].y + enemies[1].height,false,3));
 		if(index == 5)
 		{
-			
 			this.z_index_map[index].push(new Tile_To_Draw(9,1,1800,false,4));
-			//this.z_index_map[index].push(new Tile_To_Draw(12,2,1800,false,5));
-			//console.log("this.z_index_map[index] ", this.z_index_map[index]);
 		}
 		this.z_index_map[index].sort(function(a, b){return a.z_index - b.z_index});
 	}
 	
-	/*sort(index,w,h)
+	resortAll()
 	{
-		//for(let i = 0; i < this.map_array[this.current_floor][0].length; i++)
-		for(let i = 0; i < this.map_size_width; i++)
-		{
-			//for(let j = 0; j < this.map_array[this.current_floor].length; j++)
-			for(let j = 0; j < this.map_size_height; j++)
-			{
-				z_index_map.push(new Tile_To_Draw(i,j,i*100 + map_array[this.current_floor][i][j].hitboxY + map_array[this.current_floor][i][j].hitboxH,true,0))
-			}
-		}
-		z_index_map.push(new Tile_To_Draw(floor(dwight.x/100),floor(dwight.y/100),dwight.y + dwight.height,false,1));
-		z_index_map.push(new Tile_To_Draw(floor(enemies[0].x/100),floor(enemies[0].y/100),enemies[0].y + enemies[0].height,false,2));
-		z_index_map.push(new Tile_To_Draw(floor(enemies[1].x/100),floor(enemies[1].y/100),enemies[1].y + enemies[1].height,false,3));
-		z_index_map.sort(function(a, b){return a.z_index - b.z_index});
-	}*/
+		this.z_index_map[this.current_floor].sort(function(a, b){return a.z_index - b.z_index});
+	}
 	
 	//updating moving tile z index
 	modify(obj)
@@ -96,7 +84,86 @@ class Map {
 	{
 		this.modify(obj);
 		this.z_index_map[this.current_floor].sort(function(a, b){return a.z_index - b.z_index});
-		//console.log("this.z_index_map[this.current_floor] ", this.z_index_map[this.current_floor]);
+	}
+	
+	draw()
+	{
+		//console.log("draw");
+		background(47,47,47);
+		fill(98,149,112);
+		if(this.current_floor == 0)
+			fill(149,139,89);
+		if(this.current_floor == 5)
+			fill(173,173,173);
+		rect(camera.offSetX,camera.offSetY,1000,1000)
+		stroke(255,0,0);
+		noFill();
+		for(let k = 0; k < this.z_index_map[this.current_floor].length; k++)
+		{
+			
+			//checks if tile is within camera viewport
+			if(this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale > -100 && this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale > -100 && this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale < camera.width + 100 && this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale < camera.height + 100)
+			{
+				//checks if background tile
+				if(this.z_index_map[this.current_floor][k].bckgrnd == true)
+				{
+					let i = this.z_index_map[this.current_floor][k].i;
+					let j = this.z_index_map[this.current_floor][k].j;
+					let img_array_id = this.map_array[this.current_floor][i][j].data_id;
+					image(this.img_array[img_array_id], this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale,this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale+this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].decalY*scale,100*scale,100*scale,this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].draw_id*100,0,100,100)					
+					
+					let x = this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX+this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxX
+					let y = this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY+this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxY
+					let w = this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxW
+					let h = this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxH
+					rect(x,y,w,h)
+					//textSize(10);
+					//text("w "+ w,x,y)
+				}
+				
+			}
+			
+		}
+		//Zombie.s_drawChaseLine();
+		Menu.s_drawCurrentFloor();
+		message.draw();
+	}
+	
+	draw_assets_list()
+	{
+		fill(255,255,255);
+		rect(0,500,800,100)
+		rect(0,0,800,20)
+		//console.log("assets_array[i].data_id; ", assets_array);
+		for(let i = 0; i < assets_array.length; i++)
+		{
+			let img_array_id = assets_array[i].data_id;
+			//console.log("assets_array[i].data_id; ", assets_array[i].data_id);
+			//console.log("i ", i);
+			image(this.img_array[img_array_id], i*100+editor.decalX, 500, 100,100,100*assets_array[i].draw_id,0,100,100)
+		}
+		stroke(255,0,0);
+		noFill();
+		rect(editor.selected*100+editor.decalX,500,100,100)
+	}
+	
+	select_element()
+	{
+		
+		if (mouseIsPressed === true) {
+			if((mouseX - editor.decalX) > 0 && (mouseX - editor.decalX) < assets_array.length*100 - 100 && mouseY > 500 && mouseY < 600)
+			{
+				editor.selected = floor((mouseX - editor.decalX)/100);
+			}
+			if(mouseX > 0 && mouseX < 800 && mouseY > 20 && mouseY < 500)
+			{
+				let iw_i = floor((mouseX - camera.offSetX)/100);
+				let iw_j = floor((mouseY - camera.offSetY)/100);
+				if(iw_i >= 0 && iw_i < 10 && iw_j >= 0 && iw_j < 10)
+					this.map_array[this.current_floor][iw_j][iw_i] = assets_array[editor.selected];
+			}
+			mouseIsPressed = false;
+		}
 	}
 	
 	//drawing map in fct of z index
@@ -114,10 +181,10 @@ class Map {
 		if(this.current_floor == 5)
 		{
 			//paints floor
-			rect(camera.offSetX,camera.offSetY + 100,1000,900)
+			rect(camera.offSetX*scale,camera.offSetY*scale+100*scale,1000*scale,1000*scale)
 			//paints street
 			fill(63,72,204);
-			rect(camera.offSetX,camera.offSetY+1400,2000,1000)
+			rect(camera.offSetX*scale-500,camera.offSetY*scale+1400*scale,2000,1000)
 		}
 		else
 			rect(camera.offSetX,camera.offSetY,1000,1000)
@@ -125,19 +192,16 @@ class Map {
 		for(let k = 0; k < this.z_index_map[this.current_floor].length; k++)
 		{
 			//checks if tile is within camera viewport
-			if(this.z_index_map[this.current_floor][k].j*100+camera.offSetX > -100 && this.z_index_map[this.current_floor][k].i*100+camera.offSetY > -100 && this.z_index_map[this.current_floor][k].j*100+camera.offSetX < camera.width + 100 && this.z_index_map[this.current_floor][k].i*100+camera.offSetY < camera.height + 100)
+			if(this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale > -100 && this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale > -100 && this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale < camera.width + 100 && this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale < camera.height + 100)
 			{
 				//checks if background tile
 				if(this.z_index_map[this.current_floor][k].bckgrnd == true)
 				{
 					//checks if tile is positionable
 					if(map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j] instanceof PositionableTile)
-						image(this.img_array[this.current_floor], this.z_index_map[this.current_floor][k].j*100+camera.offSetX, this.z_index_map[this.current_floor][k].i*100+camera.offSetY+map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].decalY, 100, 100,map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].id*100,0,100,100);
+						image(this.img_array[this.current_floor], this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale, this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale+map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].decalY*scale, 100*scale, 100*scale,map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].id*100,0,100,100);
 					else
-						image(this.img_array[this.current_floor], this.z_index_map[this.current_floor][k].j*100+camera.offSetX, this.z_index_map[this.current_floor][k].i*100+camera.offSetY, 100, 100,map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].id*100,0,100,100);
-					/*fill(0);
-					textSize(10);
-					text("z " + this.z_index_map[this.current_floor][k].z_index,this.z_index_map[this.current_floor][k].j*100+camera.offSetX+20,this.z_index_map[this.current_floor][k].i*100+camera.offSetY)*/
+						image(this.img_array[this.current_floor], (this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale), (this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale), 100*scale, 100*scale,map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].id*100,0,100,100);
 						
 				}
 				
@@ -155,11 +219,10 @@ class Map {
 				//draws elevator
 				if(this.z_index_map[this.current_floor][k].id == 4)
 				{
-					//console.log("image");
 					if(this.cleaning_platform_pos == 1)
-						image(cleaning_platform, this.z_index_map[this.current_floor][k].j*100+camera.offSetX, this.z_index_map[this.current_floor][k].i*100+camera.offSetY, 200, 420,0,0,200,420);
+						image(cleaning_platform, this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale, this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale, 200*scale, 420*scale,0,0,200,420);
 					else
-						image(cleaning_platform_up, this.z_index_map[this.current_floor][k].j*100+camera.offSetX, this.z_index_map[this.current_floor][k].i*100+camera.offSetY, 200, 420,0,0,200,420);
+						image(cleaning_platform_up, this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale, this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale, 200*scale, 420*scale,0,0,200,420);
 				}
 				if(this.z_index_map[this.current_floor][k].id == 2)
 				{
@@ -173,7 +236,6 @@ class Map {
 				}
 			}
 		}
-		//this.drawHitBox();
 		Zombie.s_drawChaseLine();
 		Menu.s_drawCurrentFloor();
 		message.draw();
@@ -186,55 +248,5 @@ class Map {
 		stroke(255, 0, 0);
 		rect(colX+camera.offSetX, colY+camera.offSetY, colW, colH);
 		rect(hitDX+camera.offSetX, hitDY+camera.offSetY, hitDW, hitDH);
-	}
-	
-	changeFloor()
-	{
-		
-	}
-	
-	
-	
-	
-	
-	//old draw function /!\ (deprecated) /!\
-	draw()
-	{
-		background(98,149,112);
-		let dwightDrawn = false;
-		let zombiesDrawn = [0,0];
-		for(let i = 0; i < this.map_size_width; i++)
-		{
-			for(let j = 0; j < this.map_size_height; j++)
-			{
-				//does not display floor tile
-				if(map_array[this.current_floor][i][j].id == 1)
-					continue;
-		
-				//draws zombies
-				for(let k = 0; k < 2 ;k++)
-				{
-					if(floor((enemies[k].y+70)/100) == i+1 && j == 9 && zombiesDrawn[k] == 0)
-					{
-						zombiesDrawn[k] = 1;
-						enemies[k].draw();
-					}
-				}
-				
-				//only displays tiles within camera viewport
-				if(j*100+camera.offSetX > camera.offSetX-100 && i*100+camera.offSetY > camera.offSetY-100 && j*100+camera.offSetX < camera.width && i*100+camera.offSetY < camera.height)
-				{
-					image(tilemap, j*100+camera.offSetX, i*100+camera.offSetY, 100, 100,map_array[this.current_floor][i][j].id*100,0,100,100);
-				}
-				
-				if(floor((dwight.y+70)/100) == i+1 && j == 9 && dwightDrawn == false && dwight.alive == true)
-				{
-					dwightDrawn = true;
-					dwight.draw();
-				}
-				
-				
-			}
-		}
 	}
 }

@@ -26,5 +26,25 @@ class Camera {
 		
 	}
 	
+	move()
+	{
+		if(keys[LEFT_ARROW])
+		{
+			this.offSetX += 10;
+		}
+		if(keys[RIGHT_ARROW])
+		{
+			this.offSetX -= 10;
+		}
+		if(keys[UP_ARROW])
+		{
+			this.offSetY += 10;
+		}
+		if(keys[DOWN_ARROW])
+		{
+			this.offSetY -= 10;
+		}
+	}
+	
 	
 }

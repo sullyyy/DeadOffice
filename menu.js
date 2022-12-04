@@ -329,14 +329,27 @@ class Menu {
 	{
 		fill(255,0,0);
 		stroke(0, 0, 0);
-		text("current floor : " + floorAliases[map.current_floor],windowWidth/2,20)
+		textSize(25);
+		text("current floor : " + floorAliases[map2.current_floor],windowWidth/2,50)
 	}
 	
 	static s_drawEnd()
 	{
+		
 		textSize(40);
 		fill(255,0,0);
 		text('YOU ESCAPED !!!', windowWidth/2, windowHeight/4);
+		
+		fill(0);
+		textSize(20);
+		if(floor(time/1000) < 60)
+			text('TIME : ' + floor(time/1000) + " sec", windowWidth/2, windowHeight/4 + 100);
+		else
+		{
+			let min = floor((time/1000)/60);
+			let sec = floor(time/1000)%60;
+			text('TIME : ' + min + " min " + sec + " sec", windowWidth/2, windowHeight/4 + 100);
+		}
 	}
 	
 }

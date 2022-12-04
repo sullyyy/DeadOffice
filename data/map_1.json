@@ -1,0 +1,1124 @@
+[
+  [
+    {
+      "game_id": 2,
+      "draw_id": 2,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 3,
+      "draw_id": 3,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 2,
+      "draw_id": 2,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 3,
+      "draw_id": 3,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 2,
+      "draw_id": 2,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 3,
+      "draw_id": 3,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    }
+  ],
+  [
+    {
+      "game_id": 2,
+      "draw_id": 2,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 12,
+      "draw_id": 12,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 100,
+      "hitboxH": 100,
+      "decalY": 0
+    },
+    {
+      "game_id": 13,
+      "draw_id": 13,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 100,
+      "hitboxH": 100,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 4,
+      "draw_id": 4,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 100,
+      "hitboxH": 100,
+      "decalY": 0
+    },
+    {
+      "game_id": 3,
+      "draw_id": 3,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    }
+  ],
+  [
+    {
+      "game_id": 2,
+      "draw_id": 2,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 3,
+      "draw_id": 3,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    }
+  ],
+  [
+    {
+      "game_id": 2,
+      "draw_id": 2,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 3,
+      "draw_id": 3,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    }
+  ],
+  [
+    {
+      "game_id": 2,
+      "draw_id": 2,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 3,
+      "draw_id": 3,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    }
+  ],
+  [
+    {
+      "game_id": 2,
+      "draw_id": 2,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 3,
+      "draw_id": 3,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    }
+  ],
+  [
+    {
+      "game_id": 2,
+      "draw_id": 2,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 3,
+      "draw_id": 3,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    }
+  ],
+  [
+    {
+      "game_id": 2,
+      "draw_id": 2,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 3,
+      "draw_id": 3,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    }
+  ],
+  [
+    {
+      "game_id": 2,
+      "draw_id": 2,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 3,
+      "draw_id": 3,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    }
+  ],
+  [
+    {
+      "game_id": 6,
+      "draw_id": 6,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 100,
+      "hitboxH": 100,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 80,
+      "hitboxW": 100,
+      "hitboxH": 20,
+      "decalY": 0
+    },
+    {
+      "game_id": 5,
+      "draw_id": 5,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 100,
+      "hitboxH": 100,
+      "decalY": 0
+    }
+  ],
+  [
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+      "decalY": 0
+    }
+  ]
+]

@@ -16,3 +16,12 @@ body {
 #defaultCanvas0{
 	border: double;
 }
+
+#button{
+border: 1px solid black;
+    padding: 1px;
+    background: whitesmoke;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 3px;
+}

@@ -14,11 +14,12 @@ const HOW_TO_PLAY = 5;
 const DIALOG_BOX = 6;
 const GENERATOR_DIALOG = 7;
 const ELEVATOR_DIALOG = 8;
+const TEST = 9;
 
 let font;
 let fontSize = 40;
 
-let gameState = MENU;
+let gameState = TEST;
 
 let map_size_width = 10;
 let map_size_height = 10;
@@ -29,7 +30,16 @@ let dwight_dead;
 
 let enemies = [];
 let map_array = [];
+let map_array2 = [];
+let map_array_0;
+let map_array_1;
+let map_array_2;
+let map_array_3;
+let map_array_4;
+let map_array_5;
 let map_floor = [];
+
+let assets_array;
 
 let colX, colY, colW, colH = 0;
 let hitDX, hitDY, hitDW, hitDH = 0;
@@ -38,7 +48,10 @@ let z_index_map = [[],[],[],[],[],[]];
 let img_array = [];
 
 let last = new Date().getTime();
+let start = new Date().getTime();
 
+let scale = 1.0;
+let time;
 
 class cpl {
 	 constructor (w, h) {
@@ -48,30 +61,8 @@ class cpl {
 }
 
 const floor_size = [new cpl(10,9),new cpl(10,9),new cpl(10,9),new cpl(10,9),new cpl(10,9),new cpl(9,17)]
-
-/*let map_array_0 = [[3,2,12,24,4,3,2,4,3,4],
-		   [3,18,1,1,16,17,21,2,20,4],
-		   [3,1,1,1,1,1,1,1,1,4],
-		   [3,28,27,26,27,27,1,25,28,4],
-		   [3,13,14,13,1,1,1,1,33,4],
-		   [3,32,9,1,9,1,1,1,1,4],
-		   [3,1,10,1,10,"b",26,31,27,4],
-		   [3,1,9,1,9,30,1,1,18,4],
-		   [3,1,10,1,10,"a",32,1,1,4],
-		   [35,2,12,2,12,2,2,12,2,34]]*/
 		   
-/*let map_array_1 = [[3,12,12,12,12,12,12,12,12,4],
-		   [3,1,1,1,1,1,1,1,11,4],
-		   [3,1,1,1,1,1,1,1,1,4],
-		   [3,1,1,1,1,1,1,1,1,4],
-		   [3,1,1,1,1,1,1,1,1,4],
-		   [3,1,1,1,1,1,1,1,1,4],
-		   [3,1,1,1,10,1,1,1,1,4],
-		   [3,1,1,1,1,1,1,1,1,4],
-		   [3,1,1,1,1,1,1,1,1,4],
-		   [7,5,5,5,5,5,5,5,5,6]]*/
-		   
-let map_array_0 = [[3,12,12,12,12,4,3,4,3,4],
+/*let map_array_0 = [[3,12,12,12,12,4,3,4,3,4],
 				   [3,37,37,37,18,16,17,24,20,4],
 				   [3,28,31,28,28,1,1,1,1,4],
 				   [3,28,28,25,26,27,1,1,28,4],
@@ -80,7 +71,7 @@ let map_array_0 = [[3,12,12,12,12,4,3,4,3,4],
 		   [3,1,10,1,10,"b",26,31,27,4],
 		   [3,1,9,1,9,30,1,1,18,4],
 		   [3,1,10,1,10,"a",32,1,1,4],
-		   [35,2,12,2,12,2,2,12,2,34]]
+		   [35,2,12,2,12,2,2,12,2,34]]*/
 		   
 let map_array_lvl_basement = [[3,2,2,2,2,4,3,4,3,4],
 		   [3,1,1,9,10,2,2,2,5,4],
@@ -155,12 +146,39 @@ let map_array_lvl_0 = [[3,2,2,2,2,4,3,4,3,4],
 		   [0,0,0,0,0,0,34,0,0,35],
 		   [0,0,0,0,0,0,0,30,30,0],
 		   [0,0,0,0,0,0,0,36,36,0]]
+		   
+		   let test_array = [
+  [
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+	  "decalY": 0
+    },
+    {
+      "game_id": 1,
+      "draw_id": 1,
+      "data_id": 1,
+      "hitboxX": 82,
+      "hitboxY": 0,
+      "hitboxW": 18,
+      "hitboxH": 182,
+	  "decalY": 0
+    }
+  ]
+]
 
 
 
 
 function preload() {
-  //tilemap = loadImage('assets/img/tile_map.png');
+  data_0 = loadImage('assets/img/data_0.png');
+  data_1 = loadImage('assets/img/data_1.png');
+  data_2 = loadImage('assets/img/data_2.png');
   tilemap_0 = loadImage('assets/img/tile_map_0.png');
   tilemap_1 = loadImage('assets/img/tile_map_1.png');
   tilemap_2 = loadImage('assets/img/tile_map_2.png');
@@ -174,10 +192,17 @@ function preload() {
   dwight_dead = loadImage('assets/img/dwight_dead.png');
   enemies.push(new Zombie(300,200,36,70,loadImage('assets/img/zombie.png'),2));
   enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),3));
+  File.load();
+  File.loadAssets();
+  
+  
 }
 
+let sel;
+ let input;
+
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  var cnv = createCanvas(windowWidth, windowHeight);
   frameRate(fr);
   
   textFont(font);
@@ -185,13 +210,8 @@ function setup() {
   textAlign(CENTER, CENTER);
   
   camera = new Camera(0, 0,800,600);
+  camera.lookAt(400,300);
   
-  /*convertMapArray(map_array_0);
-  convertMapArray(map_array_lvl_0);
- 
-  
-  map_array.push(map_array_0);
-  map_array.push(map_array_lvl_0);*/
   convertMapArray_01(map_array_lvl_basement,10,10,0);
   convertMapArray_0(map_array_lvl_0,10,10,1);
   convertMapArray_1(map_array_lvl_1,10,10,2);
@@ -206,36 +226,127 @@ function setup() {
   map_array.push(map_array_lvl_3);
   map_array.push(map_array_lvl_roof);
   
-  img_array.push(tilemap_0);
+  
+  /*img_array.push(tilemap_0);
   img_array.push(tilemap_1);
   img_array.push(tilemap_2);
   img_array.push(tilemap_3);
   img_array.push(tilemap_4);
-  img_array.push(tilemap_5);
+  img_array.push(tilemap_5);*/
   
+  img_array.push(data_0)
+  img_array.push(data_1)
+  img_array.push(data_2)
   
-  //img_array.push(tilemap);
+  map_array2.push(map_array_0);
+  map_array2.push(map_array_1);
+  map_array2.push(map_array_2);
+  map_array2.push(map_array_3);
+  map_array2.push(map_array_4);
+  map_array2.push(map_array_5);
   
-  
+  //map_array2.push(test_array);
   
   map = new Map(10,10, map_array,img_array,z_index_map);
+  map2 = new Map(2,0, map_array2,img_array,z_index_map);
   
-  //console.log("lenthj ", map.map_array[5][0].length);
-  
+  //console.log("map_array_0 ", map_array_0);
+  //console.log("map2.map_array2 ", map2.map_array[0][0][1]);
   for(let i = 0; i < 6;i++)
+  {
+		map2.sort(i,10,10);
+  }
+  //console.log("assets_array[i].data_id; ", assets_array);
+  //File.save(map2.map_array[0]);
+  //console.log("map2.map_array ", map2.map_array);
+  //console.log("map2.map_array[0] ", map2.map_array[0][0][0]);
+  
+  //console.log("hello");
+  
+  //File.save(map_array_lvl_basement);
+  
+  /*for(let i = 0; i < 6;i++)
   {
 	  if(i == 5)
 		 map.sort(i,18,10);
 	  else
 		 map.sort(i,10,10);
 	  
-  }
+  }*/
+  //console.log("cnv ", );
+ 
+
   
-  //Zombie.s_setState(STATE.IDLE);
+  button = createButton('save');
+  button.position(cnv.elt.getBoundingClientRect().x+45, cnv.elt.getBoundingClientRect().y+button.height/2);
+  button.mousePressed(saveFile);
+  button1 = createButton('new');
+  button1.position(cnv.elt.getBoundingClientRect().x, cnv.elt.getBoundingClientRect().y+button1.height/2);
+  button1.mousePressed(loadFile);
+  input = createFileInput(handleFile);
+  input.elt.hidden = true;
+  input.elt.id = "load";
+  input.elt.accept = ".json";
+  
+  input.position(cnv.elt.getBoundingClientRect().x+90, cnv.elt.getBoundingClientRect().y+button1.height/2);
+  
+  let label = createElement('label', 'load');
+  label.elt.setAttribute("for", "load");
+  label.position(cnv.elt.getBoundingClientRect().x+95, cnv.elt.getBoundingClientRect().y+button1.height/2);
+  label.elt.id = "button"
+  
+   //console.log("name ", input)
+  sel = createSelect();
+  sel.position(cnv.elt.getBoundingClientRect().x + 150, cnv.elt.getBoundingClientRect().y+button.height/2);
+  sel.option('basement',0);
+  sel.option('ground floor',1);
+  sel.option('1st floor',2);
+  sel.option('2nd floor',3);
+  sel.option('3rd floor',4);
+  sel.option('roof',5);
+  sel.selected('basement');
+  sel.changed(mySelectEvent);
   
   message = new Message(0,0,"");
   
+  editor = new Editor();
+  
+  sel.elt.addEventListener("click", function(event){
+  event.preventDefault()
+});
+  
 
+}
+
+function mySelectEvent() {
+  //let item = sel.value();
+	map2.current_floor = sel.value();
+	//console.log(sel.value());
+}
+
+function saveFile()
+{
+	File.save(map2.map_array[map2.current_floor]);
+}
+
+function loadFile()
+{
+	File.load();
+	map2.map_array[0] = map_array_0;
+	map2.map_array[1] = map_array_1;
+	map2.map_array[2] = map_array_2;
+	map2.map_array[3] = map_array_3;
+	map2.map_array[4] = map_array_4;
+	map2.map_array[5] = map_array_5;
+}
+
+function handleFile(file)
+{
+	//if(file 
+	
+	map2.map_array[map2.current_floor] = file.data
+	//console.log("file : ", file.data);
+	input.elt.value = "";
 }
 
 function convertMapArray_01(map_array,w,h,flr)
@@ -774,119 +885,6 @@ function convertMapArray(map_array,w,h,flr)
 	}
 }
 
-/*function convertMapArray(map_array)
-{
-	for(let i = 0; i < 10; i++)
-	{
-		for(let j = 0; j < 10; j++)
-		{
-			if(map_array[i][j] == 1)
-			{
-				map_array[i][j] = new Floor(map_array[i][j],0,0,0,0);
-			}
-			else if(map_array[i][j] == 2 || map_array[i][j] == 12)
-			{
-				map_array[i][j] = new Wall(map_array[i][j],0,82,100,18);
-				
-			}
-			else if(map_array[i][j] == 3)
-			{
-				map_array[i][j] = new Wall(map_array[i][j],82,0,18,182);
-				
-			}
-			else if(map_array[i][j] == 4)
-			{
-				map_array[i][j] = new Wall(map_array[i][j],0,0,18,182);
-				
-			}
-			else if(map_array[i][j] == 8)
-			{
-				map_array[i][j] = new Door(map_array[i][j],0,80,100,20);
-				
-			}
-			
-			
-			else if(map_array[i][j] == 9)
-			{
-				map_array[i][j] = new Table(map_array[i][j],1,72,98,28);
-				
-			}
-			else if(map_array[i][j] == 10)
-			{
-				map_array[i][j] = new Chair(map_array[i][j],41,0,28,14,-86);
-				
-			}
-			else if(map_array[i][j] == 11 || map_array[i][j] == 19 )
-			{
-				map_array[i][j] = new Stairs(map_array[i][j],0,0,100,100);
-				
-			}
-			else if(map_array[i][j] == 13 || map_array[i][j] == 14)
-			{
-				map_array[i][j] = new Cupboard(map_array[i][j],3,0,94,17,-83);
-				
-			}
-			else if(map_array[i][j] == 18)
-			{
-				map_array[i][j] = new Plant(map_array[i][j],43,0,21,12,-55);
-				
-			}
-			else if(map_array[i][j] == 16 || map_array[i][j] == 17)
-			{
-				map_array[i][j] = new Elevator(map_array[i][j],0,0,100,100);
-				
-			}
-			else if(map_array[i][j] == 21)
-			{
-				map_array[i][j] = new VendingMachine(map_array[i][j],19,0,64,28,-72);
-				
-			}
-			else if(map_array[i][j] == 25 || map_array[i][j] == 26 || map_array[i][j] == 27 || map_array[i][j] == 28)
-			{
-				map_array[i][j] = new ThinWall(map_array[i][j],0,90,100,10);
-				
-			}
-			else if(map_array[i][j] == 30)
-			{
-				map_array[i][j] = new ThinWall(map_array[i][j],90,0,10,100);
-				
-			}
-			else if(map_array[i][j] == 31)
-			{
-				map_array[i][j] = new ThinDoor(map_array[i][j],0,90,100,10);
-				
-			}
-			else if(map_array[i][j] == 32)
-			{
-				map_array[i][j] = new Printer(map_array[i][j],9,0,78,20,-80);
-				
-			}
-			else if(map_array[i][j] == 33)
-			{
-				map_array[i][j] = new Lamp(map_array[i][j],41,0,19,10,-90);
-				
-			}
-			else if(map_array[i][j] == 37)
-			{
-				map_array[i][j] = new Toilet(map_array[i][j],37,0,29,20,-80);
-				
-			}
-			else if(map_array[i][j] == "a")
-			{
-				map_array[i][j] = new ThinWallLong(30,90,0,10,200);
-			}
-			else if(map_array[i][j] == "b")
-			{
-				map_array[i][j] = new ThinWallLong(30,90,90,10,10);
-				
-			}
-			else
-				map_array[i][j] = new Tile(map_array[i][j],0,0,100,100);
-		}
-	}
-	
-}*/
-
 function setStartingPoint()
 {
 	dwight.x = 100;
@@ -895,6 +893,7 @@ function setStartingPoint()
 	map.current_floor = 3;
 	map.cleaning_platform_pos = 1;
 	map.generatorOn = false;
+	start = new Date().getTime();
 }
 
 let end = 0;
@@ -903,12 +902,18 @@ function draw() {
   
   switch (gameState) {
 	  
+	  case TEST:
+	  map2.draw();
+	  map2.draw_assets_list();
+	  map2.select_element();
+	  camera.move();
+	  break;
+	  
 	  case MENU:
 	  
 	  end = 0;
 	  Menu.s_draw();
 	  Menu.s_select_option();
-	  //Menu.s_drawHowToPlay();
 	  setStartingPoint();
 	  camera.lookAtObj(dwight);
 	  camera.update();
@@ -946,9 +951,11 @@ function draw() {
 		  enemies[i].update();
 	  }
 	  map.drawZ();
-	  camera.update();
 	  if(end == 1)
 		  gameState = END;
+	  if(gameState!=END)
+		  camera.update();
+	  
 	  Menu.s_return();
 	  break;
 	  
@@ -1016,5 +1023,19 @@ function windowResized() {
 	  gameState = MENU;
 }*/
 
+function mouseWheel(event) {
+  if(event.deltaY  >  0)
+  {
+	   //console.log("editor.decalX ", editor.decalX);
+	   if(editor.decalX!=-3600)
+		editor.decalX-=100;
+  }
+  else
+  {
+	  if(editor.decalX!=0)
+		  //console.log("editor.decalX ", editor.decalX);
+		editor.decalX+=100;
+  }
+}
 
 
