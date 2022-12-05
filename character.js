@@ -35,7 +35,7 @@
 		if(x1 > x2 && x1 < x2w && y1 > y2 && y1 < y2h)
 		{
 			//going into a staircase door
-			if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 5)
+			if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 4)
 			{
 				
 				gameState = DIALOG_BOX;
@@ -45,7 +45,7 @@
 			//going into elevator
 			if(map.current_floor > 0 && map.current_floor < 5 && this instanceof Dwight)
 			{
-				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 10 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 11)
+				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 12 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 13)
 				{
 					
 					if(map.generatorOn)
@@ -66,7 +66,7 @@
 			if(map.current_floor == 5)
 			{
 				//going into basement outside access door
-				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 20)
+				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 26)
 				{
 					
 					map.travelTo(0,7,8)
@@ -74,7 +74,7 @@
 					
 				}
 				//going into open window
-				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 32)
+				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 38)
 				{
 					
 					if(map.cleaning_platform_pos == 0)
@@ -85,7 +85,7 @@
 					
 				}
 				//going into cleaning_platform
-				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 33)
+				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 123)
 				{
 					
 					if(map.cleaning_platform_pos == 0)
@@ -106,7 +106,7 @@
 			if(map.current_floor == 0)
 			{
 				//going into generator
-				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 9 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 10)
+				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 8 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 9)
 				{
 					gameState = GENERATOR_DIALOG;
 					return false;
@@ -131,7 +131,7 @@
 			//going into elevator
 			if(map.current_floor > 0 && map.current_floor < 5 && this instanceof Dwight)
 			{
-				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 10 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 11)
+				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 12 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 13)
 				{
 					
 					if(map.generatorOn)
@@ -173,7 +173,7 @@
 			if(map.current_floor == 0)
 			{
 				//going into basement outside access door
-				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 8)
+				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 7)
 				{
 					map.travelTo(5,7,15)
 					return false;
@@ -184,7 +184,7 @@
 			if(map.current_floor == 1)
 			{
 				//going into exit / ending game
-				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 8 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 9)
+				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 10 || map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 11)
 				{
 					map.travelTo(5,4,14)
 					end = 1;
@@ -200,7 +200,7 @@
 			if(map.current_floor == 2)
 			{
 				//going into window
-				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 9)
+				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 15)
 				{
 					if(map.cleaning_platform_pos == 1)
 						map.travelTo(5,2,12)
@@ -211,7 +211,7 @@
 			if(map.current_floor == 4)
 			{
 				//going into window
-				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].id == 9)
+				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 15)
 				{
 					if(map.cleaning_platform_pos == 0)
 						map.travelTo(5,2,10)
@@ -378,7 +378,7 @@ class Zombie extends Character{
 		{
 			enemies[i].x = 600-i*200;
 			enemies[i].y = 300+i*200;
-			enemies[i].zombieState = STATE.ROAMING;
+			enemies[i].zombieState = STATE.IDLE;
 		}
 	}
 	

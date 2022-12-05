@@ -959,23 +959,23 @@
       "decalY": 0
     },
     {
-      "game_id": 1,
-      "draw_id": 1,
+      "game_id": 10,
+      "draw_id": 10,
       "data_id": 0,
       "hitboxX": 0,
-      "hitboxY": 80,
+      "hitboxY": 0,
       "hitboxW": 100,
-      "hitboxH": 20,
+      "hitboxH": 100,
       "decalY": 0
     },
     {
-      "game_id": 1,
-      "draw_id": 1,
+      "game_id": 11,
+      "draw_id": 11,
       "data_id": 0,
       "hitboxX": 0,
-      "hitboxY": 80,
+      "hitboxY": 0,
       "hitboxW": 100,
-      "hitboxH": 20,
+      "hitboxH": 100,
       "decalY": 0
     },
     {

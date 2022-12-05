@@ -55,6 +55,7 @@ class DialogBox {
 			
 			if(map.current_floor == 0)
 			{
+				//console.log(" map.current_floor + 1 ", map.current_floor + 1);
 				text(floorAliases[map.current_floor + 1] + ' door locked', windowWidth/2, windowHeight/4 + 20);
 			}
 			if(map.current_floor == 1)
@@ -247,29 +248,31 @@ class Menu {
 	{
 		if(keys[UP_ARROW] && selected != 0)
 		{
-			selected = 0;
+			selected--;
 		}
-		if(keys[DOWN_ARROW] && selected != 1)
+		if(keys[DOWN_ARROW] && selected != 2)
 		{
-			selected = 1;
+			selected++;
 		}
 		if(keys[32] && selected == 0)
 		{
 			gameState = PLAY;
+			showEditorButtons(false)
 		}
 		if(keys[32] && selected == 1)
 		{
 			gameState = HOW_TO_PLAY;
+			showEditorButtons(false)
+		}
+		if(keys[32] && selected == 2)
+		{
+			gameState = EDITOR;
+			showEditorButtons(true);
 		}
 	}
 	
 	static s_return()
 	{
-		
-		/*let now = new Date().getTime();
-		let delta = now - last;
-		if (delta >= 1000) {
-		last = now;*/
 		if(keys[ESCAPE])
 		{
 			if(gameState == HOW_TO_PLAY)
@@ -280,6 +283,11 @@ class Menu {
 				gameState = MENU;
 			else if(gameState == GAME_OVER)
 				gameState = MENU;
+			else if(gameState == EDITOR)
+			{
+				gameState = MENU;
+				showEditorButtons(false)
+			}
 		}
 	}
 	
@@ -290,8 +298,13 @@ class Menu {
 		textSize(40);
 		text('DEAD OFFICE', windowWidth/2, windowHeight/4);
 		textSize(25);
+		
+		text('->', 250, windowHeight/4 + 150+selected*25);
+		text('PLAY', windowWidth/2, windowHeight/4 + 150);
+		text('HOW TO PLAY', windowWidth/2, windowHeight/4 + 175);
+		text('EDITOR', windowWidth/2, windowHeight/4 + 200);
 		//textAlign(LEFT);
-		if(selected == 0)
+		/*if(selected == 0)
 		{
 			text('->', 250, windowHeight/4 + 150);
 			text('PLAY', windowWidth/2, windowHeight/4 + 150);
@@ -302,7 +315,7 @@ class Menu {
 			text('->', 250, windowHeight/4 + 175);
 			text('PLAY', windowWidth/2, windowHeight/4 + 150);
 			text('HOW TO PLAY', windowWidth/2, windowHeight/4 + 175);
-		}
+		}*/
 		//textAlign(CENTER);
 	}
 	
@@ -330,7 +343,7 @@ class Menu {
 		fill(255,0,0);
 		stroke(0, 0, 0);
 		textSize(25);
-		text("current floor : " + floorAliases[map2.current_floor],windowWidth/2,50)
+		text("current floor : " + floorAliases[map.current_floor],windowWidth/2,50)
 	}
 	
 	static s_drawEnd()
