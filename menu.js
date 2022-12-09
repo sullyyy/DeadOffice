@@ -187,12 +187,15 @@ class DialogBox {
 		{
 			map.generatorOn = true;
 			gameState = PLAY;
+			message.set(0,0,"GENERATOR IS NOW ON !!!",true)
 			console.log("map.generatorOn ", map.generatorOn);
 		}
 		if(keys[32] && selected == 1)
 		{
+			message.set(0,0,"GENERATOR IS NOW OFF !!!",true)
 			map.generatorOn = false;
 			gameState = PLAY;
+			
 		}
 		if(keys[ESCAPE])
 		{

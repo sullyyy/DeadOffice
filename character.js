@@ -17,6 +17,7 @@
 	
 	checkCollision(x,y,x2,y2)
 	{
+		
 		let x1 = x;
 		let x1halfw = x + 18;
 		let x1w = x + 36;
@@ -30,6 +31,11 @@
 		hitDH = y1h - y1;
 		if(this instanceof Dwight)
 			message.displayed(false);
+		
+		//console.log("y2 ", y2);
+		//console.log("map.map_array[map.current_floor][floor(y2/100)][floor(x2/100)].hitboxH; ", map.map_array[map.current_floor][floor(y2/100)][floor(x2/100)].hitboxH);
+		//console.log("map.map_array[map.current_floor][floor(y2/100)][floor(x2/100)].hitboxY; ", map.map_array[map.current_floor][floor(y2/100)][floor(x2/100)].hitboxY);
+		//console.log("y2h ", y2h);
 		
 		
 		if(x1 > x2 && x1 < x2w && y1 > y2 && y1 < y2h)
@@ -74,8 +80,11 @@
 					
 				}
 				//going into open window
-				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 38)
+				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 38 && floor(x1/100) == 2)
 				{
+					
+					console.log("floor(x1/100) ", floor(x1/100));
+					console.log("floor(y1/100) ", floor(y1/100));
 					
 					if(map.cleaning_platform_pos == 0)
 						map.travelTo(4,2,9)
@@ -109,6 +118,13 @@
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 8 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 9)
 				{
 					gameState = GENERATOR_DIALOG;
+					return false;
+					
+				}
+				//going into sewer
+				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 64)
+				{
+					message.set(0,0,"DLC REQUIRED",true)
 					return false;
 					
 				}
@@ -179,6 +195,13 @@
 					return false;
 					
 				}
+				//going into sewer
+				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 64)
+				{
+					message.set(0,0,"DLC REQUIRED",true)
+					return false;
+					
+				}
 				
 			}
 			if(map.current_floor == 1)
@@ -200,7 +223,7 @@
 			if(map.current_floor == 2)
 			{
 				//going into window
-				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 15)
+				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 15 && floor(x1/100) == 2)
 				{
 					if(map.cleaning_platform_pos == 1)
 						map.travelTo(5,2,12)
@@ -266,7 +289,6 @@
 		{
 			for(let j = -1; j < 2; j++)
 			{
-				
 				if(floor(y/100)+ j < 0 || floor(x/100)+ i < 0 || floor(y/100)+ j > floor_size[map.current_floor].h || floor(x/100)+ i > floor_size[map.current_floor].w )
 					continue;
 				let x2 = (floor(x/100))*100 + i*100 + map.map_array[map.current_floor][floor(y/100)+ j][floor(x/100)+ i].hitboxX;

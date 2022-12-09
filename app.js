@@ -69,6 +69,7 @@ function preload() {
   data_3 = loadImage('assets/img/data_3.png');
   cleaning_platform = loadImage('assets/img/cleaning_platform.png');
   cleaning_platform_up = loadImage('assets/img/cleaning_platform_up.png');
+  wc_floor = loadImage('assets/img/wc_floor.png');
   dwight = new Dwight(500,200,36,70,loadImage('assets/img/dwight.png'),1);
   font = loadFont('assets/font/joystix.ttf');
   dwight_dead = loadImage('assets/img/dwight_dead.png');
@@ -86,6 +87,15 @@ let sel;
  let button;
  let button1;
  let label;
+ 
+ let button2 = [];
+ let inp2 = [];
+ 
+ let sel2;
+ 
+ let tilePropSel;
+ let checkbox;
+ let showOption = true;
 
 function setup() {
   cnv = createCanvas(windowWidth, windowHeight);
@@ -149,6 +159,41 @@ function setup() {
   sel.selected('basement');
   sel.changed(mySelectEvent);
   
+  sel2 = createSelect();
+  sel2.position(cnv.elt.getBoundingClientRect().x + 250, cnv.elt.getBoundingClientRect().y+button.height/2);
+  sel2.option('decalY',0);
+  sel2.option('hitboxX',1);
+  sel2.option('hitboxY',2);
+  sel2.option('hitboxW',3);
+  sel2.option('hitboxH',4);
+  sel2.selected('decalY');
+  sel2.changed(mySelectEvent2);
+  
+  checkbox = createCheckbox('show tile options', true);
+  checkbox.changed(myCheckedEvent);
+  checkbox.position(cnv.elt.getBoundingClientRect().x + 350, cnv.elt.getBoundingClientRect().y+button.height/2);
+  
+  let k = 0;
+  for(let i = 0; i < 10;i++)
+  {
+	  for(let j = 0; j < 10;j++)
+	  {
+		  
+		  inp2[k] = createInput('');
+		  inp2[k].position(0, +20);
+		  inp2[k].size(50);
+		  inp2[k].input(updateTile2);
+		  inp2[k].elt.value = 0;
+		  inp2[k].hide();
+		  button2[k] = createButton('+');
+		  button2[k].position(cnv.elt.getBoundingClientRect().x, cnv.elt.getBoundingClientRect().y);
+		  button2[k].mousePressed(updateTile);
+		  button2[k].hide();
+		  k++;
+	  }
+  }
+  
+  
   message = new Message(0,0,"");
   
   editor = new Editor();
@@ -157,9 +202,87 @@ function setup() {
   event.preventDefault()
 });
 
+sel2.elt.addEventListener("click", function(event){
+  event.preventDefault()
+});
+
   Zombie.s_setState(STATE.IDLE)
   showEditorButtons(false)
 
+}
+
+function myCheckedEvent() {
+  if (checkbox.checked()) {
+    showOption = true;
+  } else {
+    showOption = false;
+	map.hide_option_buttons();
+  }
+}
+
+function updateTile()
+{
+	let i = floor((this.x - camera.offSetX - cnv.elt.getBoundingClientRect().x)/100)
+	let j = floor((this.y - camera.offSetY - cnv.elt.getBoundingClientRect().y)/100)
+	console.log("i ", i);
+	console.log("j ", j);
+	//let k = (j*10+i);
+	//inp2[k].show();
+	/*let k = 0;
+	for(let p = 0; p < i*10; p++)
+	{
+		for(let m = 0; m < j; m++)
+		{
+			k++;
+		}
+	}*/
+	//console.log("k =i*10+j", (j*10+i));
+	
+	//console.log("this ", this);
+	//console.log(this.x - camera.offSetX - cnv.elt.getBoundingClientRect().x);
+	//console.log(this.y - camera.offSetY - cnv.elt.getBoundingClientRect().y);
+	//inp2[k].show();
+	//map.map_array[map.current_floor][0][0].decalY;
+	
+	if(tilePropSel == 0)
+	{
+		let decal = prompt("decalY", map.map_array[map.current_floor][j][i].decalY);
+		map.map_array[map.current_floor][j][i].decalY =  parseInt(decal);
+		console.log("game id = ", map.map_array[map.current_floor][j][i].game_id);
+	}
+	else if(tilePropSel == 1)
+	{
+		//console.log("map.map_array[map.current_floor][j][i].hitboxX1 ", map.map_array[map.current_floor][j][i].hitboxX);
+		let decal = prompt("hitboxX", map.map_array[map.current_floor][j][i].hitboxX);
+		map.map_array[map.current_floor][j][i].hitboxX = parseInt(decal);
+		//console.log("map.map_array[map.current_floor][j][i].hitboxX2 ", map.map_array[map.current_floor][j][i]);
+	}
+	else if(tilePropSel == 2)
+	{
+		let decal = prompt("hitboxY", map.map_array[map.current_floor][j][i].hitboxY);
+		map.map_array[map.current_floor][j][i].hitboxY = parseInt(decal);
+	}
+	else if(tilePropSel == 3)
+	{
+		let decal = prompt("hitboxW", map.map_array[map.current_floor][j][i].hitboxW);
+		map.map_array[map.current_floor][j][i].hitboxW =  parseInt(decal);
+	}
+	else if(tilePropSel == 4)
+	{
+		let decal = prompt("hitboxH", map.map_array[map.current_floor][j][i].hitboxH);
+		map.map_array[map.current_floor][j][i].hitboxH =  parseInt(decal);
+	}
+}
+
+function updateTile2()
+{
+	console.log(this.x - camera.offSetX - cnv.elt.getBoundingClientRect().x);
+	console.log(this.y - camera.offSetY - cnv.elt.getBoundingClientRect().y);
+	let i = floor((this.x - camera.offSetX - cnv.elt.getBoundingClientRect().x)/100)
+	let j = floor((this.y - camera.offSetY - cnv.elt.getBoundingClientRect().y)/100)
+	console.log(map.map_array[map.current_floor][i][j].decalY);
+	console.log(this.value());
+	map.map_array[map.current_floor][j][i].decalY = this.value();
 }
 
 function showEditorButtons(showed)
@@ -170,6 +293,9 @@ function showEditorButtons(showed)
 		button1.show();
 		label.show();
 		sel.show();
+		sel2.show();
+		checkbox.show();
+		showOption = true;
 	}
 	else
 	{
@@ -177,6 +303,10 @@ function showEditorButtons(showed)
 		button1.hide();
 		label.hide();
 		sel.hide();
+		sel2.hide();
+		checkbox.hide();
+		showOption = false;
+		map.hide_option_buttons();
 	}
 }
 
@@ -187,6 +317,10 @@ function getUniqueId(i,j)
 
 function mySelectEvent() {
 	map.current_floor = sel.value();
+}
+
+function mySelectEvent2() {
+	tilePropSel = sel2.value();
 }
 
 function saveFile()
@@ -215,9 +349,9 @@ function handleFile(file)
 function setStartingPoint()
 {
 	dwight.x = 100;
-	dwight.y = 100;
+	dwight.y = 200;
 	Zombie.s_setZombiePosition();
-	map.current_floor = 1;
+	map.current_floor = 3;
 	map.cleaning_platform_pos = 1;
 	map.generatorOn = false;
 	start = new Date().getTime();
@@ -345,7 +479,7 @@ function windowResized() {
 function mouseWheel(event) {
   if(event.deltaY  >  0)
   {
-	   if(editor.decalX!=-5300)
+	   if(editor.decalX!=-7000)
 	      editor.decalX-=100;
   }
   else

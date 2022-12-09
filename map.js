@@ -102,6 +102,8 @@ class Map {
 		//draw background
 		background(47,47,47);
 		
+		noStroke();
+		
 		//draw floor colour
 		fill(98,149,112);
 		if(this.current_floor == 0)
@@ -110,12 +112,18 @@ class Map {
 			fill(173,173,173);
 		rect(camera.offSetX*scale,camera.offSetY*scale+100,1000*scale,900*scale)
 		
+		if(this.current_floor == 3 || this.current_floor == 1)
+		{
+			image(wc_floor, camera.offSetX+100,camera.offSetY+100,400,200);
+		}
+		
 		stroke(255,0,0);
 		noFill();
 		
 		for(let k = 0; k < this.z_index_map[this.current_floor].length; k++)
 		{
-			
+			//if(k < 100)
+					//button2[k].hide();
 			//checks if tile is within camera viewport
 			if(this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale > -100 && this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale > -100 && this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale < camera.width + 100 && this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale < camera.height + 100)
 			{
@@ -137,7 +145,14 @@ class Map {
 						let w = this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxW
 						let h = this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxH
 						rect(x,y,w,h)
+						//if(showOption && k < 100 && cnv.elt.getBoundingClientRect().y+camera.offSetY+this.z_index_map[this.current_floor][k].i*100 < 700 && cnv.elt.getBoundingClientRect().y+camera.offSetY+this.z_index_map[this.current_floor][k].i*100 > 200){
+						//if(showOption && k < 100 && cnv.elt.getBoundingClientRect().y+camera.offSetY+this.z_index_map[this.current_floor][k].i*100 < 700 && cnv.elt.getBoundingClientRect().y+camera.offSetY+this.z_index_map[this.current_floor][k].i*100 > 200){
+						//button2[k].show();
+						//button2[k].position(cnv.elt.getBoundingClientRect().x+camera.offSetX+this.z_index_map[this.current_floor][k].j*100, cnv.elt.getBoundingClientRect().y+camera.offSetY+this.z_index_map[this.current_floor][k].i*100);
+						//}
+						//inp2[k].position(cnv.elt.getBoundingClientRect().x+camera.offSetX+this.z_index_map[this.current_floor][k].i*100,20+cnv.elt.getBoundingClientRect().y+camera.offSetY+this.z_index_map[this.current_floor][k].j*100);
 					}
+					
 				}
 				
 			}
@@ -173,9 +188,40 @@ class Map {
 			}
 			
 		}
+		if(showOption)
+			this.show_option_buttons();
 		//Zombie.s_drawChaseLine();
 		Menu.s_drawCurrentFloor();
 		message.draw();
+		this.drawHitBox();
+	}
+	
+	hide_option_buttons()
+	{
+		let k = 0;
+		for(let k = 0; k < 100; k++)
+		{
+			button2[k].hide();
+		}
+		//console.log(button2);
+	}
+	
+	show_option_buttons()
+	{
+		let k = 0;
+		for(let i = 0; i < 10; i++)
+		{
+			for(let j = 0; j < 10; j++)
+			{
+				button2[k].hide();
+				if(cnv.elt.getBoundingClientRect().x+camera.offSetX+j*100 > 100 && cnv.elt.getBoundingClientRect().x+camera.offSetX+j*100 < 1500 && cnv.elt.getBoundingClientRect().y+camera.offSetY+i*100 > 200 && cnv.elt.getBoundingClientRect().y+camera.offSetY+i*100 < 700)
+				{
+					button2[k].show();
+					button2[k].position(cnv.elt.getBoundingClientRect().x+camera.offSetX+j*100, cnv.elt.getBoundingClientRect().y+camera.offSetY+i*100);
+				}
+				k++;
+			}
+		}
 	}
 	
 	draw_assets_list()

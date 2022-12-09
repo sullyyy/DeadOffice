@@ -933,9 +933,9 @@
       "draw_id": 16,
       "data_id": 0,
       "hitboxX": 0,
-      "hitboxY": 0,
+      "hitboxY": 80,
       "hitboxW": 100,
-      "hitboxH": 100,
+      "hitboxH": 20,
       "decalY": 0
     },
     {
@@ -943,9 +943,9 @@
       "draw_id": 16,
       "data_id": 0,
       "hitboxX": 0,
-      "hitboxY": 0,
+      "hitboxY": 80,
       "hitboxW": 100,
-      "hitboxH": 100,
+      "hitboxH": 20,
       "decalY": 0
     },
     {
@@ -953,9 +953,9 @@
       "draw_id": 16,
       "data_id": 0,
       "hitboxX": 0,
-      "hitboxY": 0,
+      "hitboxY": 80,
       "hitboxW": 100,
-      "hitboxH": 100,
+      "hitboxH": 20,
       "decalY": 0
     },
     {
@@ -963,9 +963,9 @@
       "draw_id": 16,
       "data_id": 0,
       "hitboxX": 0,
-      "hitboxY": 0,
+      "hitboxY": 80,
       "hitboxW": 100,
-      "hitboxH": 100,
+      "hitboxH": 20,
       "decalY": 0
     },
     {
@@ -973,9 +973,9 @@
       "draw_id": 16,
       "data_id": 0,
       "hitboxX": 0,
-      "hitboxY": 0,
+      "hitboxY": 80,
       "hitboxW": 100,
-      "hitboxH": 100,
+      "hitboxH": 20,
       "decalY": 0
     },
     {
@@ -983,9 +983,9 @@
       "draw_id": 16,
       "data_id": 0,
       "hitboxX": 0,
-      "hitboxY": 0,
+      "hitboxY": 80,
       "hitboxW": 100,
-      "hitboxH": 100,
+      "hitboxH": 20,
       "decalY": 0
     },
     {
@@ -993,9 +993,9 @@
       "draw_id": 16,
       "data_id": 0,
       "hitboxX": 0,
-      "hitboxY": 0,
+      "hitboxY": 80,
       "hitboxW": 100,
-      "hitboxH": 100,
+      "hitboxH": 20,
       "decalY": 0
     },
     {
