@@ -32,11 +32,6 @@
 		if(this instanceof Dwight)
 			message.displayed(false);
 		
-		//console.log("y2 ", y2);
-		//console.log("map.map_array[map.current_floor][floor(y2/100)][floor(x2/100)].hitboxH; ", map.map_array[map.current_floor][floor(y2/100)][floor(x2/100)].hitboxH);
-		//console.log("map.map_array[map.current_floor][floor(y2/100)][floor(x2/100)].hitboxY; ", map.map_array[map.current_floor][floor(y2/100)][floor(x2/100)].hitboxY);
-		//console.log("y2h ", y2h);
-		
 		
 		if(x1 > x2 && x1 < x2w && y1 > y2 && y1 < y2h)
 		{
@@ -82,10 +77,6 @@
 				//going into open window
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 38 && floor(x1/100) == 2)
 				{
-					
-					console.log("floor(x1/100) ", floor(x1/100));
-					console.log("floor(y1/100) ", floor(y1/100));
-					
 					if(map.cleaning_platform_pos == 0)
 						map.travelTo(4,2,9)
 					else
@@ -316,16 +307,35 @@ class Dwight extends Character{
 		super(x, y, width, height, img,id);
 		this.acc = 7;
 		this.alive = true;
+		this.weapon;
 		
+	}
+	
+	equipWeapon(weapon)
+	{
+		this.weapon = weapon;
+	}
+	
+	init()
+	{
+		this.weapon.update();
+				camera.update();
+				map.resort(this);
 	}
 	
 	move()
 	{
+		if(keys[32])
+		{
+			this.weapon.swing();
+			keys[32] = 0;
+		}
 		if(keys[LEFT_ARROW])
 		{
 			if(this.handleCollision(dwight.x - dwight.acc, dwight.y))
 			{
 				dwight.x-= dwight.acc;
+				this.weapon.update();
 				camera.update();
 				map.resort(this);
 			}
@@ -336,6 +346,7 @@ class Dwight extends Character{
 			{
 				camera.offSetX -= dwight.acc;
 				dwight.x+=dwight.acc;
+				this.weapon.update();
 				map.resort(this);
 			}
 			
@@ -345,6 +356,7 @@ class Dwight extends Character{
 			if(this.handleCollision(dwight.x, dwight.y - dwight.acc))
 			{
 				dwight.y-=dwight.acc;
+				this.weapon.update();
 				camera.update();
 				map.resort(this);
 			}
@@ -354,6 +366,7 @@ class Dwight extends Character{
 			if(this.handleCollision(dwight.x, dwight.y + dwight.acc))
 			{
 				dwight.y+=dwight.acc;
+				this.weapon.update();
 				camera.update();
 				map.resort(this);
 			}
@@ -381,17 +394,47 @@ function keyReleased() {
     ROAMING: 0,
 	CHASING: 1,
 	IDLE: 2,
+	DEAD: 3
  }
 
 class Zombie extends Character{
-    constructor (x, y, width, height, img, id) {
+    constructor (x, y, width, height, img, id, initX, initY) {
 		super(x, y, width, height, img, id );
 		this.dirX = 1;
 		this.zombieState = STATE.ROAMING;
 		this.velocity = 2;
 		this.acc = 2;
 		this.chaseLine = [createVector(0, 0),createVector(0, 0)];
+		this.initX = initX;
+		this.initY = initY;
+		this.vecRoam = createVector(0, 0);
+		this.life = 3;
 		
+	}
+	
+	takeDmg()
+	{
+		this.life--;
+		if(this.life == 0)
+			this.die();
+	}
+	
+	revive()
+	{
+		this.zombieState = STATE.ROAMING;
+		this.img = zombie;
+		this.width = 36;
+		this.height = 70;
+		this.life = 3;
+	}
+	
+	die()
+	{
+		this.zombieState = STATE.DEAD;
+		this.img = dwight_dead;
+		this.y += 50;
+		this.width = 70;
+		this.height = 14;
 	}
 	
 	static s_setZombiePosition()
@@ -404,10 +447,35 @@ class Zombie extends Character{
 		}
 	}
 	
+	draw()
+	{
+		super.draw();
+		this.drawChaseLine();
+		this.drawLife();
+	}
+	
+	drawLife()
+	{
+		push();
+		textSize(10);
+		fill(0,0,0);
+		text('HP : ' + this.life, this.x+camera.offSetX, this.y+camera.offSetY-10);
+		pop();
+	}
+	
+	setZombieInitPosition()
+	{
+		this.zombieState = STATE.ROAMING;
+		this.x = this.initX;
+		this.y = this.initY;
+		this.vecRoam = createVector(random(0,800), random(0,600));
+		this.revive();
+	}
+	
 	update()
 	{
 		this.move();
-		if(dwight.alive && this.zombieState != STATE.IDLE)
+		if(dwight.alive && (this.zombieState == STATE.CHASING || this.zombieState == STATE.ROAMING) )
 			this.detectPlayer(this.x + 36/2, dwight.x + 36/2, this.y+ 70/2, dwight.y+ 70/2);
 	}
 	
@@ -426,6 +494,9 @@ class Zombie extends Character{
 			  case STATE.IDLE:
 			  break;
 			  
+			  case STATE.DEAD:
+			  break;
+			  
 			  default:
 			  break;
 		  }
@@ -435,13 +506,58 @@ class Zombie extends Character{
 	
 	roam()
 	{
-		if(this.handleCollision(this.x + this.velocity*this.dirX, this.y))
+		/*if(this.handleCollision(this.x + this.velocity*this.dirX, this.y))
 		{
 			this.x+=this.velocity*this.dirX;
 			map.resort(this);
 		}
 		else
-			this.dirX*=-1;
+			this.dirX*=-1;*/
+		let v1 = createVector(this.x + 36/2 + camera.offSetX, this.y + 70/2 + camera.offSetY);
+		//let v2 = p5.Vector.random2D();
+		let v2 = createVector(this.vecRoam.x+camera.offSetX, this.vecRoam.y+camera.offSetY)
+		//v2.x+=camera.offSetX;
+		//v2.y+=camera.offSetY;
+		 this.chaseLine[0].set(v1.x, v1.y);
+		  this.chaseLine[1].set(v2.x, v2.y);
+		//console.log("v2 ", v2);
+		
+		let distance = p5.Vector.dist(v1, v2);
+		
+		if(distance < 1)
+		{
+			//console.log("arrivé");
+			this.vecRoam = createVector(random(0,800), random(0,600));
+			v2 = createVector(this.vecRoam.x+camera.offSetX, this.vecRoam.y+camera.offSetY)
+		}
+		
+		let dx = v1.x - v2.x;
+		  let dy = v1.y - v2.y;
+		  let angle = atan2(dy, dx)
+		  
+		  let xVelocity = this.velocity * cos(angle);
+		  let yVelocity = this.velocity * sin(angle);
+		  if(this.handleCollision(this.x - xVelocity, this.y))
+		  {
+			this.x-=xVelocity;
+			map.resort(this);
+		  }
+		  else
+		  {
+			  this.vecRoam = createVector(random(0,800), random(0,600));
+			  //console.log(" vecroam ", this.vecRoam);
+		  }
+		  if(this.handleCollision(this.x, this.y - yVelocity))
+		  {
+			this.y-=yVelocity;
+			map.resort(this);
+		  }
+		  else
+		  {
+			   this.vecRoam = createVector(random(0,800), random(0,600));
+			  //console.log(" vecroam ", this.vecRoam);
+		  }
+		  
 	}
 	
 	chase()
@@ -504,7 +620,7 @@ class Zombie extends Character{
 	detectPlayer(x1,x2,y1,y2)
 	{
 		var dist = Math.sqrt( Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2) );
-		if(dist < 200)
+		if(dist < 1000)
 		{
 			this.zombieState = STATE.CHASING;
 		}
@@ -513,7 +629,7 @@ class Zombie extends Character{
 			for(let i = 0; i < 2; i++)
 				enemies[i].zombieState = STATE.ROAMING;
 			gameState = GAME_OVER;
-			camera.lookAtObj(this);
+			//camera.lookAtObj(this);
 			dwight.alive = false;
 		}
 	}

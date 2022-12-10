@@ -1,6 +1,7 @@
 let tile;
 let fr = 30;
 let dwight;
+let weapon;
 
 let windowWidth = 800
 let windowHeight = 600;
@@ -71,10 +72,13 @@ function preload() {
   cleaning_platform_up = loadImage('assets/img/cleaning_platform_up.png');
   wc_floor = loadImage('assets/img/wc_floor.png');
   dwight = new Dwight(500,200,36,70,loadImage('assets/img/dwight.png'),1);
+  weapon = new Weapon(500,200,20,42,loadImage('assets/img/axe.png'));
   font = loadFont('assets/font/joystix.ttf');
   dwight_dead = loadImage('assets/img/dwight_dead.png');
+  zombie = loadImage('assets/img/zombie.png');
   enemies.push(new Zombie(300,200,36,70,loadImage('assets/img/zombie.png'),2));
   enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),3));
+  enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),4));
   File.load();
   File.loadAssets();
 }
@@ -121,6 +125,25 @@ function setup() {
   map_array2.push(map_array_5);
   
   map = new Map(2,0, map_array2,img_array,z_index_map);
+  
+  
+  map.floors[0] = new Floor(0,3);
+  map.floors[0].enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),100,400,500));
+  map.floors[0].enemies.push(new Zombie(500,600,36,70,loadImage('assets/img/zombie.png'),101,300,600));
+  map.floors[0].enemies.push(new Zombie(500,700,36,70,loadImage('assets/img/zombie.png'),102,500,700));
+  map.floors[1] = new Floor(1,1);
+  map.floors[1].enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),100,500,500));
+  map.floors[2] = new Floor(2,1);
+  map.floors[2].enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),100,500,500));
+  map.floors[3] = new Floor(3,1);
+  map.floors[3].enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),100,500,500));
+  map.floors[4] = new Floor(4,1);
+  map.floors[4].enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),100,500,500));
+  map.floors[5] = new Floor(5,2);
+  map.floors[5].enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),100,500,500));
+  map.floors[5].enemies.push(new Zombie(500,600,36,70,loadImage('assets/img/zombie.png'),101,500,600));
+  
+  //console.log("map.floors[map.current_floor] ", map.floors[map.current_floor]);
   
   for(let i = 0; i < 6;i++)
   {
@@ -198,6 +221,8 @@ function setup() {
   
   editor = new Editor();
   
+  dwight.equipWeapon(weapon);
+  
   sel.elt.addEventListener("click", function(event){
   event.preventDefault()
 });
@@ -224,25 +249,6 @@ function updateTile()
 {
 	let i = floor((this.x - camera.offSetX - cnv.elt.getBoundingClientRect().x)/100)
 	let j = floor((this.y - camera.offSetY - cnv.elt.getBoundingClientRect().y)/100)
-	console.log("i ", i);
-	console.log("j ", j);
-	//let k = (j*10+i);
-	//inp2[k].show();
-	/*let k = 0;
-	for(let p = 0; p < i*10; p++)
-	{
-		for(let m = 0; m < j; m++)
-		{
-			k++;
-		}
-	}*/
-	//console.log("k =i*10+j", (j*10+i));
-	
-	//console.log("this ", this);
-	//console.log(this.x - camera.offSetX - cnv.elt.getBoundingClientRect().x);
-	//console.log(this.y - camera.offSetY - cnv.elt.getBoundingClientRect().y);
-	//inp2[k].show();
-	//map.map_array[map.current_floor][0][0].decalY;
 	
 	if(tilePropSel == 0)
 	{
@@ -252,10 +258,8 @@ function updateTile()
 	}
 	else if(tilePropSel == 1)
 	{
-		//console.log("map.map_array[map.current_floor][j][i].hitboxX1 ", map.map_array[map.current_floor][j][i].hitboxX);
 		let decal = prompt("hitboxX", map.map_array[map.current_floor][j][i].hitboxX);
 		map.map_array[map.current_floor][j][i].hitboxX = parseInt(decal);
-		//console.log("map.map_array[map.current_floor][j][i].hitboxX2 ", map.map_array[map.current_floor][j][i]);
 	}
 	else if(tilePropSel == 2)
 	{
@@ -276,12 +280,10 @@ function updateTile()
 
 function updateTile2()
 {
-	console.log(this.x - camera.offSetX - cnv.elt.getBoundingClientRect().x);
-	console.log(this.y - camera.offSetY - cnv.elt.getBoundingClientRect().y);
+	
 	let i = floor((this.x - camera.offSetX - cnv.elt.getBoundingClientRect().x)/100)
 	let j = floor((this.y - camera.offSetY - cnv.elt.getBoundingClientRect().y)/100)
-	console.log(map.map_array[map.current_floor][i][j].decalY);
-	console.log(this.value());
+	
 	map.map_array[map.current_floor][j][i].decalY = this.value();
 }
 
@@ -350,12 +352,13 @@ function setStartingPoint()
 {
 	dwight.x = 100;
 	dwight.y = 200;
-	Zombie.s_setZombiePosition();
+	//Zombie.s_setZombiePosition();
 	map.current_floor = 3;
 	map.cleaning_platform_pos = 1;
 	map.generatorOn = false;
 	start = new Date().getTime();
 	scale = 1;
+	map.floors[map.current_floor].setZombiesPosition();
 }
 
 let end = 0;
@@ -409,10 +412,12 @@ function draw() {
 	  dwight.move();
 	  if(gameState == LVL_TRANSITION)
 		  break;
-	  for(let i = 0; i < 2; i++)
+	  for(let i = 0; i < map.floors[map.current_floor].enemyNumber; i++)
 	  {
-		  enemies[i].update();
+		  map.floors[map.current_floor].enemies[i].update();
 	  }
+	  //map.floors[map.current_floor].enemies[0].update();
+	  //map.floors[map.current_floor].enemies[1].update();
 	  map.draw();
 	  if(end == 1)
 		  gameState = END;
@@ -428,10 +433,10 @@ function draw() {
 	  
 	  case GAME_OVER: 
 	  
-	  for(let i = 0; i < 2; i++)
+	  /*for(let i = 0; i < 2; i++)
 	  {
 		enemies[i].update();
-	  }
+	  }*/
 	  map.draw();
 	  image(dwight_dead, dwight.x + camera.offSetX, dwight.y + 70 + camera.offSetY, dwight_dead.width, dwight_dead.height);
 	  Menu.s_drawGameOver();

@@ -187,12 +187,12 @@ class DialogBox {
 		{
 			map.generatorOn = true;
 			gameState = PLAY;
-			message.set(0,0,"GENERATOR IS NOW ON !!!",true)
+			message.set(0,0,"GENERATOR IS NOW ON !!!\nTHE ELEVATOR IS NOW WORKING !!!",true)
 			console.log("map.generatorOn ", map.generatorOn);
 		}
 		if(keys[32] && selected == 1)
 		{
-			message.set(0,0,"GENERATOR IS NOW OFF !!!",true)
+			message.set(0,0,"GENERATOR IS NOW OFF !!!\nTHE ELEVATOR IS NOT WORKING ANYYMORE !!!",true)
 			map.generatorOn = false;
 			gameState = PLAY;
 			
@@ -259,8 +259,11 @@ class Menu {
 		}
 		if(keys[32] && selected == 0)
 		{
+			keys[32] = 0;
 			gameState = PLAY;
 			showEditorButtons(false)
+			dwight.init();
+			
 		}
 		if(keys[32] && selected == 1)
 		{
