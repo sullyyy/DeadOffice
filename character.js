@@ -202,7 +202,7 @@
 				{
 					map.travelTo(5,4,14)
 					end = 1;
-					scale = 0.5;
+					game_scale = 0.5;
 					
 					camera.lookAt(200,700);
 					let now = new Date().getTime();
@@ -295,7 +295,7 @@
 	//drawing character
 	draw()
 	{
-		image(this.img, this.x*scale + camera.offSetX*scale, this.y*scale + camera.offSetY*scale, this.width*scale, this.height*scale);
+		image(this.img, this.x*game_scale + camera.offSetX*game_scale, this.y*game_scale + camera.offSetY*game_scale, this.width*game_scale, this.height*game_scale);
 		
 	}
 	
@@ -308,6 +308,8 @@ class Dwight extends Character{
 		this.acc = 7;
 		this.alive = true;
 		this.weapon;
+		this.faceX = 1;
+		this.faceY = 0;
 		
 	}
 	
@@ -327,23 +329,47 @@ class Dwight extends Character{
 	{
 		if(keys[32])
 		{
-			this.weapon.swing();
+			if(this.weapon instanceof Axe) 
+				this.weapon.swing();
+			if(this.weapon instanceof Revolver) 
+				this.weapon.shoot();
 			keys[32] = 0;
+		}
+		if(keys[82])
+		{
+			if(this.weapon instanceof Revolver) 
+				this.weapon.reload();
+			keys[82] = 0;
+		}
+		if(keys[CONTROL])
+		{
+			if(this.weapon instanceof Revolver) 
+				this.weapon = axe;
+			else if(this.weapon instanceof Axe) 
+				this.weapon = revolver; 
+			this.weapon.update();
+			keys[CONTROL] = 0;
 		}
 		if(keys[LEFT_ARROW])
 		{
+			this.faceX = -1;
+			this.faceY = 0;
 			if(this.handleCollision(dwight.x - dwight.acc, dwight.y))
 			{
+				
 				dwight.x-= dwight.acc;
-				this.weapon.update();
 				camera.update();
+				this.weapon.update();
 				map.resort(this);
 			}
 		}
 		if(keys[RIGHT_ARROW])
 		{
+			this.faceX = 1;
+			this.faceY = 0;
 			if(this.handleCollision(dwight.x  + dwight.acc, dwight.y))
 			{
+				
 				camera.offSetX -= dwight.acc;
 				dwight.x+=dwight.acc;
 				this.weapon.update();
@@ -353,21 +379,27 @@ class Dwight extends Character{
 		}
 		if(keys[UP_ARROW])
 		{
+			this.faceX = 0;
+			this.faceY = -1;
 			if(this.handleCollision(dwight.x, dwight.y - dwight.acc))
 			{
 				dwight.y-=dwight.acc;
-				this.weapon.update();
+				
 				camera.update();
+				this.weapon.update();
 				map.resort(this);
 			}
 		}
 		if(keys[DOWN_ARROW])
 		{
+			this.faceX = 0;
+			this.faceY = 1;
 			if(this.handleCollision(dwight.x, dwight.y + dwight.acc))
 			{
 				dwight.y+=dwight.acc;
-				this.weapon.update();
+				
 				camera.update();
+				this.weapon.update();
 				map.resort(this);
 			}
 		}
@@ -450,7 +482,7 @@ class Zombie extends Character{
 	draw()
 	{
 		super.draw();
-		this.drawChaseLine();
+		//this.drawChaseLine();
 		this.drawLife();
 	}
 	

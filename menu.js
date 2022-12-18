@@ -333,8 +333,14 @@ class Menu {
 		text('HOW TO PLAY', windowWidth/2, windowHeight/4);
 		textSize(20);
 		text('Move = ← → ↑ ↓', windowWidth/2, (windowHeight/4)+100);
-		text('Action = Space', windowWidth/2, (windowHeight/4)+120);
-		text('Cancel/Menu = Esc', windowWidth/2, (windowHeight/4)+140);
+		text('Action/Attack = Space', windowWidth/2, (windowHeight/4)+120);
+		text('Switch weapon = Ctrl', windowWidth/2, (windowHeight/4)+140);
+		text('Reload weapon = R', windowWidth/2, (windowHeight/4)+160);
+		text('Cancel/Menu = Esc', windowWidth/2, (windowHeight/4)+180);
+		
+		textSize(30);
+		text('ESCAPE THE BUILDING !', windowWidth/2, (windowHeight/4)+250);
+		text('DONT LET THE ZOMBIES TOUCH YOU !', windowWidth/2, (windowHeight/4)+280);
 	}
 	
 	static s_drawGameOver()

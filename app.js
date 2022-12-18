@@ -1,7 +1,8 @@
 let tile;
 let fr = 30;
 let dwight;
-let weapon;
+let axe;
+let revolver;
 
 let windowWidth = 800
 let windowHeight = 600;
@@ -51,7 +52,7 @@ let img_array = [];
 let last = new Date().getTime();
 let start = new Date().getTime();
 
-let scale = 1.0;
+let game_scale = 1.0;
 let time;
 
 class cpl {
@@ -68,11 +69,13 @@ function preload() {
   data_1 = loadImage('assets/img/data_1.png');
   data_2 = loadImage('assets/img/data_2.png');
   data_3 = loadImage('assets/img/data_3.png');
+  bullet_img = loadImage('assets/img/bullet.png');
   cleaning_platform = loadImage('assets/img/cleaning_platform.png');
   cleaning_platform_up = loadImage('assets/img/cleaning_platform_up.png');
   wc_floor = loadImage('assets/img/wc_floor.png');
   dwight = new Dwight(500,200,36,70,loadImage('assets/img/dwight.png'),1);
-  weapon = new Weapon(500,200,20,42,loadImage('assets/img/axe.png'));
+  axe = new Axe(500,200,20,42,loadImage('assets/img/axe.png'));
+  revolver = new Revolver(500,200,20,13,loadImage('assets/img/revolver.png'));
   font = loadFont('assets/font/joystix.ttf');
   dwight_dead = loadImage('assets/img/dwight_dead.png');
   zombie = loadImage('assets/img/zombie.png');
@@ -221,7 +224,8 @@ function setup() {
   
   editor = new Editor();
   
-  dwight.equipWeapon(weapon);
+  //dwight.equipWeapon(revolver);
+  dwight.equipWeapon(axe);
   
   sel.elt.addEventListener("click", function(event){
   event.preventDefault()
@@ -357,7 +361,7 @@ function setStartingPoint()
 	map.cleaning_platform_pos = 1;
 	map.generatorOn = false;
 	start = new Date().getTime();
-	scale = 1;
+	game_scale = 1;
 	map.floors[map.current_floor].setZombiesPosition();
 }
 

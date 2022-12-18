@@ -133,7 +133,7 @@ class Map {
 			fill(149,139,89);
 		if(this.current_floor == 5)
 			fill(173,173,173);
-		rect(camera.offSetX*scale,camera.offSetY*scale+100,1000*scale,900*scale)
+		rect(camera.offSetX*game_scale,camera.offSetY*game_scale+100,1000*game_scale,900*game_scale)
 		
 		if(this.current_floor == 3 || this.current_floor == 1)
 		{
@@ -146,7 +146,7 @@ class Map {
 		for(let k = 0; k < this.z_index_map[this.current_floor].length; k++)
 		{
 			//checks if tile is within camera viewport
-			if(this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale > -100 && this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale > -100 && this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale < camera.width + 100 && this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale < camera.height + 100)
+			if(this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale > -100 && this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale > -100 && this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale < camera.width + 100 && this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale < camera.height + 100)
 			{
 				//checks if background tile
 				if(this.z_index_map[this.current_floor][k].bckgrnd == true)
@@ -155,14 +155,14 @@ class Map {
 					let i = this.z_index_map[this.current_floor][k].i;
 					let j = this.z_index_map[this.current_floor][k].j;
 					let img_array_id = this.map_array[this.current_floor][i][j].data_id;
-					image(this.img_array[img_array_id], this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale,this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale+this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].decalY*scale,100*scale,100*scale,this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].draw_id*100,0,100,100)					
+					image(this.img_array[img_array_id], this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale,this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale+this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].decalY*game_scale,100*game_scale,100*game_scale,this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].draw_id*100,0,100,100)					
 					
 					
 					//draw hitbox
 					if(gameState == EDITOR)
 					{
-						let x = this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX+this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxX
-						let y = this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY+this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxY
+						let x = this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX+this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxX
+						let y = this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY+this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxY
 						let w = this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxW
 						let h = this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxH
 						rect(x,y,w,h)
@@ -189,9 +189,9 @@ class Map {
 				if(this.z_index_map[this.current_floor][k].id == 4)
 				{
 					if(this.cleaning_platform_pos == 1)
-						image(cleaning_platform, this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale, this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale, 200*scale, 420*scale,0,0,200,420);
+						image(cleaning_platform, this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale, this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale, 200*game_scale, 420*game_scale,0,0,200,420);
 					else
-						image(cleaning_platform_up, this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale, this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale, 200*scale, 420*scale,0,0,200,420);
+						image(cleaning_platform_up, this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale, this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale, 200*game_scale, 420*game_scale,0,0,200,420);
 				}
 				if(this.z_index_map[this.current_floor][k].id >= 100)
 				{
@@ -315,10 +315,10 @@ class Map {
 		if(this.current_floor == 5)
 		{
 			//paints floor
-			rect(camera.offSetX*scale,camera.offSetY*scale+100*scale,1000*scale,1000*scale)
+			rect(camera.offSetX*game_scale,camera.offSetY*game_scale+100*game_scale,1000*game_scale,1000*game_scale)
 			//paints street
 			fill(63,72,204);
-			rect(camera.offSetX*scale-500,camera.offSetY*scale+1400*scale,2000,1000)
+			rect(camera.offSetX*game_scale-500,camera.offSetY*game_scale+1400*game_scale,2000,1000)
 		}
 		else
 			rect(camera.offSetX,camera.offSetY,1000,1000)
@@ -326,16 +326,16 @@ class Map {
 		for(let k = 0; k < this.z_index_map[this.current_floor].length; k++)
 		{
 			//checks if tile is within camera viewport
-			if(this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale > -100 && this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale > -100 && this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale < camera.width + 100 && this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale < camera.height + 100)
+			if(this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale > -100 && this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale > -100 && this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale < camera.width + 100 && this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale < camera.height + 100)
 			{
 				//checks if background tile
 				if(this.z_index_map[this.current_floor][k].bckgrnd == true)
 				{
 					//checks if tile is positionable
 					if(map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j] instanceof PositionableTile)
-						image(this.img_array[this.current_floor], this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale, this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale+map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].decalY*scale, 100*scale, 100*scale,map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].id*100,0,100,100);
+						image(this.img_array[this.current_floor], this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale, this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale+map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].decalY*game_scale, 100*game_scale, 100*game_scale,map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].id*100,0,100,100);
 					else
-						image(this.img_array[this.current_floor], (this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale), (this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale), 100*scale, 100*scale,map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].id*100,0,100,100);
+						image(this.img_array[this.current_floor], (this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale), (this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale), 100*game_scale, 100*game_scale,map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].id*100,0,100,100);
 						
 				}
 				
@@ -354,9 +354,9 @@ class Map {
 				if(this.z_index_map[this.current_floor][k].id == 4)
 				{
 					if(this.cleaning_platform_pos == 1)
-						image(cleaning_platform, this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale, this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale, 200*scale, 420*scale,0,0,200,420);
+						image(cleaning_platform, this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale, this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale, 200*game_scale, 420*game_scale,0,0,200,420);
 					else
-						image(cleaning_platform_up, this.z_index_map[this.current_floor][k].j*100*scale+camera.offSetX*scale, this.z_index_map[this.current_floor][k].i*100*scale+camera.offSetY*scale, 200*scale, 420*scale,0,0,200,420);
+						image(cleaning_platform_up, this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale, this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale, 200*game_scale, 420*game_scale,0,0,200,420);
 				}
 				if(this.z_index_map[this.current_floor][k].id == 2)
 				{
