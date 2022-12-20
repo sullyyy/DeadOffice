@@ -381,6 +381,7 @@ function draw() {
   
   switch (gameState) {
 	  
+	  
 	  case EDITOR:
 	  map.draw();
 	  map.draw_assets_list();

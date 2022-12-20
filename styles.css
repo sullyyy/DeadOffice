@@ -25,3 +25,7 @@ border: 1px solid black;
     padding-right: 5px;
     border-radius: 3px;
 }
+
+h1 {
+  text-shadow: 2px 2px 5px red;
+}

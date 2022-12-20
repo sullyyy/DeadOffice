@@ -317,6 +317,8 @@ class Dwight extends Character{
 		this.faceX = 1;
 		this.faceY = 0;
 		this.life = 3;
+		this.invulnerable = false;
+		this.lastInvulnerable;
 		
 	}
 	
@@ -338,9 +340,18 @@ class Dwight extends Character{
 	
 	takeDmg()
 	{
+		if(this.invulnerable)
+			return;
 		this.life--;
 		if(this.life == 0)
+		{
 			this.die();
+			return;
+		}
+		this.lastInvulnerable = new Date().getTime();
+		this.invulnerable = true;
+		
+		
 	}
 	
 	equipWeapon(weapon)
@@ -357,8 +368,18 @@ class Dwight extends Character{
 		map.resort(this);
 	}
 	
+	update_invulnerable()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.lastInvulnerable;
+		if (delta >= 1000) {
+			this.invulnerable = false;
+		}
+	}
+	
 	move()
 	{
+		this.update_invulnerable();
 		if(keys[32])
 		{
 			if(this.weapon instanceof Axe) 
@@ -470,6 +491,8 @@ class Dwight extends Character{
 	
 	walkOverVomit()
 	{
+		if(this.invulnerable)
+			return;
 		if(map.floors[0].boss.state == STATE.VOMITING)
 			return;
 		for(let i = 0; i < map.floors[0].boss.vomits.length; i++)
@@ -477,7 +500,10 @@ class Dwight extends Character{
 			if(this.checkVomit( map.floors[0].boss.vomits[i].x,map.floors[0].boss.vomits[i].y))
 			{
 				//this.takeDmg();
+				
 				this.life = 1;
+				this.lastInvulnerable = new Date().getTime();
+				this.invulnerable = true;
 				break;
 			}
 		}
@@ -490,6 +516,14 @@ class Dwight extends Character{
 	
 	draw()
 	{
+		if(this.invulnerable)
+		{
+			let now = new Date().getTime();
+			let delta = now - this.lastInvulnerable;
+			if ((delta >= 0 && delta < 100) || (delta >= 300 && delta < 400) || (delta >= 600 && delta < 700) || (delta >= 900 && delta < 1000)) {
+				return;
+			}
+		}
 		super.draw();
 		this.drawLife();
 	}
@@ -522,7 +556,8 @@ function keyReleased() {
 	CHASING: 1,
 	IDLE: 2,
 	DEAD: 3,
-	VOMITING: 4
+	VOMITING: 4,
+	STUNNED: 5
  }
  
  class Vomit_puddle{
@@ -534,6 +569,7 @@ function keyReleased() {
 		 this.draw_height = 30;
 		 this.id = id;
 		 this.img = vomit_puddle_img;
+		 this.lastStunned;
 	 }
 	 
 	 draw()
@@ -578,8 +614,21 @@ class Boss extends Character{
 	takeDmg()
 	{
 		this.life--;
+		if(this.state == STATE.VOMITING)
+			this.vomits.pop();
+		this.state = STATE.STUNNED
+		this.lastStunned = new Date().getTime();
 		if(this.life == 0)
 			this.die();
+	}
+	
+	stunned()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.lastStunned;
+		if (delta >= 100) {
+			this.state = STATE.CHASING
+		}
 	}
 	
 	vomit()
@@ -626,6 +675,10 @@ class Boss extends Character{
 			  
 			  case STATE.VOMITING:
 			  this.vomit();
+			  break;
+			  
+			  case STATE.STUNNED:
+			  this.stunned();
 			  break;
 			  
 			  default:
