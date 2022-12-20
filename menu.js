@@ -252,17 +252,20 @@ class Menu {
 		if(keys[UP_ARROW] && selected != 0)
 		{
 			selected--;
+			keys[UP_ARROW] = 0;
 		}
 		if(keys[DOWN_ARROW] && selected != 2)
 		{
 			selected++;
+			keys[DOWN_ARROW] = 0;
 		}
 		if(keys[32] && selected == 0)
 		{
 			keys[32] = 0;
 			gameState = PLAY;
 			showEditorButtons(false)
-			dwight.init();
+			//dwight.init();
+			setStartingPoint();
 			
 		}
 		if(keys[32] && selected == 1)

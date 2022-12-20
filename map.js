@@ -17,11 +17,12 @@ class Editor {
 }
 
 class Floor {
-	constructor (floor,enemyNumber)
+	constructor (floor,enemyNumber,boss)
 	{
 		this.floor = floor;
 		this.enemyNumber = enemyNumber;
 		this.enemies = [];
+		this.boss = boss;
 	}
 	
 	setZombiesPosition()
@@ -80,6 +81,8 @@ class Map {
 		{
 			this.z_index_map[index].push(new Tile_To_Draw(floor(this.floors[index].enemies[i].initX/100),floor(this.floors[index].enemies[i].initY/100),this.floors[index].enemies[i].y + this.floors[index].enemies[i].height,false,100+i));
 		}
+		if(map.floors[index].boss != null)
+			this.z_index_map[index].push(new Tile_To_Draw(5,5,this.floors[index].boss.y + this.floors[index].boss.height,false,6));
 		if(index == 5)
 		{
 			this.z_index_map[index].push(new Tile_To_Draw(9,1,1800,false,4));
@@ -168,14 +171,31 @@ class Map {
 						rect(x,y,w,h)
 					}
 					
+					
+					
+					
 				}
 				
 			}
+			
 			if(gameState == EDITOR)
 				continue;
+			if(this.z_index_map[this.current_floor][k].id >= 200)
+			{
+				//console.log("allo ?");
+				
+				let ind = this.z_index_map[this.current_floor][k].id;
+				//console.log("ind ", ind-100);
+				//console.log("this.floors[this.current_floor].enemies ", this.floors[this.current_floor].enemies);
+				this.floors[this.current_floor].boss.vomits[ind - 200].draw();
+			}
 			//checks if moving tile
 			if(this.z_index_map[this.current_floor][k].bckgrnd == false)
 			{
+				if(this.z_index_map[this.current_floor][k].id == 6)
+				{
+					this.floors[this.current_floor].boss.draw();
+				}
 				//draws dwight
 				if(this.z_index_map[this.current_floor][k].id == 1)
 				{
@@ -193,7 +213,8 @@ class Map {
 					else
 						image(cleaning_platform_up, this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale, this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale, 200*game_scale, 420*game_scale,0,0,200,420);
 				}
-				if(this.z_index_map[this.current_floor][k].id >= 100)
+				
+				if(this.z_index_map[this.current_floor][k].id >= 100 && this.z_index_map[this.current_floor][k].id < 200)
 				{
 					
 					let ind = this.z_index_map[this.current_floor][k].id;
@@ -201,6 +222,7 @@ class Map {
 					//console.log("this.floors[this.current_floor].enemies ", this.floors[this.current_floor].enemies);
 					this.floors[this.current_floor].enemies[ind-100].draw();
 				}
+				
 				//if(this.z_index_map[this.current_floor][k].id == 2)
 				//{
 					//enemies[0].draw();

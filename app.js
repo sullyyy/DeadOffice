@@ -78,10 +78,14 @@ function preload() {
   revolver = new Revolver(500,200,20,13,loadImage('assets/img/revolver.png'));
   font = loadFont('assets/font/joystix.ttf');
   dwight_dead = loadImage('assets/img/dwight_dead.png');
+  basement_boss = loadImage('assets/img/basement_boss.png')
+  boss_dead = loadImage('assets/img/basement_boss_dead.png');
   zombie = loadImage('assets/img/zombie.png');
+  dwight_img = loadImage('assets/img/dwight.png');
   enemies.push(new Zombie(300,200,36,70,loadImage('assets/img/zombie.png'),2));
   enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),3));
   enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),4));
+  vomit_puddle_img = loadImage('assets/img/vomit_puddle.png');
   File.load();
   File.loadAssets();
 }
@@ -130,7 +134,7 @@ function setup() {
   map = new Map(2,0, map_array2,img_array,z_index_map);
   
   
-  map.floors[0] = new Floor(0,3);
+  map.floors[0] = new Floor(0,3,new Boss(500,500,40,80,loadImage('assets/img/basement_boss.png'),6));
   map.floors[0].enemies.push(new Zombie(500,500,36,70,loadImage('assets/img/zombie.png'),100,400,500));
   map.floors[0].enemies.push(new Zombie(500,600,36,70,loadImage('assets/img/zombie.png'),101,300,600));
   map.floors[0].enemies.push(new Zombie(500,700,36,70,loadImage('assets/img/zombie.png'),102,500,700));
@@ -235,7 +239,7 @@ sel2.elt.addEventListener("click", function(event){
   event.preventDefault()
 });
 
-  Zombie.s_setState(STATE.IDLE)
+  Zombie.s_setState(STATE.ROAMING)
   showEditorButtons(false)
 
 }
@@ -357,12 +361,18 @@ function setStartingPoint()
 	dwight.x = 100;
 	dwight.y = 200;
 	//Zombie.s_setZombiePosition();
-	map.current_floor = 3;
+	map.current_floor = 0;
 	map.cleaning_platform_pos = 1;
 	map.generatorOn = false;
 	start = new Date().getTime();
 	game_scale = 1;
 	map.floors[map.current_floor].setZombiesPosition();
+	dwight.revive();
+	map.floors[0].boss.revive();
+	//camera.lookAtObj(dwight);
+	//camera.update();
+	
+	dwight.init();
 }
 
 let end = 0;
@@ -384,10 +394,10 @@ function draw() {
 	  end = 0;
 	  Menu.s_draw();
 	  Menu.s_select_option();
-	  setStartingPoint();
-	  camera.lookAtObj(dwight);
+	  //setStartingPoint();
+	  /*camera.lookAtObj(dwight);
 	  camera.update();
-	  dwight.alive = true;
+	  dwight.alive = true;*/
 	  break;
 	  
 	  case HOW_TO_PLAY:
@@ -413,6 +423,7 @@ function draw() {
 	  break;
 	  
 	  case PLAY:
+	  
 	  dwight.move();
 	  if(gameState == LVL_TRANSITION)
 		  break;
@@ -420,6 +431,8 @@ function draw() {
 	  {
 		  map.floors[map.current_floor].enemies[i].update();
 	  }
+	  if(map.current_floor == 0)
+		map.floors[map.current_floor].boss.update();
 	  //map.floors[map.current_floor].enemies[0].update();
 	  //map.floors[map.current_floor].enemies[1].update();
 	  map.draw();

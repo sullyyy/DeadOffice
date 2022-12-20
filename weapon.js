@@ -96,6 +96,20 @@ class Axe extends Weapon{
 				return true;
 			}
 		}
+		if(map.current_floor != 0)
+			return;
+		if(this.checkCollision(x,y,map.floors[map.current_floor].boss.x+camera.offSetX,map.floors[map.current_floor].boss.y+camera.offSetY))
+			{
+				
+				if(map.floors[map.current_floor].boss.state != STATE.DEAD)
+				{
+					if(this.cutting)
+						map.floors[map.current_floor].boss.takeDmg();
+						
+					
+				}
+				return true;
+			}
 		return false;
 	}
 }
@@ -224,7 +238,24 @@ class Revolver extends Weapon {
 				}
 				return true;
 			}
+			
 		}
+		if(map.current_floor != 0)
+			return;
+		if(this.checkCollision(obj.x+camera.offSetX,obj.y+camera.offSetY,map.floors[map.current_floor].boss.x+camera.offSetX,map.floors[map.current_floor].boss.y+camera.offSetY))
+			{
+				
+				if(map.floors[map.current_floor].boss.state != STATE.DEAD)
+				{
+					if(obj.hurting)
+					{
+						map.floors[map.current_floor].boss.takeDmg();
+						obj.hurting = false;
+						obj.going = false;
+					}
+				}
+				return true;
+			}
 		return false;
 	}
 	
