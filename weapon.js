@@ -141,9 +141,6 @@ class Bullet {
 	{
 		if(this.going)
 		{
-			//fill(0,0,0);
-			//rect(this.x+camera.offSetX,this.y+camera.offSetY,this.w, this.h);
-			//image(this.img, this.x+camera.offSetX,this.y+camera.offSetY,this.w, this.h);
 			if(this.dirY == 0)
 				image(this.img, this.x+camera.offSetX,this.y+camera.offSetY,this.w, this.h);
 			else
@@ -152,9 +149,7 @@ class Bullet {
 			
 				angleMode(DEGREES);
 				translate(this.x+camera.offSetX+5,this.y+camera.offSetY);
-				//stroke(255,0,0);
 				rotate(90);
-				//rect(-(this.w/2),-this.h,this.w,this.h)
 				image(this.img, 0, 0, this.w, this.h);
 				
 				pop();
@@ -185,14 +180,9 @@ class Revolver extends Weapon {
 		let x2w = x2+map.map_array[map.current_floor][j][i].hitboxW
 		let y2h = y2+map.map_array[map.current_floor][j][i].hitboxH
 		fill(255,0,0);
-		//stroke(x2+camera.offSetX,y2+camera.offSetY,x2w,y2h);
 		rect(x2+camera.offSetX,y2+camera.offSetY,x2w-x2,y2h-y2);
-		//rect(x2,y2,x2w,y2h);
-		//console.log("x2 ; ", x2);
-		//console.log("x2w ; ", x2w);
 		if(x > x2 && x < x2w && y > y2 && y < y2h)
 		{
-			console.log("col ; ", x2);
 			return true;
 		}
 		return false;
@@ -220,15 +210,12 @@ class Revolver extends Weapon {
 
 		for(let i = 0; i < map.floors[map.current_floor].enemyNumber; i++)
 		{
-			
-			//rect(map.floors[map.current_floor].enemies[i].x+camera.offSetX,map.floors[map.current_floor].enemies[i].y+camera.offSetY,36,70);
-			
 			if(this.checkCollision(obj.x+camera.offSetX,obj.y+camera.offSetY,map.floors[map.current_floor].enemies[i].x+camera.offSetX,map.floors[map.current_floor].enemies[i].y+camera.offSetY))
 			{
 				
 				if(map.floors[map.current_floor].enemies[i].zombieState != STATE.DEAD)
 				{
-					//console.log("obj ", obj);
+					
 					if(obj.hurting)
 					{
 						map.floors[map.current_floor].enemies[i].takeDmg();

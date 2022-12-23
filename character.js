@@ -362,6 +362,7 @@ class Dwight extends Character{
 	init()
 	{
 		dwight.alive = true;
+		dwight.equipWeapon(axe);
 		this.weapon.update();
 		camera.lookAtObj(this);
 		camera.update();
@@ -495,12 +496,12 @@ class Dwight extends Character{
 			return;
 		if(map.floors[0].boss.state == STATE.VOMITING)
 			return;
+		if(map.current_floor != 0)
+			return;
 		for(let i = 0; i < map.floors[0].boss.vomits.length; i++)
 		{
 			if(this.checkVomit( map.floors[0].boss.vomits[i].x,map.floors[0].boss.vomits[i].y))
 			{
-				//this.takeDmg();
-				
 				this.life = 1;
 				this.lastInvulnerable = new Date().getTime();
 				this.invulnerable = true;
@@ -520,7 +521,16 @@ class Dwight extends Character{
 		{
 			let now = new Date().getTime();
 			let delta = now - this.lastInvulnerable;
-			if ((delta >= 0 && delta < 100) || (delta >= 300 && delta < 400) || (delta >= 600 && delta < 700) || (delta >= 900 && delta < 1000)) {
+			if(this.invulnerable && delta > 0 && delta < 50)
+			{
+				push();
+				tint(255,0,0,255);
+				super.draw();
+				this.drawLife();
+				pop();
+				return;
+			}
+			if ((delta >= 50 && delta < 100) || (delta >= 300 && delta < 400) || (delta >= 600 && delta < 700) || (delta >= 900 && delta < 1000)) {
 				return;
 			}
 		}
@@ -855,7 +865,7 @@ class Zombie extends Character{
 	
 	revive()
 	{
-		this.zombieState = STATE.IDLE;
+		this.zombieState = STATE.ROAMING;
 		this.img = zombie;
 		this.width = 36;
 		this.height = 70;
@@ -871,15 +881,6 @@ class Zombie extends Character{
 		this.height = 14;
 	}
 	
-	static s_setZombiePosition()
-	{
-		for(let i = 0; i < 2; i++)
-		{
-			enemies[i].x = 600-i*200;
-			enemies[i].y = 300+i*200;
-			enemies[i].zombieState = STATE.IDLE;
-		}
-	}
 	
 	draw()
 	{
@@ -942,27 +943,19 @@ class Zombie extends Character{
 	
 	roam()
 	{
-		/*if(this.handleCollision(this.x + this.velocity*this.dirX, this.y))
-		{
-			this.x+=this.velocity*this.dirX;
-			map.resort(this);
-		}
-		else
-			this.dirX*=-1;*/
 		let v1 = createVector(this.x + 36/2 + camera.offSetX, this.y + 70/2 + camera.offSetY);
-		//let v2 = p5.Vector.random2D();
+		
 		let v2 = createVector(this.vecRoam.x+camera.offSetX, this.vecRoam.y+camera.offSetY)
-		//v2.x+=camera.offSetX;
-		//v2.y+=camera.offSetY;
-		 this.chaseLine[0].set(v1.x, v1.y);
-		  this.chaseLine[1].set(v2.x, v2.y);
-		//console.log("v2 ", v2);
+		
+	    this.chaseLine[0].set(v1.x, v1.y);
+		this.chaseLine[1].set(v2.x, v2.y);
+		
 		
 		let distance = p5.Vector.dist(v1, v2);
 		
 		if(distance < 5)
 		{
-			//console.log("arrivé");
+			
 			this.vecRoam = createVector(random(0,800), random(0,600));
 			v2 = createVector(this.vecRoam.x+camera.offSetX, this.vecRoam.y+camera.offSetY)
 		}
@@ -981,7 +974,6 @@ class Zombie extends Character{
 		  else
 		  {
 			  this.vecRoam = createVector(random(0,800), random(0,600));
-			  //console.log(" vecroam ", this.vecRoam);
 		  }
 		  if(this.handleCollision(this.x, this.y - yVelocity))
 		  {
@@ -991,7 +983,6 @@ class Zombie extends Character{
 		  else
 		  {
 			   this.vecRoam = createVector(random(0,800), random(0,600));
-			  //console.log(" vecroam ", this.vecRoam);
 		  }
 		  
 	}
@@ -1036,23 +1027,6 @@ class Zombie extends Character{
 		line(this.chaseLine[0].x, this.chaseLine[0].y, this.chaseLine[1].x, this.chaseLine[1].y);
 	}
 	
-	static s_setState(state)
-	{
-		for(let i = 0; i < 2; i++)
-		{
-			enemies[i].setState(state);
-		}
-	}
-	
-	static s_drawChaseLine()
-	{
-		for(let i = 0; i < 2; i++)
-		{
-			if(enemies[i].zombieState == STATE.CHASING)
-				enemies[i].drawChaseLine();
-		}
-	}
-	
 	detectPlayer(x1,x2,y1,y2)
 	{
 		var dist = Math.sqrt( Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2) );
@@ -1062,12 +1036,7 @@ class Zombie extends Character{
 		}
 		if(dist < 30)
 		{
-			//for(let i = 0; i < 2; i++)
-				//enemies[i].zombieState = STATE.ROAMING;
 			dwight.takeDmg();
-			//gameState = GAME_OVER;
-			//camera.lookAtObj(this);
-			//dwight.alive = false;
 		}
 	}
 	

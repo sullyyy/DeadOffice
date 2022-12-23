@@ -55,7 +55,6 @@ class DialogBox {
 			
 			if(map.current_floor == 0)
 			{
-				//console.log(" map.current_floor + 1 ", map.current_floor + 1);
 				text(floorAliases[map.current_floor + 1] + ' door locked', windowWidth/2, windowHeight/4 + 20);
 			}
 			if(map.current_floor == 1)
@@ -264,7 +263,6 @@ class Menu {
 			keys[32] = 0;
 			gameState = PLAY;
 			showEditorButtons(false)
-			//dwight.init();
 			setStartingPoint();
 			
 		}
@@ -312,20 +310,6 @@ class Menu {
 		text('PLAY', windowWidth/2, windowHeight/4 + 150);
 		text('HOW TO PLAY', windowWidth/2, windowHeight/4 + 175);
 		text('EDITOR', windowWidth/2, windowHeight/4 + 200);
-		//textAlign(LEFT);
-		/*if(selected == 0)
-		{
-			text('->', 250, windowHeight/4 + 150);
-			text('PLAY', windowWidth/2, windowHeight/4 + 150);
-			text('HOW TO PLAY', windowWidth/2, windowHeight/4 + 175);
-		}
-		else
-		{
-			text('->', 250, windowHeight/4 + 175);
-			text('PLAY', windowWidth/2, windowHeight/4 + 150);
-			text('HOW TO PLAY', windowWidth/2, windowHeight/4 + 175);
-		}*/
-		//textAlign(CENTER);
 	}
 	
 	static s_drawHowToPlay()

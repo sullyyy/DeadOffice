@@ -8,14 +8,6 @@ class Tile_To_Draw {
 	}
 }
 
-class Editor {
-	constructor ()
-	{
-		this.selected = 0;
-		this.decalX = 0;
-	}
-}
-
 class Floor {
 	constructor (floor,enemyNumber,boss)
 	{
@@ -34,9 +26,52 @@ class Floor {
 	}
 }
 
+function setupMap()
+{
+  img_array.push(data_0)
+  img_array.push(data_1)
+  img_array.push(data_2)
+  img_array.push(data_3)
+  
+  map_array2.push(map_array_0);
+  map_array2.push(map_array_1);
+  map_array2.push(map_array_2);
+  map_array2.push(map_array_3);
+  map_array2.push(map_array_4);
+  map_array2.push(map_array_5);
+}
+
+function loadFloors()
+{
+  map.floors[0] = new Floor(0,3,new Boss(500,500,40,80,basement_boss,6));
+  map.floors[0].enemies.push(new Zombie(500,500,36,70,zombie,100,400,500));
+  map.floors[0].enemies.push(new Zombie(500,600,36,70,zombie,101,300,600));
+  map.floors[0].enemies.push(new Zombie(500,700,36,70,zombie,102,500,700));
+  map.floors[1] = new Floor(1,1);
+  map.floors[1].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
+  map.floors[2] = new Floor(2,1);
+  map.floors[2].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
+  map.floors[3] = new Floor(3,1);
+  map.floors[3].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
+  map.floors[4] = new Floor(4,1);
+  map.floors[4].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
+  map.floors[5] = new Floor(5,2);
+  map.floors[5].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
+  map.floors[5].enemies.push(new Zombie(500,600,36,70,zombie,101,500,600));
+  
+  for(let i = 0; i < 6;i++)
+  {
+		if(i == 5)
+		 map.sort(i,17,10);
+		else
+		 map.sort(i,10,10);
+  }
+}
+
 
 class Map {
     constructor (map_size_width,map_size_height, map_array, img_array,z_index_map) {
+		setupMap();
 		this.map_size_width = map_size_width;
 		this.map_size_height = map_size_height;
 		this.map_array = map_array;
@@ -53,6 +88,7 @@ class Map {
 		this.map_size_height = size;
 	}
 	
+	//travel to another floor
 	travelTo(floor,i,j)
 	{
 		gameState = LVL_TRANSITION;
@@ -63,7 +99,6 @@ class Map {
 		camera.update();
 		this.resort(dwight);
 		this.floors[this.current_floor].setZombiesPosition();
-		//Zombie.s_setZombiePosition();
 	}
 	
 	//sorting map array by z index
@@ -99,7 +134,6 @@ class Map {
 			{
 				this.z_index_map[index][k].z_index = this.map_array[index][i][j].hitboxY + this.map_array[index][i][j].hitboxH;
 				k++;
-				
 			}
 		}
 		this.z_index_map[index].sort(function(a, b){return a.z_index - b.z_index});
@@ -108,7 +142,6 @@ class Map {
 	//updating moving tile z index
 	modify(obj)
 	{
-		//console.log("obj ", obj);
 		let ind = this.z_index_map[this.current_floor].findIndex(x => x.id == obj.id);
 		this.z_index_map[this.current_floor][ind].i = floor(obj.x/100);
 		this.z_index_map[this.current_floor][ind].j = floor(obj.y/100);
@@ -161,7 +194,7 @@ class Map {
 					image(this.img_array[img_array_id], this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale,this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale+this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].decalY*game_scale,100*game_scale,100*game_scale,this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].draw_id*100,0,100,100)					
 					
 					
-					//draw hitbox
+					//draw hitbox if in editor
 					if(gameState == EDITOR)
 					{
 						let x = this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX+this.map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].hitboxX
@@ -171,27 +204,24 @@ class Map {
 						rect(x,y,w,h)
 					}
 					
-					
-					
-					
 				}
 				
 			}
 			
 			if(gameState == EDITOR)
 				continue;
+			
+			//draws vomit
 			if(this.z_index_map[this.current_floor][k].id >= 200)
 			{
-				//console.log("allo ?");
-				
 				let ind = this.z_index_map[this.current_floor][k].id;
-				//console.log("ind ", ind-100);
-				//console.log("this.floors[this.current_floor].enemies ", this.floors[this.current_floor].enemies);
 				this.floors[this.current_floor].boss.vomits[ind - 200].draw();
 			}
+			
 			//checks if moving tile
 			if(this.z_index_map[this.current_floor][k].bckgrnd == false)
 			{
+				//draws boss
 				if(this.z_index_map[this.current_floor][k].id == 6)
 				{
 					this.floors[this.current_floor].boss.draw();
@@ -213,189 +243,22 @@ class Map {
 					else
 						image(cleaning_platform_up, this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale, this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale, 200*game_scale, 420*game_scale,0,0,200,420);
 				}
-				
+				//draws zombies
 				if(this.z_index_map[this.current_floor][k].id >= 100 && this.z_index_map[this.current_floor][k].id < 200)
 				{
 					
 					let ind = this.z_index_map[this.current_floor][k].id;
-					//console.log("ind ", ind-100);
-					//console.log("this.floors[this.current_floor].enemies ", this.floors[this.current_floor].enemies);
 					this.floors[this.current_floor].enemies[ind-100].draw();
 				}
-				
-				//if(this.z_index_map[this.current_floor][k].id == 2)
-				//{
-					//enemies[0].draw();
-					//this.floors[this.current_floor].enemies[1].draw();
-					//this.floors[this.current_floor].enemies[0].draw();
-					/*for(let i = 0; i < map.floors[map.current_floor].enemyNumber; i++)
-					{
-						this.floors[this.current_floor].enemies[i].draw();
-					}*/
-					
-				//}*/
-				/*if(this.z_index_map[this.current_floor][k].id == 3)
-				{
-					enemies[1].draw();
-					
-				}*/
 			}
-			
 		}
+		
+		//draws other stuff
 		if(showOption)
-			this.show_option_buttons();
+			show_option_buttons();
 		Menu.s_drawCurrentFloor();
 		message.draw();
 		this.drawHitBox();
-	}
-	
-	hide_option_buttons()
-	{
-		let k = 0;
-		for(let k = 0; k < 100; k++)
-		{
-			button2[k].hide();
-		}
-	}
-	
-	show_option_buttons()
-	{
-		let k = 0;
-		for(let i = 0; i < 10; i++)
-		{
-			for(let j = 0; j < 10; j++)
-			{
-				button2[k].hide();
-				if(cnv.elt.getBoundingClientRect().x+camera.offSetX+j*100 > 100 && cnv.elt.getBoundingClientRect().x+camera.offSetX+j*100 < 1500 && cnv.elt.getBoundingClientRect().y+camera.offSetY+i*100 > 200 && cnv.elt.getBoundingClientRect().y+camera.offSetY+i*100 < 700)
-				{
-					button2[k].show();
-					button2[k].position(cnv.elt.getBoundingClientRect().x+camera.offSetX+j*100, cnv.elt.getBoundingClientRect().y+camera.offSetY+i*100);
-				}
-				k++;
-			}
-		}
-	}
-	
-	draw_assets_list()
-	{
-		//draw assets background
-		fill(255,255,255);
-		rect(0,500,800,100)
-		rect(0,0,800,20)
-		
-		//draw assets list
-		for(let i = 0; i < assets_array.length; i++)
-		{
-			let img_array_id = assets_array[i].data_id;
-			image(this.img_array[img_array_id], i*100+editor.decalX, 500, 100,100,100*assets_array[i].draw_id,0,100,100)
-		}
-		
-		//draw red selected rect
-		stroke(255,0,0);
-		noFill();
-		rect(editor.selected*100+editor.decalX,500,100,100)
-	}
-	
-	select_element()
-	{
-		
-		if (mouseIsPressed === true) {
-			//checks if click pos on assets list 
-			if((mouseX - editor.decalX) > 0 && (mouseX - editor.decalX) < assets_array.length*100 && mouseY > 500 && mouseY < 600)
-			{
-				//select asset
-				editor.selected = floor((mouseX - editor.decalX)/100);
-			}
-			//checks if click pos on map
-			if(mouseX > 0 && mouseX < 800 && mouseY > 20 && mouseY < 500 && document.activeElement == document.body)
-			{
-				let iw_i = floor((mouseX - camera.offSetX)/100);
-				let iw_j = floor((mouseY - camera.offSetY)/100);
-				//checks if click within map boundaries
-				if(iw_i >= 0 && iw_i < 10 && iw_j >= 0 && iw_j < floor_size[map.current_floor].h)
-				{
-					//put tile 
-					this.map_array[this.current_floor][iw_j][iw_i] = assets_array[editor.selected];
-				}
-			}
-			mouseIsPressed = false;
-		}
-	}
-	
-	//drawing map in fct of z index
-	drawZ()
-	{
-		//paints background grey then paints floor ground
-		background(47,47,47);
-		if(this.current_floor == 0)
-			fill(149,139,89);
-		else if(this.current_floor == 5)
-			fill(173,173,173);
-		else
-			fill(98,149,112);
-		noStroke();
-		if(this.current_floor == 5)
-		{
-			//paints floor
-			rect(camera.offSetX*game_scale,camera.offSetY*game_scale+100*game_scale,1000*game_scale,1000*game_scale)
-			//paints street
-			fill(63,72,204);
-			rect(camera.offSetX*game_scale-500,camera.offSetY*game_scale+1400*game_scale,2000,1000)
-		}
-		else
-			rect(camera.offSetX,camera.offSetY,1000,1000)
-		
-		for(let k = 0; k < this.z_index_map[this.current_floor].length; k++)
-		{
-			//checks if tile is within camera viewport
-			if(this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale > -100 && this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale > -100 && this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale < camera.width + 100 && this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale < camera.height + 100)
-			{
-				//checks if background tile
-				if(this.z_index_map[this.current_floor][k].bckgrnd == true)
-				{
-					//checks if tile is positionable
-					if(map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j] instanceof PositionableTile)
-						image(this.img_array[this.current_floor], this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale, this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale+map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].decalY*game_scale, 100*game_scale, 100*game_scale,map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].id*100,0,100,100);
-					else
-						image(this.img_array[this.current_floor], (this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale), (this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale), 100*game_scale, 100*game_scale,map_array[this.current_floor][this.z_index_map[this.current_floor][k].i][this.z_index_map[this.current_floor][k].j].id*100,0,100,100);
-						
-				}
-				
-			}
-			
-			//checks if moving tile
-			if(this.z_index_map[this.current_floor][k].bckgrnd == false)
-			{
-				//draws dwight
-				if(this.z_index_map[this.current_floor][k].id == 1)
-				{
-					if(dwight.alive)
-						dwight.draw();
-				}
-				//draws elevator
-				if(this.z_index_map[this.current_floor][k].id == 4)
-				{
-					if(this.cleaning_platform_pos == 1)
-						image(cleaning_platform, this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale, this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale, 200*game_scale, 420*game_scale,0,0,200,420);
-					else
-						image(cleaning_platform_up, this.z_index_map[this.current_floor][k].j*100*game_scale+camera.offSetX*game_scale, this.z_index_map[this.current_floor][k].i*100*game_scale+camera.offSetY*game_scale, 200*game_scale, 420*game_scale,0,0,200,420);
-				}
-				if(this.z_index_map[this.current_floor][k].id == 2)
-				{
-					enemies[0].draw();
-					
-				}
-				if(this.z_index_map[this.current_floor][k].id == 3)
-				{
-					enemies[1].draw();
-					
-				}
-			}
-		}
-		Zombie.s_drawChaseLine();
-		Menu.s_drawCurrentFloor();
-		message.draw();
-		
 	}
 	
 	drawHitBox()
