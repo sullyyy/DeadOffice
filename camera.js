@@ -4,7 +4,7 @@ class Camera {
 		this.offSetY = startY;
 		this.width = width;
 		this.height = height;
-		this.obj;
+		this.obj = null;
 	}
 	
 	lookAt(x,y){
@@ -18,7 +18,7 @@ class Camera {
 	
 	update()
 	{
-		if(this.obj == null)
+		if(this.obj === null)
 			return;
 		
 		this.offSetX = windowWidth/2 - this.obj.x;

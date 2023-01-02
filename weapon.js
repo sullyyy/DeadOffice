@@ -68,6 +68,8 @@ class Axe extends Weapon{
 		this.cutting = true;
 	}
 	
+	
+	
 	checkCollision(x,y,x2,y2)
 	{
 		let x2w = x2 + 36
@@ -96,7 +98,7 @@ class Axe extends Weapon{
 				return true;
 			}
 		}
-		if(map.current_floor != 0)
+		if(map.current_floor != 0 && map.current_floor != 4 && map.current_floor != 5)
 			return;
 		if(this.checkCollision(x,y,map.floors[map.current_floor].boss.x+camera.offSetX,map.floors[map.current_floor].boss.y+camera.offSetY))
 			{
@@ -105,7 +107,7 @@ class Axe extends Weapon{
 				{
 					if(this.cutting)
 						map.floors[map.current_floor].boss.takeDmg();
-						
+					
 					
 				}
 				return true;
@@ -227,7 +229,7 @@ class Revolver extends Weapon {
 			}
 			
 		}
-		if(map.current_floor != 0)
+		if(map.current_floor != 0 && map.current_floor != 4 && map.current_floor != 5)
 			return;
 		if(this.checkCollision(obj.x+camera.offSetX,obj.y+camera.offSetY,map.floors[map.current_floor].boss.x+camera.offSetX,map.floors[map.current_floor].boss.y+camera.offSetY))
 			{
@@ -245,6 +247,9 @@ class Revolver extends Weapon {
 			}
 		return false;
 	}
+
+	
+	
 	
 	update()
 	{

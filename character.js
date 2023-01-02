@@ -1,4 +1,4 @@
- let keys = [];
+let keys = [];
  let sens = 1;
  
  class Character {
@@ -11,6 +11,20 @@
 		this.id = id;
 		this.travel = false;
 	}
+	 
+	speak(text_message)
+	{
+		push();
+			noStroke();
+			fill("white")
+			triangle(this.x+camera.offSetX, this.y+camera.offSetY, this.x+camera.offSetX-20, this.y+camera.offSetY-100,this.x+camera.offSetX-50, this.y+camera.offSetY-100)
+			ellipse(this.x+camera.offSetX, this.y+camera.offSetY-100, 300, 100);
+			fill("black")
+			textSize(12);
+			text(text_message,this.x+camera.offSetX, this.y+camera.offSetY-100);
+		pop();
+	}
+     
 	
 	
 	
@@ -40,7 +54,7 @@
 		if(x1 > x2 && x1 < x2w && y1 > y2 && y1 < y2h)
 		{
 			//going into a staircase door
-			if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 4)
+			if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 4  && this instanceof Dwight)
 			{
 				
 				gameState = DIALOG_BOX;
@@ -59,7 +73,7 @@
 					}
 					else
 					{
-						message.set(0,0,"The elevator is not working...",true)
+						message.set(0,0,"The elevator is not working...",true);
 					}
 					return false;
 					
@@ -68,13 +82,13 @@
 					
 			}
 			//outside roof area
-			if(map.current_floor == 5)
+			if(map.current_floor == 5  && this instanceof Dwight)
 			{
 				//going into basement outside access door
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 26)
 				{
 					
-					map.travelTo(0,7,8)
+					map.travelTo(0,7,8);
 					return false;
 					
 				}
@@ -107,7 +121,7 @@
 				}
 			}
 			//basement
-			if(map.current_floor == 0)
+			if(map.current_floor == 0  && this instanceof Dwight)
 			{
 				//going into generator
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 8 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 9)
@@ -181,7 +195,7 @@
 		if(x1 > x2 && x1 < x2w && y1h > y2 && y1h < y2h)
 		{
 			//basement
-			if(map.current_floor == 0)
+			if(map.current_floor == 0 && this instanceof Dwight)
 			{
 				//going into basement outside access door
 				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 7)
@@ -199,7 +213,7 @@
 				}
 				
 			}
-			if(map.current_floor == 1)
+			if(map.current_floor == 1  && this instanceof Dwight)
 			{
 				//going into exit / ending game
 				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 10 || map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 11)
@@ -215,7 +229,7 @@
 					
 				}
 			}
-			if(map.current_floor == 2)
+			if(map.current_floor == 2  && this instanceof Dwight)
 			{
 				//going into window
 				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 15 && floor(x1/100) == 2)
@@ -226,7 +240,7 @@
 					
 				}
 			}
-			if(map.current_floor == 4)
+			if(map.current_floor == 4  && this instanceof Dwight)
 			{
 				//going into window
 				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 15)
@@ -322,6 +336,19 @@ class Dwight extends Character{
 		
 	}
 	
+	/*speak()
+	{
+		push();
+			noStroke();
+			fill("white")
+			triangle(this.x+camera.offSetX, this.y+camera.offSetY, this.x+camera.offSetX-20, this.y+camera.offSetY-100,this.x+camera.offSetX-50, this.y+camera.offSetY-100)
+			ellipse(this.x+camera.offSetX, this.y+camera.offSetY-100, 300, 100);
+			fill("black")
+			textSize(12);
+			text("AIE !!!",this.x+camera.offSetX, this.y+camera.offSetY-100);
+		pop();
+	}*/
+	
 	revive()
 	{
 		this.img = dwight_img;
@@ -380,6 +407,7 @@ class Dwight extends Character{
 	
 	move()
 	{
+		
 		this.update_invulnerable();
 		if(keys[32])
 		{
@@ -415,7 +443,7 @@ class Dwight extends Character{
 				camera.update();
 				this.weapon.update();
 				map.resort(this);
-				this.walkOverVomit()
+				//this.walkOverVomit()
 			}
 			
 		}
@@ -430,7 +458,7 @@ class Dwight extends Character{
 				dwight.x+=dwight.acc;
 				this.weapon.update();
 				map.resort(this);
-				this.walkOverVomit()
+				//this.walkOverVomit()
 			}
 			
 			
@@ -446,7 +474,7 @@ class Dwight extends Character{
 				camera.update();
 				this.weapon.update();
 				map.resort(this);
-				this.walkOverVomit()
+				//this.walkOverVomit()
 			}
 			
 		}
@@ -461,7 +489,7 @@ class Dwight extends Character{
 				camera.update();
 				this.weapon.update();
 				map.resort(this);
-				this.walkOverVomit()
+				//this.walkOverVomit()
 			}
 			
 		}
@@ -494,8 +522,8 @@ class Dwight extends Character{
 	{
 		if(this.invulnerable)
 			return;
-		if(map.floors[0].boss.state == STATE.VOMITING)
-			return;
+		//if(map.floors[0].boss.state == STATE.VOMITING)
+			//return;
 		if(map.current_floor != 0)
 			return;
 		for(let i = 0; i < map.floors[0].boss.vomits.length; i++)
@@ -508,11 +536,6 @@ class Dwight extends Character{
 				break;
 			}
 		}
-	}
-	
-	handleCollision(x,y)
-	{
-		return super.handleCollision(x,y);
 	}
 	
 	draw()
@@ -533,9 +556,11 @@ class Dwight extends Character{
 			if ((delta >= 50 && delta < 100) || (delta >= 300 && delta < 400) || (delta >= 600 && delta < 700) || (delta >= 900 && delta < 1000)) {
 				return;
 			}
+			this.speak("AIE !!!");
 		}
 		super.draw();
 		this.drawLife();
+		
 	}
 	
 	drawLife()
@@ -567,44 +592,34 @@ function keyReleased() {
 	IDLE: 2,
 	DEAD: 3,
 	VOMITING: 4,
-	STUNNED: 5
+	STUNNED: 5,
+	WAITING: 6
  }
  
- class Vomit_puddle{
-	 constructor (x, y, width, height, id) {
-		 this.x = x;
-		 this.y = y;
-		 this.width = width;
-		 this.height = height;
-		 this.draw_height = 30;
-		 this.id = id;
-		 this.img = vomit_puddle_img;
-		 this.lastStunned;
-	 }
-	 
-	 draw()
-	 {
-		 image(this.img, this.x+camera.offSetX,this.y+camera.offSetY,this.width,this.draw_height)
-	 }
- }
+ 
  
 class Boss extends Character{
-	constructor (x, y, width, height, img,id) {
+	constructor (x, y, width, height, img,id,life,state,velocity,name) {
 		super(x, y, width, height, img,id);
-		this.state = STATE.ROAMING;
+		this.life = life;
+		this.state = state;
 		this.chaseLine = [createVector(0, 0),createVector(0, 0)];
 		this.vecRoam = createVector(0, 0);
-		this.velocity = 1.5;
-		this.life = 10;
-		this.vomiting = false;
+		this.velocity = velocity;
+		this.name = name;
+		this.alive_img = img;
+		this.max_life = life;
 		this.last = new Date().getTime();
-		this.vomits = [];
+		
+		this.init_width = width;
+		this.init_height = height;
+		this.start_x = x;
+		this.start_y = y;
+		
 	}
 	
 	die()
 	{
-		if(this.state == STATE.VOMITING)
-			this.vomits.pop();
 		this.state = STATE.DEAD;
 		this.img = boss_dead;
 		this.y += 70;
@@ -615,17 +630,17 @@ class Boss extends Character{
 	revive()
 	{
 		this.state = STATE.ROAMING;
-		this.img = basement_boss;
-		this.width = 40;
-		this.height = 80;
-		this.life = 10;
+		this.img = this.alive_img;
+		this.width = this.init_width;
+		this.height = this.init_height;
+		this.life = this.max_life;
+		this.x = this.start_x;
+		this.y = this.start_y;
 	}
 	
 	takeDmg()
 	{
 		this.life--;
-		if(this.state == STATE.VOMITING)
-			this.vomits.pop();
 		this.state = STATE.STUNNED
 		this.lastStunned = new Date().getTime();
 		if(this.life == 0)
@@ -641,29 +656,7 @@ class Boss extends Character{
 		}
 	}
 	
-	vomit()
-	{
-		let now = new Date().getTime();
-		let delta = now - this.last;
-		this.vomits[this.vomits.length - 1].height+=4;
-		if (delta >= 500) {
-			this.state = STATE.CHASING;
-			this.vomits[this.vomits.length - 1].y = this.y+80;
-			this.vomits[this.vomits.length - 1].x = this.x;
-			this.vomits[this.vomits.length - 1].width = 50;
-			this.vomits[this.vomits.length - 1].height = 0;
-			map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.vomits[this.vomits.length - 1].x/100,this.vomits[this.vomits.length - 1].y/100,1,true,(this.vomits.length - 1)+200));
-			map.resort(this.vomits[this.vomits.length - 1]);
-		}
-		
-	}
-	
 	update()
-	{
-		this.move();
-	}
-	
-	move()
 	{
 		switch (this.state) {
 	  
@@ -681,10 +674,6 @@ class Boss extends Character{
 			  break;
 			  
 			  case STATE.DEAD:
-			  break;
-			  
-			  case STATE.VOMITING:
-			  this.vomit();
 			  break;
 			  
 			  case STATE.STUNNED:
@@ -776,49 +765,17 @@ class Boss extends Character{
 			if(this.state == STATE.ROAMING)
 				this.state = STATE.CHASING;
 		}
-		if(dist < 80)
-		{
-			if(this.state == STATE.CHASING)
-			{
-				let now = new Date().getTime();
-				let delta = now - this.last;
-				if (delta >= 2000)
-				{
-					this.state = STATE.VOMITING;
-					this.last = new Date().getTime();
-					this.vomits.push(new Vomit_puddle(this.x+18,this.y+ 18 ,5,10,(this.vomits.length)+200));
-				}
-			}
-		}
 		if(dist < 20)
 		{
 			dwight.takeDmg();
 		}
-	}
-	
-	
-	
-	handleCollision(x,y)
-	{
-		return super.handleCollision(x,y);
+		return dist;
 	}
 	
 	draw()
 	{
 		super.draw();
-		//this.drawChaseLine();
 		this.drawLife();
-		if(this.state == STATE.VOMITING)
-		{
-			push();
-			noStroke();
-			fill(50,250,50)
-			for(let i = 0; i < this.vomits.length; i++)
-			{
-				rect(this.vomits[i].x+camera.offSetX, this.vomits[i].y+camera.offSetY,this.vomits[i].width,this.vomits[i].height)
-			}
-			pop();
-		}
 	}
 	
 	drawLife()
@@ -830,7 +787,7 @@ class Boss extends Character{
 			fill(0,0,0);
 			text('HP : ' + this.life, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
 			textSize(12);
-			text('VOMITOR', this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-20);
+			text(this.name, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-20);
 		pop();
 	}
 	
@@ -839,6 +796,124 @@ class Boss extends Character{
 		stroke(255,0,0);
 		line(this.chaseLine[0].x, this.chaseLine[0].y, this.chaseLine[1].x, this.chaseLine[1].y);
 	}
+}
+
+class Vomit_puddle{
+	 constructor (x, y, width, height, id) {
+		 this.x = x;
+		 this.y = y;
+		 this.width = width;
+		 this.height = -10;
+		 this.draw_height = height;
+		 this.id = id;
+		 this.img = vomit_puddle_img;
+		 this.lastStunned;
+	 }
+	 
+	 draw()
+	 {
+		 image(this.img, this.x+camera.offSetX,this.y+camera.offSetY,this.width,this.draw_height)
+	 }
+ }
+
+class Basement_Boss extends Boss{
+	constructor (x, y, width, height, img,id,life,state,velocity,name) {
+		super(x, y, width, height, img,id,life,state,velocity,name);
+		this.vomiting = false;
+		this.vomits = [];
+		this.vomitProgression = 0;
+	}
+	
+	die()
+	{
+		super.die();
+		
+		if(this.state == STATE.VOMITING)
+			this.vomitProgression = 0;
+		
+		this.vomits.push(new Vomit_puddle(this.x,this.y,100,60,(this.vomits.length)+200));
+		map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.vomits[this.vomits.length - 1].x/100,this.vomits[this.vomits.length - 1].y/100,1,true,(this.vomits.length - 1)+200));
+		map.resort(this.vomits[this.vomits.length - 1]);
+		
+	}
+	
+	takeDmg()
+	{
+		if(this.state == STATE.VOMITING)
+			this.vomitProgression = 0;
+		
+		
+		super.takeDmg();
+	}
+	
+	vomit()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.last;
+		this.vomitProgression += 4;
+		
+		if (delta >= 500) {
+			this.vomitProgression = 0;
+			this.state = STATE.CHASING;
+			this.vomits.push(new Vomit_puddle(this.x,this.y+80,0,30,(this.vomits.length)+200));
+			map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.vomits[this.vomits.length - 1].x/100,this.vomits[this.vomits.length - 1].y/100,1,true,(this.vomits.length - 1)+200));
+			map.resort(this.vomits[this.vomits.length - 1]);
+		}
+		
+	}
+	
+	
+	
+	detectPlayer()
+	{ 
+		let dist = super.detectPlayer();
+		
+		if(dist < 80)
+		{
+			if(this.state == STATE.CHASING)
+			{
+				let now = new Date().getTime();
+				let delta = now - this.last;
+				if (delta >= 2000)
+				{
+					this.state = STATE.VOMITING;
+					this.last = new Date().getTime();
+				}
+			}
+		}
+	}
+	
+	update()
+	{
+		
+		super.update();
+		dwight.walkOverVomit();
+		switch (this.state) {
+	
+			case STATE.VOMITING:
+			  this.vomit();
+			  break;
+			
+			
+		}
+	}
+	
+	draw()
+	{
+		super.draw();
+		
+		if(this.state == STATE.VOMITING)
+		{
+			push();
+			noStroke();
+			fill(50,250,50)
+			rect(this.x+camera.offSetX + 18, this.y+camera.offSetY + 18,5,this.vomitProgression)
+			pop();
+			
+			this.speak("BEUUUARGHLOUGHARG");
+		}
+	}
+	
 }
 
 class Zombie extends Character{
@@ -853,6 +928,8 @@ class Zombie extends Character{
 		this.initY = initY;
 		this.vecRoam = createVector(0, 0);
 		this.life = 3;
+		this.lastWait = new Date().getTime(); 
+		this.speaking = false;
 		
 	}
 	
@@ -887,6 +964,8 @@ class Zombie extends Character{
 		super.draw();
 		//this.drawChaseLine();
 		this.drawLife();
+		if(this.speaking)
+			this.speak("bleuargh ?!?!!")
 	}
 	
 	drawLife()
@@ -930,6 +1009,10 @@ class Zombie extends Character{
 			  
 			  case STATE.IDLE:
 			  break;
+				
+			case STATE.WAITING:
+				this.wait();
+				break;
 			  
 			  case STATE.DEAD:
 			  break;
@@ -939,7 +1022,15 @@ class Zombie extends Character{
 		  }
 	}
 	
-	
+	wait()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.lastWait;
+		if (delta >= 500) {
+			this.zombieState = STATE.ROAMING;
+			this.speaking = false;
+		}
+	}
 	
 	roam()
 	{
@@ -958,9 +1049,12 @@ class Zombie extends Character{
 			
 			this.vecRoam = createVector(random(0,800), random(0,600));
 			v2 = createVector(this.vecRoam.x+camera.offSetX, this.vecRoam.y+camera.offSetY)
+			this.zombieState = STATE.WAITING;
+			this.lastWait = new Date().getTime();  
+			this.speaking = true;
 		}
 		
-		let dx = v1.x - v2.x;
+		  let dx = v1.x - v2.x;
 		  let dy = v1.y - v2.y;
 		  let angle = atan2(dy, dx)
 		  
@@ -974,6 +1068,9 @@ class Zombie extends Character{
 		  else
 		  {
 			  this.vecRoam = createVector(random(0,800), random(0,600));
+			  this.zombieState = STATE.WAITING;
+			  this.lastWait = new Date().getTime(); 
+			  this.speaking = true;
 		  }
 		  if(this.handleCollision(this.x, this.y - yVelocity))
 		  {
@@ -983,6 +1080,9 @@ class Zombie extends Character{
 		  else
 		  {
 			   this.vecRoam = createVector(random(0,800), random(0,600));
+			   this.zombieState = STATE.WAITING;
+			   this.lastWait = new Date().getTime(); 
+			   this.speaking = true;
 		  }
 		  
 	}

@@ -43,19 +43,31 @@ function setupMap()
 
 function loadFloors()
 {
-  map.floors[0] = new Floor(0,3,new Boss(500,500,40,80,basement_boss,6));
+  map.floors[0] = new Floor(0,1,new Basement_Boss(500,500,40,80,basement_boss,6,25,STATE.ROAMING,1.5,"FATTY FAT BOB"));
   map.floors[0].enemies.push(new Zombie(500,500,36,70,zombie,100,400,500));
-  map.floors[0].enemies.push(new Zombie(500,600,36,70,zombie,101,300,600));
+  /*map.floors[0].enemies.push(new Zombie(500,600,36,70,zombie,101,300,600));
   map.floors[0].enemies.push(new Zombie(500,700,36,70,zombie,102,500,700));
+  map.floors[0].enemies.push(new Zombie(500,800,36,70,zombie,103,500,800));
+  map.floors[0].enemies.push(new Zombie(500,900,36,70,zombie,104,500,900));
+  map.floors[0].enemies.push(new Zombie(500,400,36,70,zombie,105,500,400));
+  map.floors[0].enemies.push(new Zombie(500,300,36,70,zombie,106,500,300));
+  map.floors[0].enemies.push(new Zombie(100,100,36,70,zombie,107,100,100));
+  map.floors[0].enemies.push(new Zombie(100,200,36,70,zombie,108,100,200));
+  map.floors[0].enemies.push(new Zombie(100,300,36,70,zombie,109,100,300));
+  map.floors[0].enemies.push(new Zombie(100,400,36,70,zombie,110,100,400));
+  map.floors[0].enemies.push(new Zombie(100,500,36,70,zombie,111,100,500));
+  map.floors[0].enemies.push(new Zombie(100,600,36,70,zombie,112,100,600));
+  map.floors[0].enemies.push(new Zombie(100,700,36,70,zombie,113,100,700));
+  map.floors[0].enemies.push(new Zombie(100,800,36,70,zombie,114,100,800));*/
   map.floors[1] = new Floor(1,1);
   map.floors[1].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
   map.floors[2] = new Floor(2,1);
   map.floors[2].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
   map.floors[3] = new Floor(3,1);
   map.floors[3].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
-  map.floors[4] = new Floor(4,1);
+  map.floors[4] = new Floor(4,1,new Boss(300,300,40,80,ceo_boss,6,8,STATE.ROAMING,1.5,"THE CEO"));
   map.floors[4].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
-  map.floors[5] = new Floor(5,2);
+  map.floors[5] = new Floor(5,2, new Boss(500,500,36,70,creed_boss,6,6,STATE.ROAMING,1.5,"CREED"));
   map.floors[5].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
   map.floors[5].enemies.push(new Zombie(500,600,36,70,zombie,101,500,600));
   
@@ -98,7 +110,7 @@ class Map {
 		dwight.weapon.update();
 		camera.update();
 		this.resort(dwight);
-		this.floors[this.current_floor].setZombiesPosition();
+		//this.floors[this.current_floor].setZombiesPosition();
 	}
 	
 	//sorting map array by z index

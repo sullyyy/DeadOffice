@@ -98,6 +98,8 @@ function preload() {
   dwight_dead = loadImage('assets/img/dwight_dead.png');
   basement_boss = loadImage('assets/img/basement_boss.png')
   boss_dead = loadImage('assets/img/basement_boss_dead.png');
+  ceo_boss = loadImage('assets/img/the_ceo.png');
+  creed_boss = loadImage('assets/img/creed.png');
   zombie = loadImage('assets/img/zombie.png');
   dwight_img = loadImage('assets/img/dwight.png');
   vomit_puddle_img = loadImage('assets/img/vomit_puddle.png');
@@ -130,9 +132,9 @@ function setup() {
 
 function setStartingPoint()
 {
-	dwight.x = 100;
+	dwight.x = 800;
 	dwight.y = 200;
-	map.current_floor = 3;
+	map.current_floor = 0;
 	map.cleaning_platform_pos = 1;
 	map.generatorOn = false;
 	start = new Date().getTime();
@@ -140,6 +142,8 @@ function setStartingPoint()
 	map.floors[map.current_floor].setZombiesPosition();
 	dwight.revive();
 	map.floors[0].boss.revive();
+	map.floors[4].boss.revive();
+	map.floors[5].boss.revive();
 	dwight.init();
 }
 
@@ -184,13 +188,14 @@ function draw() {
 	  
 	  case PLAY:
 	  dwight.move();
+	  
 	  if(gameState == LVL_TRANSITION)
 		  break;
 	  for(let i = 0; i < map.floors[map.current_floor].enemyNumber; i++)
 	  {
 		  map.floors[map.current_floor].enemies[i].update();
 	  }
-	  if(map.current_floor == 0)
+	  if(map.current_floor == 0 || map.current_floor == 4 || map.current_floor == 5)
 		map.floors[map.current_floor].boss.update();
 	  map.draw();
 	  if(end == 1)

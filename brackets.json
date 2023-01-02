@@ -1,0 +1,22 @@
+{
+    "brackets-eslint.gutterMarks": false,
+    "brackets-eslint.useLocalESLint": false,
+    "fonts.fontSize": "12px",
+    "fonts.fontFamily": "'SourceCodePro-Medium', ＭＳ ゴシック, 'MS Gothic', monospace",
+    "linting.ESLint.collapsed": true,
+    "themes.theme": "dark-theme",
+    "linting.JSLint.collapsed": true,
+    "externalApplications": {
+        "jpg": "default",
+        "jpeg": "default",
+        "png": "default",
+        "svg": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+    },
+    "useTabChar": false,
+	"language": {
+    "javascript": {
+        "linting.prefer": "JSHint",
+        "linting.usePreferredOnly": true
+    }
+}
+}
