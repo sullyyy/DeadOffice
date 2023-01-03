@@ -593,7 +593,8 @@ function keyReleased() {
 	DEAD: 3,
 	VOMITING: 4,
 	STUNNED: 5,
-	WAITING: 6
+	WAITING: 6,
+	SPITTING: 7
  }
  
  
@@ -816,12 +817,175 @@ class Vomit_puddle{
 	 }
  }
 
+class Creed_Boss extends Boss{
+	constructor (x, y, width, height, img,id,life,state,velocity,name) {
+		super(x, y, width, height, img,id,life,state,velocity,name);
+		this.phase = 1;
+		this.blinking = false;
+		this.blinkingX;
+		this.blinkingY;
+		this.lastBlink = new Date().getTime();
+	}
+	
+	takeDmg()
+	{
+		super.takeDmg();
+		if(this.phase == 1)
+		{
+			this.lastBlink = new Date().getTime();
+			this.blinking = true;
+			this.blinkingX = this.x;
+			this.blinkingY = this.y;
+			this.x = random(100,800);
+			this.y = random(100,900);
+		}
+	}
+	
+	die()
+	{
+		if(this.phase == 1)
+		{
+			this.phase = 2;	
+			this.width *= 1.5;
+			this.height *= 1.5;
+			this.life = 15;
+			this.name = "ZOMBIE CREED";
+		}
+		else if(this.phase == 2)
+		{
+			super.die();
+		}
+		
+	}
+	
+	
+	
+	draw()
+	{
+		super.draw();
+		if(this.blinking)
+		{
+			let now = new Date().getTime();
+			let delta = now - this.lastBlink;
+			if (delta >= 800) {
+				this.blinking = false;
+			}
+			push();
+				tint(255,255-delta)
+				image(blink_image,this.blinkingX+camera.offSetX, this.blinkingY+camera.offSetY, this.width, this.height);
+				noTint();
+			pop();
+			
+		}
+	}
+}
+
+class Spit{
+	constructor (x, y, w, h,id){
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		this.id = id;
+		this.spitOrig = createVector(this.x + 18, this.y+ 18 );
+		this.spitDest = createVector(dwight.x + 36/2 , dwight.y + 70/2);
+		this.velocity = 5;
+		this.going = true;
+	}
+	
+	handleCollision()
+	{
+		let x = this.x
+		let x2 = dwight.x
+		let y = this.y
+		let y2 = dwight.y
+		let xw = x + this.w
+		let x2w = x2 + dwight.width
+		let yh = y + this.h
+		let y2h = y2 + dwight.height
+		if(x > x2 && x < x2w && y > y2 && y < y2h)
+			return false;
+		if(xw > x2 && xw < x2w && y > y2 && y < y2h)
+			return false;
+		if(x > x2 && x < x2w && yh > y2 && yh < y2h)
+			return false;
+		if(xw > x2 && xw < x2w && yh > y2 && yh < y2h)
+			return false;
+		return true;
+	}
+	
+	createVomit()
+	{
+		
+		map.z_index_map[map.current_floor] = map.z_index_map[map.current_floor].filter(x => x.id !== this.id)
+		this.going = false;
+		//map.floors[map.current_floor].boss.spits = map.floors[map.current_floor].boss.spits.filter(x => x.id != this.id);
+		
+		map.floors[map.current_floor].boss.vomits.push(new Vomit_puddle(this.x,this.y,0,30,(map.floors[map.current_floor].boss.vomits.length)+200));
+		map.z_index_map[map.current_floor].push(new Tile_To_Draw(map.floors[map.current_floor].boss.vomits[map.floors[map.current_floor].boss.vomits.length - 1].x/100,map.floors[map.current_floor].boss.vomits[map.floors[map.current_floor].boss.vomits.length - 1].y/100,1,true,(map.floors[map.current_floor].boss.vomits.length - 1)+200));
+		map.resort(map.floors[map.current_floor].boss.vomits[map.floors[map.current_floor].boss.vomits.length - 1]);
+	}
+	
+	
+	update()
+	{
+		if(!this.going)
+			return;
+
+		let v1 = this.spitOrig;
+		let v2 = this.spitDest;
+		  
+		  
+		  let dx = v1.x - v2.x;
+		  let dy = v1.y - v2.y;
+		  let angle = atan2(dy, dx)
+		  
+		  let xVelocity = this.velocity * cos(angle);
+		  let yVelocity = this.velocity * sin(angle);
+		  
+		
+			this.x-=xVelocity;
+			
+			this.y-=yVelocity;
+		
+		if(!this.handleCollision())
+		{
+			this.createVomit();
+			dwight.takeDmg();
+			return;
+			
+		}
+		
+		v1 = createVector(this.x+18, this.y+18);
+		
+		let distance = p5.Vector.dist(v1, v2);
+		
+		if(distance < 5)
+			{
+				this.createVomit();
+			}
+		  
+	}
+	
+	draw()
+	{
+		push();
+		fill(0,255,0)
+		noStroke();
+		circle(this.x + camera.offSetX, this.y+camera.offSetY, 15)
+		pop();
+	}
+}
+
 class Basement_Boss extends Boss{
 	constructor (x, y, width, height, img,id,life,state,velocity,name) {
 		super(x, y, width, height, img,id,life,state,velocity,name);
 		this.vomiting = false;
 		this.vomits = [];
 		this.vomitProgression = 0;
+		this.lastSpit = new Date().getTime();
+		this.spits = [];
+		this.spitCount = 0;
 	}
 	
 	die()
@@ -856,10 +1020,28 @@ class Basement_Boss extends Boss{
 			this.vomitProgression = 0;
 			this.state = STATE.CHASING;
 			this.vomits.push(new Vomit_puddle(this.x,this.y+80,0,30,(this.vomits.length)+200));
-			map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.vomits[this.vomits.length - 1].x/100,this.vomits[this.vomits.length - 1].y/100,1,true,(this.vomits.length - 1)+200));
+			map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.vomits[this.vomits.length - 1].x/100,this.vomits[this.vomits.length - 1].y/100,-1,true,(this.vomits.length - 1)+200));
 			map.resort(this.vomits[this.vomits.length - 1]);
 		}
 		
+	}
+	
+	spit()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.lastSpit;
+		
+		
+		if (delta >= 300) {
+			this.state = STATE.CHASING;
+			
+			this.spits.push(new Spit(this.x+18, this.y+18,10,10,(this.spitCount)+300));
+			this.spitCount++;
+			if(this.spitCount > 100)
+				this.spitCount = 0;
+			map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.spits[this.spits.length - 1].x/100,this.spits[this.spits.length - 1].y/100,1000,false,(this.spits.length - 1)+300));
+			//map.resort(this.spits[this.spits.length - 1]);
+		}
 	}
 	
 	
@@ -867,19 +1049,30 @@ class Basement_Boss extends Boss{
 	detectPlayer()
 	{ 
 		let dist = super.detectPlayer();
+		if(this.state != STATE.CHASING)
+			return;
 		
-		if(dist < 80)
+		if(dist > 150 && dist < 800)
 		{
-			if(this.state == STATE.CHASING)
+			let now = new Date().getTime();
+			let delta = now - this.lastSpit;
+			if (delta >= 1500)
 			{
-				let now = new Date().getTime();
-				let delta = now - this.last;
-				if (delta >= 2000)
-				{
-					this.state = STATE.VOMITING;
-					this.last = new Date().getTime();
-				}
+				this.state = STATE.SPITTING;
+				this.lastSpit = new Date().getTime();
 			}
+		}
+		if(dist < 150)
+		{
+			
+			let now = new Date().getTime();
+			let delta = now - this.last;
+			if (delta >= 4000)
+			{
+				this.state = STATE.VOMITING;
+				this.last = new Date().getTime();
+			}
+
 		}
 	}
 	
@@ -888,11 +1081,19 @@ class Basement_Boss extends Boss{
 		
 		super.update();
 		dwight.walkOverVomit();
+		for(let i = 0; i < this.spits.length; i++)
+			{
+				this.spits[i].update();
+			}
 		switch (this.state) {
 	
 			case STATE.VOMITING:
 			  this.vomit();
 			  break;
+			
+			case STATE.SPITTING:
+				this.spit();
+				break;
 			
 			
 		}
@@ -912,6 +1113,8 @@ class Basement_Boss extends Boss{
 			
 			this.speak("BEUUUARGHLOUGHARG");
 		}
+		if(this.state == STATE.SPITTING)
+			this.speak("SPFIOUUU");
 	}
 	
 }
@@ -1130,7 +1333,7 @@ class Zombie extends Character{
 	detectPlayer(x1,x2,y1,y2)
 	{
 		var dist = Math.sqrt( Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2) );
-		if(dist < 200)
+		if(dist < 0)
 		{
 			this.zombieState = STATE.CHASING;
 		}

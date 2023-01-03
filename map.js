@@ -67,7 +67,7 @@ function loadFloors()
   map.floors[3].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
   map.floors[4] = new Floor(4,1,new Boss(300,300,40,80,ceo_boss,6,8,STATE.ROAMING,1.5,"THE CEO"));
   map.floors[4].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
-  map.floors[5] = new Floor(5,2, new Boss(500,500,36,70,creed_boss,6,6,STATE.ROAMING,1.5,"CREED"));
+  map.floors[5] = new Floor(5,2, new Creed_Boss(500,500,36,70,creed_boss,6,6,STATE.ROAMING,1.5,"CREED"));
   map.floors[5].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
   map.floors[5].enemies.push(new Zombie(500,600,36,70,zombie,101,500,600));
   
@@ -155,6 +155,7 @@ class Map {
 	modify(obj)
 	{
 		let ind = this.z_index_map[this.current_floor].findIndex(x => x.id == obj.id);
+		//console.log("index", ind);
 		this.z_index_map[this.current_floor][ind].i = floor(obj.x/100);
 		this.z_index_map[this.current_floor][ind].j = floor(obj.y/100);
 		this.z_index_map[this.current_floor][ind].z_index = obj.y + obj.height;
@@ -223,8 +224,16 @@ class Map {
 			if(gameState == EDITOR)
 				continue;
 			
+			//draws spits
+			if(this.z_index_map[this.current_floor][k].id >= 300 && this.z_index_map[this.current_floor][k].id < 400)
+			{
+				
+				let ind = this.z_index_map[this.current_floor][k].id;
+				this.floors[this.current_floor].boss.spits[ind - 300].draw();
+			}
+			
 			//draws vomit
-			if(this.z_index_map[this.current_floor][k].id >= 200)
+			if(this.z_index_map[this.current_floor][k].id >= 200 && this.z_index_map[this.current_floor][k].id < 300)
 			{
 				let ind = this.z_index_map[this.current_floor][k].id;
 				this.floors[this.current_floor].boss.vomits[ind - 200].draw();

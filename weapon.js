@@ -169,6 +169,7 @@ class Revolver extends Weapon {
 		this.bullets = [];
 		this.bulletsNbr= 6;
 		this.bulletsShot = 0;
+		this.lastShot = new Date().getTime();
 	}
 	
 	checkCollisionEnv(obj)
@@ -192,8 +193,8 @@ class Revolver extends Weapon {
 	
 	checkCollision(x,y,x2,y2)
 	{
-		let x2w = x2 + 36
-		let y2h = y2 + 70
+		let x2w = x2 + map.floors[map.current_floor].boss.width;
+		let y2h = y2 + map.floors[map.current_floor].boss.height;
 		if(x > x2 && x < x2w && y > y2 && y < y2h)
 			return true;
 		return false;
@@ -302,6 +303,14 @@ class Revolver extends Weapon {
 	
 	shoot()
 	{
+		let now = new Date().getTime();
+		let delta = now - this.lastShot;
+		if (delta < 1000) {
+			return;
+		}
+		
+		this.lastShot = new Date().getTime();
+		
 		if(this.bulletsShot == this.bulletsNbr)
 			return;
 		let startX;

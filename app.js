@@ -103,6 +103,7 @@ function preload() {
   zombie = loadImage('assets/img/zombie.png');
   dwight_img = loadImage('assets/img/dwight.png');
   vomit_puddle_img = loadImage('assets/img/vomit_puddle.png');
+  blink_image = loadImage('assets/img/blink_image.png');
   File.load();
   File.loadAssets();
 }
