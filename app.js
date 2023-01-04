@@ -104,6 +104,7 @@ function preload() {
   dwight_img = loadImage('assets/img/dwight.png');
   vomit_puddle_img = loadImage('assets/img/vomit_puddle.png');
   blink_image = loadImage('assets/img/blink_image.png');
+  blood = loadImage('assets/img/blood.png');
   File.load();
   File.loadAssets();
 }
@@ -135,7 +136,7 @@ function setStartingPoint()
 {
 	dwight.x = 800;
 	dwight.y = 200;
-	map.current_floor = 0;
+	map.current_floor = 5;
 	map.cleaning_platform_pos = 1;
 	map.generatorOn = false;
 	start = new Date().getTime();

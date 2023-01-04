@@ -24,8 +24,17 @@ let keys = [];
 			text(text_message,this.x+camera.offSetX, this.y+camera.offSetY-100);
 		pop();
 	}
+	 
+	takeDmg()
+	{
+		//map.floors[map.current_floor].bloods.push(new Blood(this.x, this.y+this.height,0,0))
+		this.bleed(this.x, this.y+this.height,0,0)
+	}
      
-	
+	bleed(x,y,w,h)
+	{
+		map.floors[map.current_floor].bloods.push(new Blood(x, y,w,h))
+	}
 	
 	
 	
@@ -363,6 +372,8 @@ class Dwight extends Character{
 	{
 		gameState = GAME_OVER;
 		dwight.alive = false;
+		//map.floors[map.current_floor].bloods.push(new Blood(this.x, this.y+this.height,40,20))
+		this.bleed(this.x, this.y+this.height, 40,20)
 	}
 	
 	takeDmg()
@@ -370,6 +381,8 @@ class Dwight extends Character{
 		if(this.invulnerable)
 			return;
 		this.life--;
+		//map.floors[map.current_floor].bloods.push(new Blood(this.x + camera.offSetX, this.y + 80 + camera.offSetY))
+		super.takeDmg();
 		if(this.life == 0)
 		{
 			this.die();
@@ -402,6 +415,7 @@ class Dwight extends Character{
 		let delta = now - this.lastInvulnerable;
 		if (delta >= 1000) {
 			this.invulnerable = false;
+			
 		}
 	}
 	
@@ -520,19 +534,25 @@ class Dwight extends Character{
 	
 	walkOverVomit()
 	{
-		if(this.invulnerable)
-			return;
+		
+		//if(this.invulnerable)
+			//return;
+		
 		//if(map.floors[0].boss.state == STATE.VOMITING)
 			//return;
 		if(map.current_floor != 0)
 			return;
+		
+		this.acc = 7;
+		
 		for(let i = 0; i < map.floors[0].boss.vomits.length; i++)
 		{
 			if(this.checkVomit( map.floors[0].boss.vomits[i].x,map.floors[0].boss.vomits[i].y))
 			{
-				this.life = 1;
-				this.lastInvulnerable = new Date().getTime();
-				this.invulnerable = true;
+				//this.life = 1;
+				//this.lastInvulnerable = new Date().getTime();
+				//this.invulnerable = true;
+				this.acc = 2;
 				break;
 			}
 		}
@@ -626,6 +646,8 @@ class Boss extends Character{
 		this.y += 70;
 		this.width = 80;
 		this.height = 22;
+		//map.floors[map.current_floor].bloods.push(new Blood(this.x, this.y+this.height,40,20))
+		this.bleed(this.x+10, this.y+this.height/2,40,20)
 	}
 	
 	revive()
@@ -644,6 +666,7 @@ class Boss extends Character{
 		this.life--;
 		this.state = STATE.STUNNED
 		this.lastStunned = new Date().getTime();
+		super.takeDmg();
 		if(this.life == 0)
 			this.die();
 	}
@@ -827,17 +850,53 @@ class Creed_Boss extends Boss{
 		this.lastBlink = new Date().getTime();
 	}
 	
+	blink()
+	{
+		this.lastBlink = new Date().getTime();
+		this.blinking = true;
+		this.blinkingX = this.x;
+		this.blinkingY = this.y;
+		this.x = random(100,800);
+		this.y = random(100,900);
+	}
+	
+	update()
+	{
+		super.update();
+		
+		if(this.phase != 1)
+			return;
+		if(this.blinking)
+			return;
+		
+		let now = new Date().getTime();
+		let delta = now - this.lastBlink;
+		
+		let dist = this.detectPlayer();
+		
+		if(dist < 150)
+			{
+				this.velocity = 10;
+			}
+		if(dist < 20)
+			{
+				this.velocity = 2;
+				this.blink();
+			}
+		
+		if(dist > 150 && dist < 1000 && delta > 1500)
+			{
+				this.blink();
+			}
+	}
+	
 	takeDmg()
 	{
 		super.takeDmg();
 		if(this.phase == 1)
 		{
-			this.lastBlink = new Date().getTime();
-			this.blinking = true;
-			this.blinkingX = this.x;
-			this.blinkingY = this.y;
-			this.x = random(100,800);
-			this.y = random(100,900);
+			this.velocity = 2;
+			this.blink();
 		}
 	}
 	
@@ -850,6 +909,8 @@ class Creed_Boss extends Boss{
 			this.height *= 1.5;
 			this.life = 15;
 			this.name = "ZOMBIE CREED";
+			this.velocity = 2;
+			this.blink();
 		}
 		else if(this.phase == 2)
 		{
@@ -1138,6 +1199,7 @@ class Zombie extends Character{
 	
 	takeDmg()
 	{
+		super.takeDmg();
 		this.life--;
 		if(this.life == 0)
 			this.die();
@@ -1159,6 +1221,10 @@ class Zombie extends Character{
 		this.y += 50;
 		this.width = 70;
 		this.height = 14;
+		//map.floors[map.current_floor].bloods.push(new Blood(this.x+10, this.y+this.height/2,40,20))
+		this.bleed(this.x+10, this.y+this.height/2,40,20)
+		this.speaking = false;
+		
 	}
 	
 	

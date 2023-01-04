@@ -8,6 +8,16 @@ class Tile_To_Draw {
 	}
 }
 
+class Blood {
+	constructor(x,y,w,h)
+	{
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+	}
+}
+
 class Floor {
 	constructor (floor,enemyNumber,boss)
 	{
@@ -15,6 +25,7 @@ class Floor {
 		this.enemyNumber = enemyNumber;
 		this.enemies = [];
 		this.boss = boss;
+		this.bloods = [];
 	}
 	
 	setZombiesPosition()
@@ -23,6 +34,14 @@ class Floor {
 		{
 			this.enemies[i].setZombieInitPosition();
 		}
+	}
+	
+	drawBlood()
+	{
+		for(let i = 0; i < this.bloods.length; i++)
+			{
+				image(blood, this.bloods[i].x + camera.offSetX, this.bloods[i].y + camera.offSetY, this.bloods[i].w,  this.bloods[i].h)
+			}
 	}
 }
 
@@ -192,6 +211,8 @@ class Map {
 		stroke(255,0,0);
 		noFill();
 		
+		this.floors[this.current_floor].drawBlood();
+		
 		for(let k = 0; k < this.z_index_map[this.current_floor].length; k++)
 		{
 			//checks if tile is within camera viewport
@@ -238,6 +259,10 @@ class Map {
 				let ind = this.z_index_map[this.current_floor][k].id;
 				this.floors[this.current_floor].boss.vomits[ind - 200].draw();
 			}
+			
+			
+				
+			
 			
 			//checks if moving tile
 			if(this.z_index_map[this.current_floor][k].bckgrnd == false)
