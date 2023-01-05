@@ -10,6 +10,11 @@ let keys = [];
 		this.img = img;
 		this.id = id;
 		this.travel = false;
+		this.bleeding = false;
+		this.lastBleed = new Date().getTime(); 
+		this.bleedX;
+		this.bleedY;
+		this.bleedFrame = 0;
 	}
 	 
 	speak(text_message)
@@ -25,9 +30,14 @@ let keys = [];
 		pop();
 	}
 	 
-	takeDmg()
+	takeDmg(x,y)
 	{
 		//map.floors[map.current_floor].bloods.push(new Blood(this.x, this.y+this.height,0,0))
+		this.bleeding = true;
+		this.lastBleed = new Date().getTime(); 
+		this.bleedX = x - camera.offSetX;
+		this.bleedY = y - camera.offSetY;
+		this.bleedFrame = 0;
 		this.bleed(this.x, this.y+this.height,0,0)
 	}
      
@@ -35,6 +45,8 @@ let keys = [];
 	{
 		map.floors[map.current_floor].bloods.push(new Blood(x, y,w,h))
 	}
+	 
+	 
 	
 	
 	
@@ -323,7 +335,28 @@ let keys = [];
 	draw()
 	{
 		image(this.img, this.x*game_scale + camera.offSetX*game_scale, this.y*game_scale + camera.offSetY*game_scale, this.width*game_scale, this.height*game_scale);
+		this.drawBleeding();
 		
+	}
+	 
+	drawBleeding()
+	{
+		if(!this.bleeding)
+			return;
+		
+		image(bleed_anim,this.x+camera.offSetX, this.bleedY+camera.offSetY,30,30,this.bleedFrame*20,0,20,20)
+		
+		let now = new Date().getTime();
+		let delta = now - this.lastBleed;
+		
+		if (delta >= 50) {
+			this.bleedFrame++;
+			if(this.bleedFrame > 6)
+				{
+					this.bleedFrame = 0;
+					this.bleeding = false;
+				}
+		}
 	}
 	
 	
@@ -382,7 +415,7 @@ class Dwight extends Character{
 			return;
 		this.life--;
 		//map.floors[map.current_floor].bloods.push(new Blood(this.x + camera.offSetX, this.y + 80 + camera.offSetY))
-		super.takeDmg();
+		super.takeDmg(this.x+this.width/2 + camera.offSetX,this.y+20+camera.offSetY);
 		if(this.life == 0)
 		{
 			this.die();
@@ -661,12 +694,12 @@ class Boss extends Character{
 		this.y = this.start_y;
 	}
 	
-	takeDmg()
+	takeDmg(x,y)
 	{
 		this.life--;
 		this.state = STATE.STUNNED
 		this.lastStunned = new Date().getTime();
-		super.takeDmg();
+		super.takeDmg(x,y);
 		if(this.life == 0)
 			this.die();
 	}
@@ -890,9 +923,9 @@ class Creed_Boss extends Boss{
 			}
 	}
 	
-	takeDmg()
+	takeDmg(x,y)
 	{
-		super.takeDmg();
+		super.takeDmg(x,y);
 		if(this.phase == 1)
 		{
 			this.velocity = 2;
@@ -952,6 +985,7 @@ class Spit{
 		this.spitDest = createVector(dwight.x + 36/2 , dwight.y + 70/2);
 		this.velocity = 5;
 		this.going = true;
+		
 	}
 	
 	handleCollision()
@@ -983,8 +1017,9 @@ class Spit{
 		//map.floors[map.current_floor].boss.spits = map.floors[map.current_floor].boss.spits.filter(x => x.id != this.id);
 		
 		map.floors[map.current_floor].boss.vomits.push(new Vomit_puddle(this.x,this.y,0,30,(map.floors[map.current_floor].boss.vomits.length)+200));
-		map.z_index_map[map.current_floor].push(new Tile_To_Draw(map.floors[map.current_floor].boss.vomits[map.floors[map.current_floor].boss.vomits.length - 1].x/100,map.floors[map.current_floor].boss.vomits[map.floors[map.current_floor].boss.vomits.length - 1].y/100,1,true,(map.floors[map.current_floor].boss.vomits.length - 1)+200));
-		map.resort(map.floors[map.current_floor].boss.vomits[map.floors[map.current_floor].boss.vomits.length - 1]);
+		//map.z_index_map[map.current_floor].push(new Tile_To_Draw(map.floors[map.current_floor].boss.vomits[map.floors[map.current_floor].boss.vomits.length - 1].x/100,map.floors[map.current_floor].boss.vomits[map.floors[map.current_floor].boss.vomits.length - 1].y/100,1,true,(map.floors[map.current_floor].boss.vomits.length - 1)+200));
+		//map.resort(map.floors[map.current_floor].boss.vomits[map.floors[map.current_floor].boss.vomits.length - 1]);
+		map.floors[map.current_floor].bloods.push(new Vomit_puddle(this.x,this.y,0,30,(map.floors[map.current_floor].boss.vomits.length)+200));
 	}
 	
 	
@@ -1057,18 +1092,19 @@ class Basement_Boss extends Boss{
 			this.vomitProgression = 0;
 		
 		this.vomits.push(new Vomit_puddle(this.x,this.y,100,60,(this.vomits.length)+200));
-		map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.vomits[this.vomits.length - 1].x/100,this.vomits[this.vomits.length - 1].y/100,1,true,(this.vomits.length - 1)+200));
-		map.resort(this.vomits[this.vomits.length - 1]);
+		map.floors[map.current_floor].bloods.push(new Vomit_puddle(this.x,this.y,100,60,(this.vomits.length)+200))
+		/*map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.vomits[this.vomits.length - 1].x/100,this.vomits[this.vomits.length - 1].y/100,1,true,(this.vomits.length - 1)+200));
+		map.resort(this.vomits[this.vomits.length - 1]);*/
 		
 	}
 	
-	takeDmg()
+	takeDmg(x,y)
 	{
 		if(this.state == STATE.VOMITING)
 			this.vomitProgression = 0;
 		
 		
-		super.takeDmg();
+		super.takeDmg(x,y);
 	}
 	
 	vomit()
@@ -1081,8 +1117,9 @@ class Basement_Boss extends Boss{
 			this.vomitProgression = 0;
 			this.state = STATE.CHASING;
 			this.vomits.push(new Vomit_puddle(this.x,this.y+80,0,30,(this.vomits.length)+200));
-			map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.vomits[this.vomits.length - 1].x/100,this.vomits[this.vomits.length - 1].y/100,-1,true,(this.vomits.length - 1)+200));
-			map.resort(this.vomits[this.vomits.length - 1]);
+			/*map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.vomits[this.vomits.length - 1].x/100,this.vomits[this.vomits.length - 1].y/100,-1,true,(this.vomits.length - 1)+200));
+			map.resort(this.vomits[this.vomits.length - 1]);*/
+			map.floors[map.current_floor].bloods.push(new Vomit_puddle(this.x,this.y+80,0,30,(this.vomits.length)+200))
 		}
 		
 	}
@@ -1191,16 +1228,26 @@ class Zombie extends Character{
 		this.initX = initX;
 		this.initY = initY;
 		this.vecRoam = createVector(0, 0);
-		this.life = 3;
+		this.life = 10;
 		this.lastWait = new Date().getTime(); 
 		this.speaking = false;
+		/*this.bleeding = false;
+		this.lastBleed = new Date().getTime(); 
+		this.bleedX;
+		this.bleedY;
+		this.bleedFrame = 0;*/
 		
 	}
 	
-	takeDmg()
+	takeDmg(x,y)
 	{
-		super.takeDmg();
+		super.takeDmg(x,y);
 		this.life--;
+		/*this.bleeding = true;
+		this.lastBleed = new Date().getTime(); 
+		this.bleedX = x - camera.offSetX;
+		this.bleedY = y - camera.offSetY;
+		this.bleedFrame = 0;*/
 		if(this.life == 0)
 			this.die();
 	}
@@ -1211,7 +1258,7 @@ class Zombie extends Character{
 		this.img = zombie;
 		this.width = 36;
 		this.height = 70;
-		this.life = 3;
+		this.life = 5;
 	}
 	
 	die()
@@ -1233,9 +1280,30 @@ class Zombie extends Character{
 		super.draw();
 		//this.drawChaseLine();
 		this.drawLife();
+		//this.drawBleeding();
 		if(this.speaking)
 			this.speak("bleuargh ?!?!!")
 	}
+	
+	/*drawBleeding()
+	{
+		if(!this.bleeding)
+			return;
+		
+		image(bleed_anim,this.x+camera.offSetX, this.bleedY+camera.offSetY,30,30,this.bleedFrame*20,0,20,20)
+		
+		let now = new Date().getTime();
+		let delta = now - this.lastBleed;
+		
+		if (delta >= 50) {
+			this.bleedFrame++;
+			if(this.bleedFrame > 6)
+				{
+					this.bleedFrame = 0;
+					this.bleeding = false;
+				}
+		}
+	}*/
 	
 	drawLife()
 	{

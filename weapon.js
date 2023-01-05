@@ -93,7 +93,8 @@ class Axe extends Weapon{
 				if(map.floors[map.current_floor].enemies[i].zombieState != STATE.DEAD)
 				{
 					if(this.cutting)
-						map.floors[map.current_floor].enemies[i].takeDmg();
+						//map.floors[map.current_floor].enemies[i].takeDmg();
+						map.floors[map.current_floor].enemies[i].takeDmg(x,y);
 				}
 				return true;
 			}
@@ -106,7 +107,7 @@ class Axe extends Weapon{
 				if(map.floors[map.current_floor].boss.state != STATE.DEAD)
 				{
 					if(this.cutting)
-						map.floors[map.current_floor].boss.takeDmg();
+						map.floors[map.current_floor].boss.takeDmg(x,y);
 					
 					
 				}
@@ -221,7 +222,7 @@ class Revolver extends Weapon {
 					
 					if(obj.hurting)
 					{
-						map.floors[map.current_floor].enemies[i].takeDmg();
+						map.floors[map.current_floor].enemies[i].takeDmg(obj.x+camera.offSetX,obj.y+camera.offSetY);
 						obj.hurting = false;
 						obj.going = false;
 					}
@@ -239,7 +240,7 @@ class Revolver extends Weapon {
 				{
 					if(obj.hurting)
 					{
-						map.floors[map.current_floor].boss.takeDmg();
+						map.floors[map.current_floor].boss.takeDmg(obj.x+camera.offSetX,obj.y+camera.offSetY);
 						obj.hurting = false;
 						obj.going = false;
 					}

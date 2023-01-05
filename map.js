@@ -40,7 +40,12 @@ class Floor {
 	{
 		for(let i = 0; i < this.bloods.length; i++)
 			{
-				image(blood, this.bloods[i].x + camera.offSetX, this.bloods[i].y + camera.offSetY, this.bloods[i].w,  this.bloods[i].h)
+				
+				if(this.bloods[i] instanceof Blood)
+					image(blood, this.bloods[i].x + camera.offSetX, this.bloods[i].y + camera.offSetY, this.bloods[i].w,  this.bloods[i].h)
+				if(this.bloods[i] instanceof Vomit_puddle)
+					this.bloods[i].draw();
+					
 			}
 	}
 }
@@ -254,11 +259,11 @@ class Map {
 			}
 			
 			//draws vomit
-			if(this.z_index_map[this.current_floor][k].id >= 200 && this.z_index_map[this.current_floor][k].id < 300)
+			/*if(this.z_index_map[this.current_floor][k].id >= 200 && this.z_index_map[this.current_floor][k].id < 300)
 			{
 				let ind = this.z_index_map[this.current_floor][k].id;
 				this.floors[this.current_floor].boss.vomits[ind - 200].draw();
-			}
+			}*/
 			
 			
 				
