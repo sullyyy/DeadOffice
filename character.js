@@ -32,12 +32,18 @@ let keys = [];
 	 
 	takeDmg(x,y)
 	{
-		//map.floors[map.current_floor].bloods.push(new Blood(this.x, this.y+this.height,0,0))
+		
 		this.bleeding = true;
 		this.lastBleed = new Date().getTime(); 
 		this.bleedX = x - camera.offSetX;
 		this.bleedY = y - camera.offSetY;
 		this.bleedFrame = 0;
+		
+		
+		if(this.bleedY + 30 > this.y + this.height)
+			this.bleedY = this.y + this.height - 30;
+		
+		
 		this.bleed(this.x, this.y+this.height,0,0)
 	}
      
@@ -344,7 +350,7 @@ let keys = [];
 		if(!this.bleeding)
 			return;
 		
-		image(bleed_anim,this.x+camera.offSetX, this.bleedY+camera.offSetY,30,30,this.bleedFrame*20,0,20,20)
+		image(bleed_anim,this.x+camera.offSetX, this.bleedY+camera.offSetY,40,40,this.bleedFrame*20,0,20,20)
 		
 		let now = new Date().getTime();
 		let delta = now - this.lastBleed;
@@ -371,6 +377,8 @@ class Dwight extends Character{
 		this.alive = true;
 		this.weapon;
 		this.faceX = 1;
+		this.faceXX = 1;
+		
 		this.faceY = 0;
 		this.life = 3;
 		this.invulnerable = false;
@@ -456,6 +464,10 @@ class Dwight extends Character{
 	{
 		
 		this.update_invulnerable();
+		revolver.updateBullets();
+		//if(this.weapon instanceof Revolver) 
+				//this.weapon.updateBullets();
+		//this.weapon.update();
 		if(keys[32])
 		{
 			if(this.weapon instanceof Axe) 
@@ -474,7 +486,7 @@ class Dwight extends Character{
 		{
 			if(this.weapon instanceof Revolver) 
 				this.weapon = axe;
-			else if(this.weapon instanceof Axe) 
+			else if(this.weapon instanceof Axe && !this.weapon.swinging) 
 				this.weapon = revolver; 
 			this.weapon.update();
 			keys[CONTROL] = 0;
@@ -482,6 +494,7 @@ class Dwight extends Character{
 		if(keys[LEFT_ARROW])
 		{
 			this.faceX = -1;
+			this.faceXX = -1;
 			this.faceY = 0;
 			if(this.handleCollision(dwight.x - dwight.acc, dwight.y))
 			{
@@ -497,6 +510,8 @@ class Dwight extends Character{
 		if(keys[RIGHT_ARROW])
 		{
 			this.faceX = 1;
+			this.faceXX = 1;
+			
 			this.faceY = 0;
 			if(this.handleCollision(dwight.x  + dwight.acc, dwight.y))
 			{
@@ -817,7 +832,7 @@ class Boss extends Character{
 		let y2 = dwight.y+ 70/2;
 		
 		var dist = Math.sqrt( Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2) );
-		if(dist < 200)
+		if(dist < 300)
 		{
 			if(this.state == STATE.ROAMING)
 				this.state = STATE.CHASING;
@@ -944,10 +959,16 @@ class Creed_Boss extends Boss{
 			this.name = "ZOMBIE CREED";
 			this.velocity = 2;
 			this.blink();
+			this.img = creed_zombie;
+			
 		}
 		else if(this.phase == 2)
 		{
 			super.die();
+			this.img = creed_dead;
+			this.width = 70;
+			this.height = 14;
+			map.resort(this);
 		}
 		
 	}
@@ -957,6 +978,7 @@ class Creed_Boss extends Boss{
 	draw()
 	{
 		super.draw();
+		
 		if(this.blinking)
 		{
 			let now = new Date().getTime();
@@ -1228,14 +1250,10 @@ class Zombie extends Character{
 		this.initX = initX;
 		this.initY = initY;
 		this.vecRoam = createVector(0, 0);
-		this.life = 10;
+		this.life = 5;
 		this.lastWait = new Date().getTime(); 
 		this.speaking = false;
-		/*this.bleeding = false;
-		this.lastBleed = new Date().getTime(); 
-		this.bleedX;
-		this.bleedY;
-		this.bleedFrame = 0;*/
+		
 		
 	}
 	
@@ -1243,11 +1261,6 @@ class Zombie extends Character{
 	{
 		super.takeDmg(x,y);
 		this.life--;
-		/*this.bleeding = true;
-		this.lastBleed = new Date().getTime(); 
-		this.bleedX = x - camera.offSetX;
-		this.bleedY = y - camera.offSetY;
-		this.bleedFrame = 0;*/
 		if(this.life == 0)
 			this.die();
 	}
@@ -1284,26 +1297,6 @@ class Zombie extends Character{
 		if(this.speaking)
 			this.speak("bleuargh ?!?!!")
 	}
-	
-	/*drawBleeding()
-	{
-		if(!this.bleeding)
-			return;
-		
-		image(bleed_anim,this.x+camera.offSetX, this.bleedY+camera.offSetY,30,30,this.bleedFrame*20,0,20,20)
-		
-		let now = new Date().getTime();
-		let delta = now - this.lastBleed;
-		
-		if (delta >= 50) {
-			this.bleedFrame++;
-			if(this.bleedFrame > 6)
-				{
-					this.bleedFrame = 0;
-					this.bleeding = false;
-				}
-		}
-	}*/
 	
 	drawLife()
 	{
@@ -1467,7 +1460,7 @@ class Zombie extends Character{
 	detectPlayer(x1,x2,y1,y2)
 	{
 		var dist = Math.sqrt( Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2) );
-		if(dist < 0)
+		if(dist < 300)
 		{
 			this.zombieState = STATE.CHASING;
 		}
@@ -1477,8 +1470,47 @@ class Zombie extends Character{
 		}
 	}
 	
+	checkCollisionMovObj(x,y,i)
+	{
+		let xw = x + 36;
+		let yh = y + 70;
+		y = y + 60;
+		let x2 = map.floors[map.current_floor].enemies[i].x;
+		let x2w = x2 + map.floors[map.current_floor].enemies[i].width;
+		let y2 = map.floors[map.current_floor].enemies[i].y;
+		let y2h = y2 + map.floors[map.current_floor].enemies[i].height;
+		y2 = y2 + 60;
+		if(x > x2 && x < x2w && y > y2 && y < y2h)
+			return false;
+		if(xw > x2 && xw < x2w && y > y2 && y < y2h)
+			return false;
+		if(x > x2 && x < x2w && yh > y2 && yh < y2h)
+			return false;
+		if(xw > x2 && xw < x2w && yh > y2 && yh < y2h)
+			return false;
+		return true;
+	}
+	
+	handleCollisionMovObj(x,y)
+	{
+		for(let i = 0; i < map.floors[map.current_floor].enemies.length; i++)
+			{
+				if( map.floors[map.current_floor].enemies[i].id === this.id)
+				{
+					//console.log("this")
+					continue;
+				}
+				if(!this.checkCollisionMovObj(x,y,i))
+					return false;
+					
+			}
+		return true;
+	}
+	
 	handleCollision(x,y)
 	{
+		if(!this.handleCollisionMovObj(x,y))
+			return;
 		return super.handleCollision(x,y);
 	}
 	

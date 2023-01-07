@@ -257,6 +257,14 @@ class Map {
 				let ind = this.z_index_map[this.current_floor][k].id;
 				this.floors[this.current_floor].boss.spits[ind - 300].draw();
 			}
+			//draws bullets
+			if(this.z_index_map[this.current_floor][k].id >= 400 && this.z_index_map[this.current_floor][k].id < 407)
+			{
+				
+				let ind = this.z_index_map[this.current_floor][k].id;
+				//dwight.weapon.bullets[ind - 400].draw();
+				revolver.bullets[ind - 400].draw();
+			}
 			
 			//draws vomit
 			/*if(this.z_index_map[this.current_floor][k].id >= 200 && this.z_index_map[this.current_floor][k].id < 300)

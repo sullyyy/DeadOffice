@@ -106,6 +106,8 @@ function preload() {
   blink_image = loadImage('assets/img/blink_image.png');
   blood = loadImage('assets/img/blood.png');
   bleed_anim = loadImage('assets/anim/anim_bleeding.png');
+  creed_zombie = loadImage('assets/img/zombie_creed.png');
+  creed_dead = loadImage('assets/img/creed_dead.png');
   File.load();
   File.loadAssets();
 }
@@ -137,7 +139,7 @@ function setStartingPoint()
 {
 	dwight.x = 800;
 	dwight.y = 200;
-	map.current_floor = 0;
+	map.current_floor = 5;
 	map.cleaning_platform_pos = 1;
 	map.generatorOn = false;
 	start = new Date().getTime();

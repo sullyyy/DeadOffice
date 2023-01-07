@@ -23,28 +23,32 @@ class Axe extends Weapon{
 	
 	update()
 	{
-		this.x = dwight.x-10;
+		if(dwight.faceXX == -1)
+			this.x = dwight.x-10;
+		else
+			this.x = dwight.x+10;
 		this.y = dwight.y+10;
 	}
 	
 	draw()
 	{
-		
 		push();
 		
-		angleMode(DEGREES);
-		translate(this.x+camera.offSetX+this.w,this.y+camera.offSetY+this.h);
-		stroke(255,0,0);
-		rotate(-this.rotation);
-		rect(-(this.w/2),-this.h,this.w,this.h)
-		image(this.img, -(this.w/2), -this.h, this.w, this.h);
+			angleMode(DEGREES);
+			translate(this.x+camera.offSetX+this.w,this.y+camera.offSetY+this.h);
+			if(dwight.faceXX == 1)
+				scale(-1,1);
+			stroke(255,0,0);
+			rotate(-this.rotation);
+			image(this.img, -(this.w/2), -this.h, this.w, this.h);
 		
 		pop();
-		
 		let angle = this.rotation * Math.PI / 180.0;
-		let x = Math.cos(-angle) * ((this.x+10)-((this.x)+20)) - Math.sin(-angle) * (this.y-(this.y+42)) + ((this.x)+20)
-		let y = Math.sin(-angle) * ((this.x+10)-((this.x)+20)) + Math.cos(-angle) * (this.y-(this.y+42)) + (this.y+42)
-		rect(x+camera.offSetX,y+camera.offSetY,10,10);
+		if(dwight.faceXX == 1)
+			angle = -angle;
+		let x =(Math.cos(-angle) * ((this.x+10)-((this.x)+20)) - Math.sin(-angle) * (this.y-(this.y+42)) + ((this.x)+20))
+		let y = (Math.sin(-angle) * ((this.x+10)-((this.x)+20)) + Math.cos(-angle) * (this.y-(this.y+42)) + (this.y+42))
+		
 		
 		if(this.swinging)
 		{
@@ -70,10 +74,8 @@ class Axe extends Weapon{
 	
 	
 	
-	checkCollision(x,y,x2,y2)
+	checkCollision(x,y,x2,y2,x2w,y2h)
 	{
-		let x2w = x2 + 36
-		let y2h = y2 + 70
 		if(x > x2 && x < x2w && y > y2 && y < y2h)
 			return true;
 		return false;
@@ -85,15 +87,15 @@ class Axe extends Weapon{
 		for(let i = 0; i < map.floors[map.current_floor].enemyNumber; i++)
 		{
 			
-			rect(map.floors[map.current_floor].enemies[i].x+camera.offSetX,map.floors[map.current_floor].enemies[i].y+camera.offSetY,36,70);
 			
-			if(this.checkCollision(x,y,map.floors[map.current_floor].enemies[i].x+camera.offSetX,map.floors[map.current_floor].enemies[i].y+camera.offSetY))
+			let x2w = map.floors[map.current_floor].enemies[i].x+camera.offSetX+map.floors[map.current_floor].enemies[i].width;
+			let y2h = map.floors[map.current_floor].enemies[i].y+camera.offSetY+map.floors[map.current_floor].enemies[i].height;
+			if(this.checkCollision(x,y,map.floors[map.current_floor].enemies[i].x+camera.offSetX,map.floors[map.current_floor].enemies[i].y+camera.offSetY,x2w,y2h))
 			{
 				
 				if(map.floors[map.current_floor].enemies[i].zombieState != STATE.DEAD)
 				{
 					if(this.cutting)
-						//map.floors[map.current_floor].enemies[i].takeDmg();
 						map.floors[map.current_floor].enemies[i].takeDmg(x,y);
 				}
 				return true;
@@ -101,7 +103,9 @@ class Axe extends Weapon{
 		}
 		if(map.current_floor != 0 && map.current_floor != 4 && map.current_floor != 5)
 			return;
-		if(this.checkCollision(x,y,map.floors[map.current_floor].boss.x+camera.offSetX,map.floors[map.current_floor].boss.y+camera.offSetY))
+		let x2w = map.floors[map.current_floor].boss.x+camera.offSetX+map.floors[map.current_floor].boss.width;
+		let y2h = map.floors[map.current_floor].boss.y+camera.offSetY+map.floors[map.current_floor].boss.height;
+		if(this.checkCollision(x,y,map.floors[map.current_floor].boss.x+camera.offSetX,map.floors[map.current_floor].boss.y+camera.offSetY,x2w,y2h))
 			{
 				
 				if(map.floors[map.current_floor].boss.state != STATE.DEAD)
@@ -192,10 +196,8 @@ class Revolver extends Weapon {
 		return false;
 	}
 	
-	checkCollision(x,y,x2,y2)
+	checkCollision(x,y,x2,y2,x2w,y2h)
 	{
-		let x2w = x2 + map.floors[map.current_floor].boss.width;
-		let y2h = y2 + map.floors[map.current_floor].boss.height;
 		if(x > x2 && x < x2w && y > y2 && y < y2h)
 			return true;
 		return false;
@@ -210,11 +212,15 @@ class Revolver extends Weapon {
 		{
 			obj.going = false;
 			return false;
+			
 		}
+		
 
 		for(let i = 0; i < map.floors[map.current_floor].enemyNumber; i++)
 		{
-			if(this.checkCollision(obj.x+camera.offSetX,obj.y+camera.offSetY,map.floors[map.current_floor].enemies[i].x+camera.offSetX,map.floors[map.current_floor].enemies[i].y+camera.offSetY))
+			let x2w = map.floors[map.current_floor].enemies[i].x+camera.offSetX + map.floors[map.current_floor].enemies[i].width;
+			let y2h = map.floors[map.current_floor].enemies[i].y+camera.offSetY + map.floors[map.current_floor].enemies[i].height;
+			if(this.checkCollision(obj.x+camera.offSetX,obj.y+camera.offSetY,map.floors[map.current_floor].enemies[i].x+camera.offSetX,map.floors[map.current_floor].enemies[i].y+camera.offSetY,x2w,y2h))
 			{
 				
 				if(map.floors[map.current_floor].enemies[i].zombieState != STATE.DEAD)
@@ -233,7 +239,10 @@ class Revolver extends Weapon {
 		}
 		if(map.current_floor != 0 && map.current_floor != 4 && map.current_floor != 5)
 			return;
-		if(this.checkCollision(obj.x+camera.offSetX,obj.y+camera.offSetY,map.floors[map.current_floor].boss.x+camera.offSetX,map.floors[map.current_floor].boss.y+camera.offSetY))
+		
+		let x2w = map.floors[map.current_floor].boss.x+camera.offSetX + map.floors[map.current_floor].boss.width;
+		let y2h = map.floors[map.current_floor].boss.y+camera.offSetY + map.floors[map.current_floor].boss.height;
+		if(this.checkCollision(obj.x+camera.offSetX,obj.y+camera.offSetY,map.floors[map.current_floor].boss.x+camera.offSetX,map.floors[map.current_floor].boss.y+camera.offSetY,x2w,y2h))
 			{
 				
 				if(map.floors[map.current_floor].boss.state != STATE.DEAD)
@@ -266,13 +275,26 @@ class Revolver extends Weapon {
 		this.bulletOrigVec = createVector(startX, this.y+camera.offSetY+4);
 	}
 	
+	updateBullets()
+	{
+		for(let i = 0; i < this.bullets.length; i++)
+		{	
+			if(this.bullets[i].going == false)
+				continue;
+			this.bullets[i].update();
+			this.handleCollision(this.bullets[i])
+			if(this.bullets[i].going == false)
+			{
+				map.z_index_map[map.current_floor] = map.z_index_map[map.current_floor].filter(x => x.id !== i+400)
+				console.log("bing");
+			}
+		}
+	}
+	
 	reload()
 	{
 		if(this.bulletsShot == this.bulletsNbr)
-		{
-			this.bullets = [];
 			this.bulletsShot = 0;
-		}
 	}
 	
 	draw()
@@ -292,35 +314,32 @@ class Revolver extends Weapon {
 		fill(0);
 		textSize(10);
 		text((this.bulletsNbr - this.bulletsShot)+'/'+this.bulletsNbr, this.x+camera.offSetX+10, this.y+camera.offSetY-5);
-		for(let i = 0; i < this.bulletsShot; i++)
-		{	
-			this.bullets[i].update();
-			
-			this.bullets[i].draw();
-			this.handleCollision(this.bullets[i])
-		}
-		
 	}
 	
 	shoot()
 	{
 		let now = new Date().getTime();
 		let delta = now - this.lastShot;
-		if (delta < 1000) {
+		if (delta < 500) {
 			return;
 		}
 		
-		this.lastShot = new Date().getTime();
-		
 		if(this.bulletsShot == this.bulletsNbr)
 			return;
+		
+		this.lastShot = new Date().getTime();
+		
 		let startX;
 		if(dwight.faceX == -1)
 			startX = this.x - (18+36);
 		else
 			startX = this.x+18
 		
-		this.bullets[this.bulletsShot] = new Bullet(startX,this.y+3,5,3,dwight.faceX,dwight.faceY)
+		
+		this.bullets[this.bulletsShot] = new Bullet(startX,this.y+3,5,3,dwight.faceX,dwight.faceY);
+		
+		map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.bullets[this.bulletsShot].x/100,this.bullets[this.bulletsShot].y/100,1000,false,(this.bulletsShot)+400));
 		this.bulletsShot++;
+		
 	}
 }
