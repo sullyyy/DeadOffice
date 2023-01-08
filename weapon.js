@@ -72,6 +72,25 @@ class Axe extends Weapon{
 		this.cutting = true;
 	}
 	
+	checkCollisionEnv(x,y)
+	{
+		//let x = this.x;
+		//let y = this.y;
+		let i = floor(this.x/100);
+		let j = floor(this.y/100);
+		let x2 = i*100+map.map_array[map.current_floor][j][i].hitboxX
+		let y2 = j*100+map.map_array[map.current_floor][j][i].hitboxY
+		let x2w = x2+map.map_array[map.current_floor][j][i].hitboxW
+		let y2h = y2+map.map_array[map.current_floor][j][i].hitboxH
+		fill(255,0,0);
+		rect(x2+camera.offSetX,y2+camera.offSetY,x2w-x2,y2h-y2);
+		if(x > x2 && x < x2w && y > y2 && y < y2h)
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	
 	
 	checkCollision(x,y,x2,y2,x2w,y2h)
@@ -83,6 +102,13 @@ class Axe extends Weapon{
 	
 	handleCollision(x,y)
 	{
+		/*if(this.checkCollisionEnv(x-camera.offSetX,y-camera.offSetY))
+			{
+				this.swinging = false;
+				this.cutting = false;
+				this.rotation = 0;
+				return true;
+			}*/
 
 		for(let i = 0; i < map.floors[map.current_floor].enemyNumber; i++)
 		{
@@ -137,7 +163,7 @@ class Bullet {
 	update()
 	{
 		this.x+=10*this.dirX;
-		if(this.x > 900 || this.x < 0)
+		if(this.x > 1000 || this.x < 0)
 			this.going = false;
 		this.y+=10*this.dirY;
 		if(this.y > 900 || this.y < 0)
@@ -179,18 +205,99 @@ class Revolver extends Weapon {
 	
 	checkCollisionEnv(obj)
 	{
+		
+				
 		let x = obj.x;
 		let y = obj.y;
 		let i = floor(obj.x/100);
 		let j = floor(obj.y/100);
-		let x2 = i*100+map.map_array[map.current_floor][j][i].hitboxX
 		let y2 = j*100+map.map_array[map.current_floor][j][i].hitboxY
-		let x2w = x2+map.map_array[map.current_floor][j][i].hitboxW
 		let y2h = y2+map.map_array[map.current_floor][j][i].hitboxH
+		
+		
+		if(map.map_array[map.current_floor][j][i].game_id == 78)
+			{
+				y2 = j*100+40;
+				y2h = y2+60;
+			}
+		let x2 = i*100+map.map_array[map.current_floor][j][i].hitboxX
+		
+		let x2w = x2+map.map_array[map.current_floor][j][i].hitboxW
+		
+		
+		
 		fill(255,0,0);
 		rect(x2+camera.offSetX,y2+camera.offSetY,x2w-x2,y2h-y2);
+		
+		
+		
 		if(x > x2 && x < x2w && y > y2 && y < y2h)
 		{
+			map.floors[map.current_floor].bullet_impact.push(new Bullet_Impact(x,y,20,20))
+			map.z_index_map[map.current_floor] = map.z_index_map[map.current_floor].filter(x => x.id !== 8)
+			map.z_index_map[map.current_floor].push(new Tile_To_Draw(floor(x/100),floor(y/100),1000,false,8));
+			
+			if(map.map_array[map.current_floor][j][i].game_id == 78)
+			{
+				map.map_array[map.current_floor][j][i].game_id = 79;
+					map.map_array[map.current_floor][j][i].draw_id = 19;
+					//map.explosion = new Explosion(i*100 - 50,j*100,200,200);
+					map.explosion = new Explosion(i*100+50,j*100+50,200,200);
+					map.floors[map.current_floor].bloods.push(new Explosion_Trace(i*100,j*100+50,0,0))
+					
+					let v1 = createVector(i*100+50, j*100+50);
+					//circle(i*100-50, j*100, 200)
+					for(let k = 0; k < map.floors[map.current_floor].enemyNumber;k++)
+						{
+							
+		
+							let v2 = createVector(map.floors[map.current_floor].enemies[k].x + 36/2, map.floors[map.current_floor].enemies[k].y + 70/2)
+
+							let distance = p5.Vector.dist(v1, v2);
+							//console.log("distance ", distance)
+							//console.log("v1 ", v1)
+							//console.log("v2 ", v2)
+							
+							if(distance < 150)
+								{
+									map.floors[map.current_floor].enemies[k].takeDmg(map.floors[map.current_floor].enemies[k].x,map.floors[map.current_floor].enemies[k].y)
+									map.floors[map.current_floor].enemies[k].takeDmg(map.floors[map.current_floor].enemies[k].x,map.floors[map.current_floor].enemies[k].y)
+									map.floors[map.current_floor].enemies[k].takeDmg(map.floors[map.current_floor].enemies[k].x,map.floors[map.current_floor].enemies[k].y)
+									map.floors[map.current_floor].enemies[k].takeDmg(map.floors[map.current_floor].enemies[k].x,map.floors[map.current_floor].enemies[k].y)
+									map.floors[map.current_floor].enemies[k].takeDmg(map.floors[map.current_floor].enemies[k].x,map.floors[map.current_floor].enemies[k].y)
+								}
+						}
+					
+		
+							let v2 = createVector(map.floors[map.current_floor].boss.x + 40/2, map.floors[map.current_floor].boss.y + 80/2)
+
+							let distance = p5.Vector.dist(v1, v2);
+							//console.log("distance ", distance)
+							//console.log("v1 ", v1)
+							//console.log("v2 ", v2)
+							
+							if(distance < 150)
+								{
+									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
+									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
+								}
+					
+					
+		
+							v2 = createVector(dwight.x + 36/2, dwight.y + 70/2)
+
+							distance = p5.Vector.dist(v1, v2);
+							//console.log("distance ", distance)
+							//console.log("v1 ", v1)
+							//console.log("v2 ", v2)
+							
+							if(distance < 150)
+								{
+									dwight.takeDmg(dwight.x,dwight.y)
+									
+								}
+			}
+			
 			return true;
 		}
 		return false;
@@ -286,7 +393,7 @@ class Revolver extends Weapon {
 			if(this.bullets[i].going == false)
 			{
 				map.z_index_map[map.current_floor] = map.z_index_map[map.current_floor].filter(x => x.id !== i+400)
-				console.log("bing");
+				
 			}
 		}
 	}

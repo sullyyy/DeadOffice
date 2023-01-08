@@ -174,7 +174,7 @@ function mySelectEvent2() {
 function mouseWheel(event) {
   if(event.deltaY  >  0)
   {
-	   if(editor.decalX!=-7000)
+	   if(editor.decalX!=-7200)
 	      editor.decalX-=100;
   }
   else

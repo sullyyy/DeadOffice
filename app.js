@@ -108,6 +108,9 @@ function preload() {
   bleed_anim = loadImage('assets/anim/anim_bleeding.png');
   creed_zombie = loadImage('assets/img/zombie_creed.png');
   creed_dead = loadImage('assets/img/creed_dead.png');
+  impact = loadImage('assets/anim/impact.png');
+  explosion_animation =  loadImage('assets/anim/explosion_animation.png');
+  explosion_trace =  loadImage('assets/img/explosion_trace.png');
   File.load();
   File.loadAssets();
 }
@@ -139,12 +142,13 @@ function setStartingPoint()
 {
 	dwight.x = 800;
 	dwight.y = 200;
-	map.current_floor = 5;
+	map.current_floor = 0;
 	map.cleaning_platform_pos = 1;
 	map.generatorOn = false;
 	start = new Date().getTime();
 	game_scale = 1;
-	map.floors[map.current_floor].setZombiesPosition();
+	//map.floors[map.current_floor].setZombiesPosition();
+	map.setZombies();
 	dwight.revive();
 	map.floors[0].boss.revive();
 	map.floors[4].boss.revive();

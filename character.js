@@ -35,7 +35,8 @@ let keys = [];
 		
 		this.bleeding = true;
 		this.lastBleed = new Date().getTime(); 
-		this.bleedX = x - camera.offSetX;
+		//this.bleedX = x - camera.offSetX;
+		this.bleedX = this.x;
 		this.bleedY = y - camera.offSetY;
 		this.bleedFrame = 0;
 		
@@ -350,7 +351,7 @@ let keys = [];
 		if(!this.bleeding)
 			return;
 		
-		image(bleed_anim,this.x+camera.offSetX, this.bleedY+camera.offSetY,40,40,this.bleedFrame*20,0,20,20)
+		image(bleed_anim,this.bleedX+camera.offSetX, this.bleedY+camera.offSetY,40,40,this.bleedFrame*20,0,20,20)
 		
 		let now = new Date().getTime();
 		let delta = now - this.lastBleed;
@@ -908,6 +909,13 @@ class Creed_Boss extends Boss{
 		this.y = random(100,900);
 	}
 	
+	revive()
+	{
+		super.revive();
+		this.phase = 1;
+		this.name = "CREED";
+	}
+	
 	update()
 	{
 		super.update();
@@ -946,6 +954,8 @@ class Creed_Boss extends Boss{
 			this.velocity = 2;
 			this.blink();
 		}
+		//super.takeDmg(this.x,this.y);
+		
 	}
 	
 	die()
@@ -968,6 +978,8 @@ class Creed_Boss extends Boss{
 			this.img = creed_dead;
 			this.width = 70;
 			this.height = 14;
+			this.width *= 1.5;
+			this.height *= 1.5;
 			map.resort(this);
 		}
 		
@@ -1253,14 +1265,20 @@ class Zombie extends Character{
 		this.life = 5;
 		this.lastWait = new Date().getTime(); 
 		this.speaking = false;
+		this.lastStunned;
 		
 		
 	}
 	
 	takeDmg(x,y)
 	{
-		super.takeDmg(x,y);
+		if(this.zombieState == STATE.DEAD)
+			return;
+		
 		this.life--;
+		this.zombieState = STATE.STUNNED
+		this.lastStunned = new Date().getTime(); 
+		super.takeDmg(x,y);
 		if(this.life == 0)
 			this.die();
 	}
@@ -1292,7 +1310,7 @@ class Zombie extends Character{
 	{
 		super.draw();
 		//this.drawChaseLine();
-		this.drawLife();
+		//this.drawLife();
 		//this.drawBleeding();
 		if(this.speaking)
 			this.speak("bleuargh ?!?!!")
@@ -1300,12 +1318,15 @@ class Zombie extends Character{
 	
 	drawLife()
 	{
+		if(this.zombieState == STATE.DEAD)
+			return;
 		push();
 		textSize(10);
 		fill(0,0,0);
 		text('HP : ' + this.life, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
 		textSize(12);
 		text('ZOMBIE', this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-20);
+		text('ID ' + this.id, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-30);
 		pop();
 	}
 	
@@ -1346,6 +1367,10 @@ class Zombie extends Character{
 			  
 			  case STATE.DEAD:
 			  break;
+				
+			case STATE.STUNNED:
+				this.stunned();
+				break;
 			  
 			  default:
 			  break;
@@ -1359,6 +1384,15 @@ class Zombie extends Character{
 		if (delta >= 500) {
 			this.zombieState = STATE.ROAMING;
 			this.speaking = false;
+		}
+	}
+	
+	stunned()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.lastStunned;
+		if (delta >= 100) {
+			this.zombieState = STATE.CHASING
 		}
 	}
 	
@@ -1491,6 +1525,27 @@ class Zombie extends Character{
 		return true;
 	}
 	
+	checkCollisionBoss(x,y)
+	{
+		let xw = x + 36;
+		let yh = y + 70;
+		y = y + 60;
+		let x2 = map.floors[map.current_floor].boss.x;
+		let x2w = x2 + map.floors[map.current_floor].boss.width;
+		let y2 = map.floors[map.current_floor].boss.y;
+		let y2h = y2 + map.floors[map.current_floor].boss.height;
+		y2 = y2 + map.floors[map.current_floor].boss.height - 10;
+		if(x > x2 && x < x2w && y > y2 && y < y2h)
+			return false;
+		if(xw > x2 && xw < x2w && y > y2 && y < y2h)
+			return false;
+		if(x > x2 && x < x2w && yh > y2 && yh < y2h)
+			return false;
+		if(xw > x2 && xw < x2w && yh > y2 && yh < y2h)
+			return false;
+		return true;
+	}
+	
 	handleCollisionMovObj(x,y)
 	{
 		for(let i = 0; i < map.floors[map.current_floor].enemies.length; i++)
@@ -1504,6 +1559,8 @@ class Zombie extends Character{
 					return false;
 					
 			}
+		if(!this.checkCollisionBoss(x,y))
+			return false;
 		return true;
 	}
 	

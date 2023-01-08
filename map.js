@@ -8,6 +8,91 @@ class Tile_To_Draw {
 	}
 }
 
+class Explosion{
+	constructor(x,y,w,h)
+	{
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		this.last = new Date().getTime();
+		this.frame = 0;
+		this.going = true;
+	}
+	
+	draw()
+	{
+		if(!this.going)
+			return;
+		//circle(this.x + camera.offSetX, this.y + camera.offSetY, 300)
+		image(explosion_animation, this.x + camera.offSetX - 50 - 25 - 12, this.y + camera.offSetY - 50 - 25 , this.w,  this.h,50*this.frame,0,50,50)
+		
+		
+		let now = new Date().getTime();
+		let delta = now - this.last;
+		if (delta >= 70) {
+			
+			this.frame++;
+			if(this.frame > 14)
+			{
+				this.going = false;
+				
+			}
+		}
+		
+	}
+}
+
+class Bullet_Impact{
+	constructor(x,y,w,h)
+	{
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		this.last = new Date().getTime();
+		this.frame = 0;
+	}
+	
+	draw()
+	{
+		image(impact, this.x + camera.offSetX, this.y + camera.offSetY, this.w,  this.h,20*this.frame,0,20,20)
+		
+		let now = new Date().getTime();
+		let delta = now - this.last;
+		if (delta >= 40) {
+			
+			this.frame++;
+			if(this.frame > 4)
+			{
+				this.frame = 0;
+				map.floors[map.current_floor].bullet_impact.pop();
+				//console.log("map.z_index_map[map.current_floor] ",map.z_index_map[map.current_floor])
+				//map.z_index_map[map.current_floor] = map.z_index_map[map.current_floor].filter(x => x.id !== 8)
+				
+			}
+		}
+		//image(blood, this.bloods[i].x + camera.offSetX, this.bloods[i].y + camera.offSetY, this.bloods[i].w,  this.bloods[i].h)
+		
+	}
+}
+
+class Explosion_Trace {
+	constructor(x,y,w,h)
+	{
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+	}
+	
+	draw()
+	{
+		//image(blood, this.bloods[i].x + camera.offSetX, this.bloods[i].y + camera.offSetY, this.bloods[i].w,  this.bloods[i].h)
+		image(explosion_trace, this.x + camera.offSetX, this.y + camera.offSetY, this.w,  this.h)
+	}
+}
+
 class Blood {
 	constructor(x,y,w,h)
 	{
@@ -15,6 +100,12 @@ class Blood {
 		this.y = y;
 		this.w = w;
 		this.h = h;
+	}
+	
+	draw()
+	{
+		//image(blood, this.bloods[i].x + camera.offSetX, this.bloods[i].y + camera.offSetY, this.bloods[i].w,  this.bloods[i].h)
+		image(blood, this.x + camera.offSetX, this.y + camera.offSetY, this.w,  this.h)
 	}
 }
 
@@ -26,7 +117,16 @@ class Floor {
 		this.enemies = [];
 		this.boss = boss;
 		this.bloods = [];
+		this.bullet_impact = [];
 	}
+	
+	drawBulletImpact()
+	{
+		for(let i = 0; i < this.bullet_impact.length;i++)
+			this.bullet_impact[i].draw();
+	}
+	
+	
 	
 	setZombiesPosition()
 	{
@@ -41,9 +141,9 @@ class Floor {
 		for(let i = 0; i < this.bloods.length; i++)
 			{
 				
-				if(this.bloods[i] instanceof Blood)
-					image(blood, this.bloods[i].x + camera.offSetX, this.bloods[i].y + camera.offSetY, this.bloods[i].w,  this.bloods[i].h)
-				if(this.bloods[i] instanceof Vomit_puddle)
+				//if(this.bloods[i] instanceof Blood)
+					
+				//if(this.bloods[i] instanceof Vomit_puddle)
 					this.bloods[i].draw();
 					
 			}
@@ -67,9 +167,9 @@ function setupMap()
 
 function loadFloors()
 {
-  map.floors[0] = new Floor(0,1,new Basement_Boss(500,500,40,80,basement_boss,6,25,STATE.ROAMING,1.5,"FATTY FAT BOB"));
+  map.floors[0] = new Floor(0,15,new Basement_Boss(500,500,40,80,basement_boss,6,25,STATE.ROAMING,1.5,"FATTY FAT BOB"));
   map.floors[0].enemies.push(new Zombie(500,500,36,70,zombie,100,400,500));
-  /*map.floors[0].enemies.push(new Zombie(500,600,36,70,zombie,101,300,600));
+  map.floors[0].enemies.push(new Zombie(500,600,36,70,zombie,101,300,600));
   map.floors[0].enemies.push(new Zombie(500,700,36,70,zombie,102,500,700));
   map.floors[0].enemies.push(new Zombie(500,800,36,70,zombie,103,500,800));
   map.floors[0].enemies.push(new Zombie(500,900,36,70,zombie,104,500,900));
@@ -81,8 +181,8 @@ function loadFloors()
   map.floors[0].enemies.push(new Zombie(100,400,36,70,zombie,110,100,400));
   map.floors[0].enemies.push(new Zombie(100,500,36,70,zombie,111,100,500));
   map.floors[0].enemies.push(new Zombie(100,600,36,70,zombie,112,100,600));
-  map.floors[0].enemies.push(new Zombie(100,700,36,70,zombie,113,100,700));
-  map.floors[0].enemies.push(new Zombie(100,800,36,70,zombie,114,100,800));*/
+  map.floors[0].enemies.push(new Zombie(300,700,36,70,zombie,113,300,700));
+  map.floors[0].enemies.push(new Zombie(400,800,36,70,zombie,114,400,800));
   map.floors[1] = new Floor(1,1);
   map.floors[1].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
   map.floors[2] = new Floor(2,1);
@@ -117,6 +217,16 @@ class Map {
 		this.cleaning_platform_pos = 1;
 		this.generatorOn = false;
 		this.floors = [];
+		this.explosion;
+	}
+	
+	setZombies()
+	{
+		for(let i = 0; i < this.floors.length; i++)
+			{
+				this.floors[i].setZombiesPosition();
+	
+			}
 	}
 	
 	set_map_size_height(size)
@@ -285,6 +395,11 @@ class Map {
 				{
 					this.floors[this.current_floor].boss.draw();
 				}
+				//draws bullet impact
+				if(this.z_index_map[this.current_floor][k].id == 8)
+				{
+					this.floors[this.current_floor].drawBulletImpact();
+				}
 				//draws dwight
 				if(this.z_index_map[this.current_floor][k].id == 1)
 				{
@@ -310,9 +425,13 @@ class Map {
 					this.floors[this.current_floor].enemies[ind-100].draw();
 				}
 			}
+			
+			
 		}
 		
 		//draws other stuff
+		if(map.explosion != null)
+			map.explosion.draw();
 		if(showOption)
 			show_option_buttons();
 		Menu.s_drawCurrentFloor();

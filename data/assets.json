@@ -778,5 +778,25 @@
       "hitboxW": 30,
       "hitboxH": 20,
 	  "decalY": -50
+    },
+	{
+      "game_id": 78,
+      "draw_id": 18,
+      "data_id": 3,
+      "hitboxX": 30,
+      "hitboxY": 80,
+      "hitboxW": 40,
+      "hitboxH": 20,
+	  "decalY": 0
+    },
+	{
+      "game_id": 79,
+      "draw_id": 19,
+      "data_id": 3,
+      "hitboxX": 30,
+      "hitboxY": 80,
+      "hitboxW": 40,
+      "hitboxH": 20,
+	  "decalY": 0
     }
 ]
