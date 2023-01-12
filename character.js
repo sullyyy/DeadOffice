@@ -663,7 +663,8 @@ function keyReleased() {
 	VOMITING: 4,
 	STUNNED: 5,
 	WAITING: 6,
-	SPITTING: 7
+	SPITTING: 7,
+	RUSHING: 8
  }
  
  
@@ -685,6 +686,8 @@ class Boss extends Character{
 		this.init_height = height;
 		this.start_x = x;
 		this.start_y = y;
+		
+		//this.lastStunned = new Date().getTime();
 		
 	}
 	
@@ -888,6 +891,141 @@ class Vomit_puddle{
 		 image(this.img, this.x+camera.offSetX,this.y+camera.offSetY,this.width,this.draw_height)
 	 }
  }
+
+class Hank_Boss extends Boss{
+	constructor (x, y, width, height, img,id,life,state,velocity,name) {
+		super(x, y, width, height, img,id,life,state,velocity,name);
+		this.lastRush = new Date().getTime();
+		this.v1;
+		this.v2;
+		this.saveState = this.state;
+	}
+	
+	stunned()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.lastStunned;
+		if (delta >= 100) {
+		   
+			this.state = this.saveState;
+		}
+		if (delta >= 2000) {
+		   
+			this.state = STATE.ROAMING;
+		}
+	}
+	
+	takeDmg(x,y)
+	{
+		this.saveState = this.state;
+		super.takeDmg(x,y);
+	}
+	
+	die()
+	{
+		super.die();
+		this.img = hank_dead;
+	}
+	
+	detectPlayer()
+	{
+		let dist = super.detectPlayer();
+		let now = new Date().getTime();
+		let delta = now - this.lastRush;
+		
+		if(dist > 150 && dist < 800)
+			{
+				if(delta > 2500)
+					{
+						this.lastRush = new Date().getTime();
+						this.state = STATE.RUSHING;
+				
+						this.v1 = createVector(this.x + 40/2 , this.y + 80/2);
+						
+						let posX = dwight.x + 36/2;
+						let posY = dwight.y + 70/2;
+						this.v2 = createVector(posX , posY );
+						
+						this.velocity = 5;
+					}
+			}
+	}
+	
+	rush()
+	{
+			
+		this.v1 = createVector(this.x + 40/2 , this.y + 80/2 );
+		
+		let distance = p5.Vector.dist(this.v1, this.v2);
+		
+		if(distance < 5)
+		{
+			this.state = STATE.CHASING;
+			this.velocity = 2;
+			return;
+		}
+		  let dx = this.v1.x - this.v2.x;
+		  let dy = this.v1.y - this.v2.y;
+		  let angle = atan2(dy, dx)
+		  
+		  let xVelocity = this.velocity * cos(angle);
+		  let yVelocity = this.velocity * sin(angle);
+		  if(this.handleCollision(this.x - xVelocity, this.y))
+		  {
+			this.x-=xVelocity;
+			map.resort(this);
+		  }
+		  else
+			  {
+				  this.velocity = 2;
+				  this.state = STATE.STUNNED;
+				  this.lastStunned = new Date().getTime();
+				  return;
+				  //this.lastRush = new Date().getTime();
+			  }
+		  if(this.handleCollision(this.x, this.y - yVelocity))
+		  {
+			this.y-=yVelocity;
+			map.resort(this);
+		  }
+		  else
+			  {
+				  this.velocity = 2;
+				  this.state = STATE.STUNNED;
+				  this.lastStunned = new Date().getTime();
+				  //this.lastRush = new Date().getTime();
+			  }
+		
+	}
+	
+	update()
+	{
+		super.update();
+		
+		switch (this.state) {
+				
+			case STATE.RUSHING:
+				this.detectPlayer();
+				this.rush();
+				
+				break;
+		}
+	}
+	
+	/*drawLife()
+	{
+		super.drawLife();
+		push();
+			textSize(10);
+			fill(0,0,0);
+			text('STATE : ' + this.state, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-30);
+		    text('saveState : ' + this.saveState, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-40);
+		pop();
+		
+	}*/
+	
+	
+}
 
 class Creed_Boss extends Boss{
 	constructor (x, y, width, height, img,id,life,state,velocity,name) {
@@ -1527,6 +1665,9 @@ class Zombie extends Character{
 	
 	checkCollisionBoss(x,y)
 	{
+		if(map.floors[map.current_floor].boss == null)
+			return true;
+		
 		let xw = x + 36;
 		let yh = y + 70;
 		y = y + 60;

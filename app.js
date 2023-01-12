@@ -73,6 +73,8 @@ let showOption = true;
 
 let lvltransframe = 0;
 
+let mySound;
+
 class cpl {
 	 constructor (w, h) {
 		 this.w = w;
@@ -111,6 +113,9 @@ function preload() {
   impact = loadImage('assets/anim/impact.png');
   explosion_animation =  loadImage('assets/anim/explosion_animation.png');
   explosion_trace =  loadImage('assets/img/explosion_trace.png');
+  hank = loadImage('assets/img/hank.png');
+  hank_dead = loadImage('assets/img/hank_dead.png');
+
   File.load();
   File.loadAssets();
 }
@@ -142,15 +147,15 @@ function setStartingPoint()
 {
 	dwight.x = 800;
 	dwight.y = 200;
-	map.current_floor = 0;
+	map.current_floor = 1;
 	map.cleaning_platform_pos = 1;
-	map.generatorOn = false;
+	map.generatorOn = true;
 	start = new Date().getTime();
 	game_scale = 1;
-	//map.floors[map.current_floor].setZombiesPosition();
 	map.setZombies();
 	dwight.revive();
 	map.floors[0].boss.revive();
+	map.floors[1].boss.revive();
 	map.floors[4].boss.revive();
 	map.floors[5].boss.revive();
 	dwight.init();
@@ -204,7 +209,7 @@ function draw() {
 	  {
 		  map.floors[map.current_floor].enemies[i].update();
 	  }
-	  if(map.current_floor == 0 || map.current_floor == 4 || map.current_floor == 5)
+	  if(map.current_floor == 0  || map.current_floor == 1 || map.current_floor == 4 || map.current_floor == 5)
 		map.floors[map.current_floor].boss.update();
 	  map.draw();
 	  if(end == 1)

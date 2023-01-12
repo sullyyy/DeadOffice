@@ -127,7 +127,7 @@ class Axe extends Weapon{
 				return true;
 			}
 		}
-		if(map.current_floor != 0 && map.current_floor != 4 && map.current_floor != 5)
+		if(map.current_floor != 0 && map.current_floor != 1 && map.current_floor != 4 && map.current_floor != 5)
 			return;
 		let x2w = map.floors[map.current_floor].boss.x+camera.offSetX+map.floors[map.current_floor].boss.width;
 		let y2h = map.floors[map.current_floor].boss.y+camera.offSetY+map.floors[map.current_floor].boss.height;
@@ -237,6 +237,8 @@ class Revolver extends Weapon {
 			map.z_index_map[map.current_floor] = map.z_index_map[map.current_floor].filter(x => x.id !== 8)
 			map.z_index_map[map.current_floor].push(new Tile_To_Draw(floor(x/100),floor(y/100),1000,false,8));
 			
+			
+			//hitting an explosive barell
 			if(map.map_array[map.current_floor][j][i].game_id == 78)
 			{
 				map.map_array[map.current_floor][j][i].game_id = 79;
@@ -244,6 +246,8 @@ class Revolver extends Weapon {
 					//map.explosion = new Explosion(i*100 - 50,j*100,200,200);
 					map.explosion = new Explosion(i*100+50,j*100+50,200,200);
 					map.floors[map.current_floor].bloods.push(new Explosion_Trace(i*100,j*100+50,0,0))
+					map.screenShake = true;
+					map.lastShake = new Date().getTime();
 					
 					let v1 = createVector(i*100+50, j*100+50);
 					//circle(i*100-50, j*100, 200)
@@ -344,7 +348,7 @@ class Revolver extends Weapon {
 			}
 			
 		}
-		if(map.current_floor != 0 && map.current_floor != 4 && map.current_floor != 5)
+		if(map.current_floor != 0 && map.current_floor != 1 && map.current_floor != 4 && map.current_floor != 5)
 			return;
 		
 		let x2w = map.floors[map.current_floor].boss.x+camera.offSetX + map.floors[map.current_floor].boss.width;

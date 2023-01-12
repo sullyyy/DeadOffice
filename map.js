@@ -148,6 +148,47 @@ class Floor {
 					
 			}
 	}
+	
+	static drawFloor(floor)
+	{
+		if(floor == 0)
+			{
+				fill(149,139,89);
+				rect(camera.offSetX*game_scale,camera.offSetY*game_scale+100,1000*game_scale,900*game_scale)
+			}
+		else if(floor == 1)
+			{
+				fill(98,149,112);
+				rect(camera.offSetX*game_scale,camera.offSetY*game_scale+100,1000*game_scale,900*game_scale)
+				image(wc_floor, camera.offSetX+100,camera.offSetY+100,400,200);
+			}
+		else if(floor == 2)
+			{
+				fill(98,149,112);
+				rect(camera.offSetX*game_scale,camera.offSetY*game_scale+100,1000*game_scale,900*game_scale)
+			}
+		else if(floor == 3)
+			{
+				fill(98,149,112);
+				rect(camera.offSetX*game_scale,camera.offSetY*game_scale+100,1000*game_scale,900*game_scale)
+				image(wc_floor, camera.offSetX+100,camera.offSetY+100,400,200);
+			}
+		else if(floor == 4)
+			{
+				fill(98,149,112);
+				rect(camera.offSetX*game_scale,camera.offSetY*game_scale+100,1000*game_scale,900*game_scale)
+				fill(78,145,100);
+				rect(camera.offSetX*game_scale+500,camera.offSetY*game_scale+100,1000*game_scale-500,900*game_scale)
+				rect(camera.offSetX*game_scale,camera.offSetY*game_scale+500,1000*game_scale,200*game_scale)
+			}
+		else if(floor == 5)
+			{
+				fill(173,173,173);
+				rect(camera.offSetX*game_scale,camera.offSetY*game_scale+100,1000*game_scale,900*game_scale)
+			}
+		
+		
+	}
 }
 
 function setupMap()
@@ -183,7 +224,7 @@ function loadFloors()
   map.floors[0].enemies.push(new Zombie(100,600,36,70,zombie,112,100,600));
   map.floors[0].enemies.push(new Zombie(300,700,36,70,zombie,113,300,700));
   map.floors[0].enemies.push(new Zombie(400,800,36,70,zombie,114,400,800));
-  map.floors[1] = new Floor(1,1);
+  map.floors[1] = new Floor(1,1,new Hank_Boss(500,500,40,80,hank,6,15,STATE.ROAMING,1.5,"HANK"));
   map.floors[1].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
   map.floors[2] = new Floor(2,1);
   map.floors[2].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
@@ -218,6 +259,8 @@ class Map {
 		this.generatorOn = false;
 		this.floors = [];
 		this.explosion;
+		this.screenShake = false;
+		this.lastShake  = new Date().getTime();
 	}
 	
 	setZombies()
@@ -302,26 +345,33 @@ class Map {
 		this.z_index_map[this.current_floor].sort(function(a, b){return a.z_index - b.z_index});
 	}
 	
+	//shaking screen 
+	shake()
+	{
+		//camera.offSetX += random(-10,10);
+		camera.offSetY += random(-15,15);
+		
+		let now = new Date().getTime();
+		let delta = now - this.lastShake;
+		if (delta >= 500) {
+			this.screenShake = false;
+		}
+	}
+	
 	
 	draw()
 	{
+		//shaking screen
+		if(this.screenShake)
+			this.shake();
+			
 		//draw background
 		background(47,47,47);
 		
 		noStroke();
 		
-		//draw floor colour
-		fill(98,149,112);
-		if(this.current_floor == 0)
-			fill(149,139,89);
-		if(this.current_floor == 5)
-			fill(173,173,173);
-		rect(camera.offSetX*game_scale,camera.offSetY*game_scale+100,1000*game_scale,900*game_scale)
-		
-		if(this.current_floor == 3 || this.current_floor == 1)
-		{
-			image(wc_floor, camera.offSetX+100,camera.offSetY+100,400,200);
-		}
+		//draws floor
+		Floor.drawFloor(map.current_floor);
 		
 		stroke(255,0,0);
 		noFill();
