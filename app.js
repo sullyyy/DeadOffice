@@ -100,7 +100,12 @@ function preload() {
   dwight_dead = loadImage('assets/img/dwight_dead.png');
   basement_boss = loadImage('assets/img/basement_boss.png')
   boss_dead = loadImage('assets/img/basement_boss_dead.png');
+	
   ceo_boss = loadImage('assets/img/the_ceo.png');
+  ceo_boss_dead = loadImage('assets/img/the_ceo_dead.png');
+  shotgun = loadImage('assets/img/shotgun_ground.png');
+	
+	
   creed_boss = loadImage('assets/img/creed.png');
   zombie = loadImage('assets/img/zombie.png');
   dwight_img = loadImage('assets/img/dwight.png');
@@ -147,7 +152,7 @@ function setStartingPoint()
 {
 	dwight.x = 800;
 	dwight.y = 200;
-	map.current_floor = 1;
+	map.current_floor = 4;
 	map.cleaning_platform_pos = 1;
 	map.generatorOn = true;
 	start = new Date().getTime();

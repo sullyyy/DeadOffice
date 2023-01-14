@@ -11,6 +11,147 @@ class Weapon {
 	
 }
 
+class Shotgun_Bullet {
+	 constructor (x,y,dest) {
+		 this.x = x;
+		 this.y = y;
+		 this.w = 5;
+		 this.h = 5;
+		 this.dest = dest;
+		 this.ori = createVector(x, y);
+		 this.velocity = 6;
+		 this.show = true;
+	 }
+	
+	checkCollisionEnv(x,y)
+	{
+		let i = floor(this.x/100);
+		let j = floor(this.y/100);
+		let x2 = i*100+map.map_array[map.current_floor][j][i].hitboxX;
+		let y2 = j*100+map.map_array[map.current_floor][j][i].hitboxY;
+		let x2w = x2+map.map_array[map.current_floor][j][i].hitboxW;
+		let y2h = y2+map.map_array[map.current_floor][j][i].hitboxH;
+		
+		if(x > x2 && x < x2w && y > y2 && y < y2h)
+			return true;
+		return false;
+	}
+	
+	checkCollision()
+	{
+		
+		let x2 = dwight.x;
+		let y2 = dwight.y;
+		let x2w = x2+dwight.width;
+		let y2h = y2+dwight.height;
+		let x = this.x;
+		let y = this.y;
+		if(x > x2 && x < x2w && y > y2 && y < y2h)
+			return true;
+		return false;
+	}
+	
+	update()
+	{
+
+		let v1 = this.ori;
+		let v2 = this.dest;
+		  
+		  
+		  let dx = v1.x - v2.x;
+		  let dy = v1.y - v2.y;
+		  let angle = atan2(dy, dx)
+		  
+		  let xVelocity = this.velocity * cos(angle);
+		  let yVelocity = this.velocity * sin(angle);
+		
+		if(this.checkCollision())
+			return 2;
+		
+		if(this.checkCollisionEnv(this.x - xVelocity,this.y - yVelocity))
+			return false;
+		  
+		
+		this.x-=xVelocity;
+			
+		this.y-=yVelocity;
+		
+		let distance = p5.Vector.dist(v1, v2);
+		
+		
+		return true;
+	}
+	
+	draw()
+	{
+		push();
+		fill('orange')
+		
+			rect(this.x + camera.offSetX, this.y + camera.offSetY, this.w, this.h)
+			
+		pop();
+	}
+}
+
+class Shotgun extends Weapon{
+	constructor (x,y,w,h,img,boss) {
+		super(x,y,w,h,img);
+		this.boss = boss;
+		this.bullets = [];
+		this.lastShot = new Date().getTime();
+	}
+	
+	update()
+	{
+		this.x = this.boss.x;
+		this.y = this.boss.y + 50;
+		for(let i = 0; i < this.bullets.length; i++)
+			{
+				if(!this.bullets[i].show)
+					continue;
+				let bullet_hit = this.bullets[i].update();
+				if(!bullet_hit)
+					{
+						
+						this.bullets[i].show = false;
+						
+						map.floors[map.current_floor].shotgun_impact[i] = new Bullet_Impact(this.bullets[i].x,this.bullets[i].y,20,20)
+						map.z_index_map[map.current_floor].push(new Tile_To_Draw(floor(this.bullets[i].x/100),floor(this.bullets[i].y/100),1000+i,false,9));
+						
+					}
+				if(bullet_hit == 2)
+					{
+						this.bullets[i].show = false;
+						dwight.takeDmg(this.x,this.y);
+					}
+			}
+	}
+	
+	draw()
+	{
+		for(let i = 0; i < this.bullets.length; i++)
+			{
+				if(this.bullets[i].show)
+					this.bullets[i].draw();
+			}
+		image(this.img, this.x + camera.offSetX, this.y + camera.offSetY, this.w, this.h);
+	}
+	
+	shoot()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.lastShot;
+		if (delta >= 1500) {
+		
+		this.bullets.push(new Shotgun_Bullet(this.x,this.y,createVector((dwight.x + (dwight.width/2)), (dwight.y + dwight.height/2))))
+		this.bullets.push(new Shotgun_Bullet(this.x,this.y,createVector((dwight.x + (dwight.width/2)) + 5, (dwight.y + dwight.height/2)+5)))
+		this.bullets.push(new Shotgun_Bullet(this.x,this.y,createVector((dwight.x + (dwight.width/2)) - 5, (dwight.y + dwight.height/2)-5)))
+			
+			this.lastShot = new Date().getTime();
+		}
+	}
+}
+
 
 
 class Axe extends Weapon{

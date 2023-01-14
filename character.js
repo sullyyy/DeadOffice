@@ -664,7 +664,8 @@ function keyReleased() {
 	STUNNED: 5,
 	WAITING: 6,
 	SPITTING: 7,
-	RUSHING: 8
+	RUSHING: 8,
+	 SPEAKING: 9
  }
  
  
@@ -872,6 +873,113 @@ class Boss extends Character{
 		stroke(255,0,0);
 		line(this.chaseLine[0].x, this.chaseLine[0].y, this.chaseLine[1].x, this.chaseLine[1].y);
 	}
+}
+
+class CEO_Boss extends Boss{
+	constructor (x, y, width, height, img,id,life,state,velocity,name) {
+		super(x, y, width, height, img,id,life,state,velocity,name);
+		this.weapon = new Shotgun(this.x,this.y,38,9,shotgun,this)
+		this.shot = false;
+		this.speach = false;
+		this.lastSpeak = new Date().getTime();
+		this.speach_list=["TAKE THAT DWIGHT !!", "DIE !!!", "HERE'S YOUR PROMOTION DWIGHT !", "MOUHAHAHAHAHAHA", "YOU WILL DIE TODAY", "EMPLOYEE OF THE MONTH MY ASS", "IM THE CEO IM THE BOSS"]
+		this.speach_index = 0;
+	}
+	
+	speaking()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.lastSpeak;
+		if (delta >= 800) {
+			this.state = STATE.CHASING;
+			this.speach_index++;
+			if(this.speach_index >= this.speach_list.length)
+				this.speach_index = 0;
+		}
+	}
+	
+	update()
+	{
+		super.update();
+		
+		if(this.state != STATE.DEAD)
+			this.weapon.update();
+		
+		switch (this.state) {
+	  
+			  case STATE.SPEAKING:
+			  //this.speak("HAHAHAHAHA");
+				this.speaking();
+			  break;
+		}
+		
+		
+	}
+	
+	draw()
+	{
+		super.draw();
+		if(this.state == STATE.SPEAKING)
+			//this.speak("TAKE THAT DWIGHT !!!");
+			this.speak(this.speach_list[this.speach_index]);
+		
+		if(this.state != STATE.DEAD)
+			this.weapon.draw();
+	}
+	
+	die()
+	{
+		super.die();
+		this.img = ceo_boss_dead;
+	}
+	
+	roam()
+	{
+		if(this.vecRoam.x > 500 || this.vecRoam.y > 500 - 60)
+			this.vecRoam = createVector(random(100,500), random(100,440)); 
+		super.roam();
+	}
+	
+	chase()
+	{
+		if(dwight.x > 500 || dwight.y > 500 - 60)
+			{
+				this.state = STATE.ROAMING;
+				return;
+			}
+		super.chase();
+	}
+	
+	detectPlayer()
+	{
+		if(dwight.x > 500 || dwight.y > 500 - 60)
+			return;
+		let dist = super.detectPlayer();
+		
+		if(dist < 300)
+		{
+			this.weapon.shoot();
+			let now = new Date().getTime();
+			let delta = now - this.lastSpeak;
+			if (delta < 1500) {
+				return;
+			}
+			this.lastSpeak = new Date().getTime();
+			this.state = STATE.SPEAKING;
+			//if(this.speach_index != 0)
+				
+		}
+	}
+	
+	/*drawLife()
+	{
+		super.drawLife();
+		push();
+			textSize(10);
+			fill(0,0,0);
+			text('STATE : ' + this.state, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-30);
+		pop();
+	}*/
 }
 
 class Vomit_puddle{

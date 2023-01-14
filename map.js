@@ -52,6 +52,7 @@ class Bullet_Impact{
 		this.h = h;
 		this.last = new Date().getTime();
 		this.frame = 0;
+		this.show = true;
 	}
 	
 	draw()
@@ -74,6 +75,31 @@ class Bullet_Impact{
 		}
 		//image(blood, this.bloods[i].x + camera.offSetX, this.bloods[i].y + camera.offSetY, this.bloods[i].w,  this.bloods[i].h)
 		
+		
+		
+	}
+	
+	drawv2()
+	{
+		if(!this.show)
+			return;
+		image(impact, this.x + camera.offSetX, this.y + camera.offSetY, this.w*1.5,  this.h*1.5,20*this.frame,0,20,20)
+		
+		let now = new Date().getTime();
+		let delta = now - this.last;
+		if (delta >= 40) {
+			
+			this.frame++;
+			if(this.frame > 4)
+			{
+				this.frame = 0;
+				this.show = false;
+				//map.floors[map.current_floor].bullet_impact.pop();
+				//console.log("map.z_index_map[map.current_floor] ",map.z_index_map[map.current_floor])
+				//map.z_index_map[map.current_floor] = map.z_index_map[map.current_floor].filter(x => x.id == 9 && x.z_index == )
+				
+			}
+		}
 	}
 }
 
@@ -118,6 +144,7 @@ class Floor {
 		this.boss = boss;
 		this.bloods = [];
 		this.bullet_impact = [];
+		this.shotgun_impact = [];
 	}
 	
 	drawBulletImpact()
@@ -189,6 +216,17 @@ class Floor {
 		
 		
 	}
+	
+	clearImpact()
+	{
+		for(let i = 0; i < this.bullet_impact.length; i++)
+			{
+				if(this.bullet_impact[i].show == false)
+					{
+						//map.z_index_map[map.current_floor] = map.z_index_map[map.current_floor].filter(x => x.id == 9)
+					}
+			}
+	}
 }
 
 function setupMap()
@@ -230,7 +268,7 @@ function loadFloors()
   map.floors[2].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
   map.floors[3] = new Floor(3,1);
   map.floors[3].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
-  map.floors[4] = new Floor(4,1,new Boss(300,300,40,80,ceo_boss,6,8,STATE.ROAMING,1.5,"THE CEO"));
+  map.floors[4] = new Floor(4,1,new CEO_Boss(300,300,40,80,ceo_boss,6,12,STATE.ROAMING,1.5,"THE CEO"));
   map.floors[4].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
   map.floors[5] = new Floor(5,2, new Creed_Boss(500,500,36,70,creed_boss,6,6,STATE.ROAMING,1.5,"CREED"));
   map.floors[5].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
@@ -450,6 +488,14 @@ class Map {
 				{
 					this.floors[this.current_floor].drawBulletImpact();
 				}
+				
+				//draws shotgun impact
+				if(this.z_index_map[this.current_floor][k].id == 9)
+				{
+					this.floors[this.current_floor].shotgun_impact[this.z_index_map[this.current_floor][k].z_index - 1000].drawv2();
+				}
+				
+				
 				//draws dwight
 				if(this.z_index_map[this.current_floor][k].id == 1)
 				{
@@ -478,6 +524,8 @@ class Map {
 			
 			
 		}
+		
+		//this.floors[this.current_floor].clearImpact();
 		
 		//draws other stuff
 		if(map.explosion != null)
