@@ -425,6 +425,8 @@ class Dwight extends Character{
 		this.life--;
 		//map.floors[map.current_floor].bloods.push(new Blood(this.x + camera.offSetX, this.y + 80 + camera.offSetY))
 		super.takeDmg(this.x+this.width/2 + camera.offSetX,this.y+20+camera.offSetY);
+		dwight_hit_sound.setVolume(0.2);
+		dwight_hit_sound.play();
 		if(this.life == 0)
 		{
 			this.die();
@@ -1153,6 +1155,7 @@ class Creed_Boss extends Boss{
 		this.blinkingY = this.y;
 		this.x = random(100,800);
 		this.y = random(100,900);
+		blink_sound.play();
 	}
 	
 	revive()
@@ -1400,6 +1403,7 @@ class Basement_Boss extends Boss{
 			/*map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.vomits[this.vomits.length - 1].x/100,this.vomits[this.vomits.length - 1].y/100,-1,true,(this.vomits.length - 1)+200));
 			map.resort(this.vomits[this.vomits.length - 1]);*/
 			map.floors[map.current_floor].bloods.push(new Vomit_puddle(this.x,this.y+80,0,30,(this.vomits.length)+200))
+			//vomit_sound.play();
 		}
 		
 	}
@@ -1413,6 +1417,7 @@ class Basement_Boss extends Boss{
 		if (delta >= 300) {
 			this.state = STATE.CHASING;
 			
+			spit_sound.play();
 			this.spits.push(new Spit(this.x+18, this.y+18,10,10,(this.spitCount)+300));
 			this.spitCount++;
 			if(this.spitCount > 100)
@@ -1525,8 +1530,14 @@ class Zombie extends Character{
 		this.zombieState = STATE.STUNNED
 		this.lastStunned = new Date().getTime(); 
 		super.takeDmg(x,y);
+		
 		if(this.life == 0)
 			this.die();
+		else
+		{
+			if(!zombie_hit_sound.isPlaying())
+				zombie_hit_sound.play();
+		}
 	}
 	
 	revive()
@@ -1548,6 +1559,10 @@ class Zombie extends Character{
 		//map.floors[map.current_floor].bloods.push(new Blood(this.x+10, this.y+this.height/2,40,20))
 		this.bleed(this.x+10, this.y+this.height/2,40,20)
 		this.speaking = false;
+		if(!zombie_death_sound.isPlaying())
+			zombie_death_sound.play();
+		else
+			console.log("playing already ")
 		
 	}
 	

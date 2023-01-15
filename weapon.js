@@ -117,6 +117,7 @@ class Shotgun extends Weapon{
 						
 						map.floors[map.current_floor].shotgun_impact[i] = new Bullet_Impact(this.bullets[i].x,this.bullets[i].y,20,20)
 						map.z_index_map[map.current_floor].push(new Tile_To_Draw(floor(this.bullets[i].x/100),floor(this.bullets[i].y/100),1000+i,false,9));
+						bullet_impact_sound.play();
 						
 					}
 				if(bullet_hit == 2)
@@ -146,6 +147,7 @@ class Shotgun extends Weapon{
 		this.bullets.push(new Shotgun_Bullet(this.x,this.y,createVector((dwight.x + (dwight.width/2)), (dwight.y + dwight.height/2))))
 		this.bullets.push(new Shotgun_Bullet(this.x,this.y,createVector((dwight.x + (dwight.width/2)) + 5, (dwight.y + dwight.height/2)+5)))
 		this.bullets.push(new Shotgun_Bullet(this.x,this.y,createVector((dwight.x + (dwight.width/2)) - 5, (dwight.y + dwight.height/2)-5)))
+			shotgun_sound.play();
 			
 			this.lastShot = new Date().getTime();
 		}
@@ -209,6 +211,9 @@ class Axe extends Weapon{
 	
 	swing()
 	{
+		if(this.swinging)
+			return;
+		axe_swing_sound.play();
 		this.swinging = true;
 		this.cutting = true;
 	}
@@ -377,6 +382,7 @@ class Revolver extends Weapon {
 			map.floors[map.current_floor].bullet_impact.push(new Bullet_Impact(x,y,20,20))
 			map.z_index_map[map.current_floor] = map.z_index_map[map.current_floor].filter(x => x.id !== 8)
 			map.z_index_map[map.current_floor].push(new Tile_To_Draw(floor(x/100),floor(y/100),1000,false,8));
+			bullet_impact_sound.play();
 			
 			
 			//hitting an explosive barell
@@ -389,6 +395,7 @@ class Revolver extends Weapon {
 					map.floors[map.current_floor].bloods.push(new Explosion_Trace(i*100,j*100+50,0,0))
 					map.screenShake = true;
 					map.lastShake = new Date().getTime();
+					explosion_sound.play();
 					
 					let v1 = createVector(i*100+50, j*100+50);
 					//circle(i*100-50, j*100, 200)
@@ -405,11 +412,13 @@ class Revolver extends Weapon {
 							
 							if(distance < 150)
 								{
+									
 									map.floors[map.current_floor].enemies[k].takeDmg(map.floors[map.current_floor].enemies[k].x,map.floors[map.current_floor].enemies[k].y)
 									map.floors[map.current_floor].enemies[k].takeDmg(map.floors[map.current_floor].enemies[k].x,map.floors[map.current_floor].enemies[k].y)
 									map.floors[map.current_floor].enemies[k].takeDmg(map.floors[map.current_floor].enemies[k].x,map.floors[map.current_floor].enemies[k].y)
 									map.floors[map.current_floor].enemies[k].takeDmg(map.floors[map.current_floor].enemies[k].x,map.floors[map.current_floor].enemies[k].y)
 									map.floors[map.current_floor].enemies[k].takeDmg(map.floors[map.current_floor].enemies[k].x,map.floors[map.current_floor].enemies[k].y)
+									
 								}
 						}
 					
@@ -423,6 +432,9 @@ class Revolver extends Weapon {
 							
 							if(distance < 150)
 								{
+									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
+									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
+									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
 									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
 									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
 								}
@@ -546,7 +558,10 @@ class Revolver extends Weapon {
 	reload()
 	{
 		if(this.bulletsShot == this.bulletsNbr)
+		{
 			this.bulletsShot = 0;
+			reload_sound.play();
+		}
 	}
 	
 	draw()
@@ -577,7 +592,10 @@ class Revolver extends Weapon {
 		}
 		
 		if(this.bulletsShot == this.bulletsNbr)
+		{
+			gun_click_sound.play();
 			return;
+		}
 		
 		this.lastShot = new Date().getTime();
 		
@@ -592,6 +610,8 @@ class Revolver extends Weapon {
 		
 		map.z_index_map[map.current_floor].push(new Tile_To_Draw(this.bullets[this.bulletsShot].x/100,this.bullets[this.bulletsShot].y/100,1000,false,(this.bulletsShot)+400));
 		this.bulletsShot++;
+		
+		revolver_shot_sound.play();
 		
 	}
 }

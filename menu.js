@@ -295,6 +295,8 @@ class Menu {
 				gameState = MENU;
 				showEditorButtons(false)
 			}
+			if(music_sound.isPlaying())
+				music_sound.stop();
 		}
 	}
 	

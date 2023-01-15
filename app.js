@@ -73,7 +73,20 @@ let showOption = true;
 
 let lvltransframe = 0;
 
-let mySound;
+let shotgun_sound;
+let dwight_hit_sound;
+let explosion_sound;
+let reload_sound;
+let revolver_shot_sound;
+let zombie_hit_sound;
+let zombie_death_sound;
+let bullet_impact_sound;
+let axe_swing_sound;
+let spit_sound;
+let vomit_sound;
+let music_sound;
+let gun_click_sound;
+let blink_sound;
 
 class cpl {
 	 constructor (w, h) {
@@ -105,6 +118,25 @@ function preload() {
   ceo_boss_dead = loadImage('assets/img/the_ceo_dead.png');
   shotgun = loadImage('assets/img/shotgun_ground.png');
 	
+  //sounds
+  shotgun_sound = loadSound('assets/sound/shotgun_sound.wav');
+  dwight_hit_sound = loadSound('assets/sound/dwight_hit.wav');
+  explosion_sound = loadSound('assets/sound/explosion.wav');
+  reload_sound = loadSound('assets/sound/reload.wav');
+  revolver_shot_sound = loadSound('assets/sound/revolver_shot.wav');
+  zombie_hit_sound = loadSound('assets/sound/zombie_hit.wav');
+  zombie_death_sound = loadSound('assets/sound/zombie_death.mp3');
+  bullet_impact_sound = loadSound('assets/sound/bullet_impact.wav');
+  bullet_impact_sound.setVolume(0.15);
+  axe_swing_sound = loadSound('assets/sound/axe_swing.mp3');
+  spit_sound = loadSound('assets/sound/spit.wav');
+  vomit_sound = loadSound('assets/sound/vomit.wav');
+  music_sound = loadSound('assets/sound/music.mp3');
+  music_sound.setVolume(0.35)
+  gun_click_sound = loadSound('assets/sound/gun_click.wav');
+  blink_sound = loadSound('assets/sound/blink.wav');
+  
+	
 	
   creed_boss = loadImage('assets/img/creed.png');
   zombie = loadImage('assets/img/zombie.png');
@@ -120,6 +152,8 @@ function preload() {
   explosion_trace =  loadImage('assets/img/explosion_trace.png');
   hank = loadImage('assets/img/hank.png');
   hank_dead = loadImage('assets/img/hank_dead.png');
+	
+  
 
   File.load();
   File.loadAssets();
@@ -130,6 +164,10 @@ function preload() {
 function setup() {
 	
   cnv = createCanvas(windowWidth, windowHeight);
+  let ctx = cnv.canvas.getContext('2d', {willReadFrequently: true});
+	
+  outputVolume(0.5);
+	
   frameRate(fr);
   
   textFont(font);
@@ -164,6 +202,9 @@ function setStartingPoint()
 	map.floors[4].boss.revive();
 	map.floors[5].boss.revive();
 	dwight.init();
+	
+	if(!music_sound.isPlaying())
+	music_sound.play();
 }
 
 function draw() {
