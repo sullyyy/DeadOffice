@@ -115,7 +115,7 @@ let keys = [];
 				//going into basement outside access door
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 26)
 				{
-					
+					door_sound.play();
 					map.travelTo(0,7,8);
 					return false;
 					
@@ -228,6 +228,7 @@ let keys = [];
 				//going into basement outside access door
 				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 7)
 				{
+					door_sound.play();
 					map.travelTo(5,7,15)
 					return false;
 					
@@ -416,6 +417,8 @@ class Dwight extends Character{
 		dwight.alive = false;
 		//map.floors[map.current_floor].bloods.push(new Blood(this.x, this.y+this.height,40,20))
 		this.bleed(this.x, this.y+this.height, 40,20)
+		music_sound.stop();
+		dark_piano_sound.loop();
 	}
 	
 	takeDmg()
@@ -639,9 +642,9 @@ class Dwight extends Character{
 		push();
 			textSize(10);
 			fill(0,0,0);
-			text('HP : ' + this.life, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
+			//text('HP : ' + this.life, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
 			textSize(12);
-			text('Dwight', this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-20);
+			text('Dwight', this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
 		pop();
 	}
 	
@@ -722,6 +725,7 @@ class Boss extends Character{
 		this.state = STATE.STUNNED
 		this.lastStunned = new Date().getTime();
 		super.takeDmg(x,y);
+		dwight_hit_sound.play();
 		if(this.life == 0)
 			this.die();
 	}
@@ -864,9 +868,9 @@ class Boss extends Character{
 		push();
 			textSize(10);
 			fill(0,0,0);
-			text('HP : ' + this.life, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
+			//text('HP : ' + this.life, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
 			textSize(12);
-			text(this.name, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-20);
+			text(this.name, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
 		pop();
 	}
 	

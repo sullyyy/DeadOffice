@@ -325,6 +325,7 @@ class Map {
 		dwight.weapon.update();
 		camera.update();
 		this.resort(dwight);
+		
 		//this.floors[this.current_floor].setZombiesPosition();
 	}
 	
@@ -532,7 +533,8 @@ class Map {
 			map.explosion.draw();
 		if(showOption)
 			show_option_buttons();
-		Menu.s_drawCurrentFloor();
+		//Menu.s_drawCurrentFloor();
+		Menu.s_drawHud();
 		message.draw();
 		this.drawHitBox();
 	}

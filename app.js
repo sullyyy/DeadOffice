@@ -73,6 +73,8 @@ let showOption = true;
 
 let lvltransframe = 0;
 
+let gun_fire_animation;
+
 let shotgun_sound;
 let dwight_hit_sound;
 let explosion_sound;
@@ -87,6 +89,9 @@ let vomit_sound;
 let music_sound;
 let gun_click_sound;
 let blink_sound;
+let dark_piano_sound;
+let elevator_sound;
+let door_sound;
 
 class cpl {
 	 constructor (w, h) {
@@ -113,6 +118,7 @@ function preload() {
   dwight_dead = loadImage('assets/img/dwight_dead.png');
   basement_boss = loadImage('assets/img/basement_boss.png')
   boss_dead = loadImage('assets/img/basement_boss_dead.png');
+	heart = loadImage('assets/img/heart.png');
 	
   ceo_boss = loadImage('assets/img/the_ceo.png');
   ceo_boss_dead = loadImage('assets/img/the_ceo_dead.png');
@@ -135,8 +141,10 @@ function preload() {
   music_sound.setVolume(0.35)
   gun_click_sound = loadSound('assets/sound/gun_click.wav');
   blink_sound = loadSound('assets/sound/blink.wav');
+  dark_piano_sound = loadSound('assets/sound/dark_piano.mp3');
+  elevator_sound = loadSound('assets/sound/elevator.wav');
+  door_sound = loadSound('assets/sound/door_open.wav');
   
-	
 	
   creed_boss = loadImage('assets/img/creed.png');
   zombie = loadImage('assets/img/zombie.png');
@@ -147,9 +155,13 @@ function preload() {
   bleed_anim = loadImage('assets/anim/anim_bleeding.png');
   creed_zombie = loadImage('assets/img/zombie_creed.png');
   creed_dead = loadImage('assets/img/creed_dead.png');
+	
+  //animation
+  gun_fire_animation = loadImage('assets/anim/gun_fire_animation.png');
   impact = loadImage('assets/anim/impact.png');
   explosion_animation =  loadImage('assets/anim/explosion_animation.png');
   explosion_trace =  loadImage('assets/img/explosion_trace.png');
+	
   hank = loadImage('assets/img/hank.png');
   hank_dead = loadImage('assets/img/hank_dead.png');
 	
@@ -204,7 +216,9 @@ function setStartingPoint()
 	dwight.init();
 	
 	if(!music_sound.isPlaying())
-	music_sound.play();
+		music_sound.loop();
+	
+	dark_piano_sound.stop();
 }
 
 function draw() {
@@ -259,7 +273,9 @@ function draw() {
 		map.floors[map.current_floor].boss.update();
 	  map.draw();
 	  if(end == 1)
+	  {
 		  gameState = END;
+	  }
 	  if(gameState!=END)
 		  camera.update();
 	  Menu.s_return();

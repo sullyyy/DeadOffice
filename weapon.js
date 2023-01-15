@@ -99,6 +99,7 @@ class Shotgun extends Weapon{
 		this.boss = boss;
 		this.bullets = [];
 		this.lastShot = new Date().getTime();
+		this.gun_fire = new Gun_Fire(this.x,this.y,5,5,this,false);
 	}
 	
 	update()
@@ -136,6 +137,8 @@ class Shotgun extends Weapon{
 					this.bullets[i].draw();
 			}
 		image(this.img, this.x + camera.offSetX, this.y + camera.offSetY, this.w, this.h);
+		
+		this.gun_fire.draw_shotgun_fire();
 	}
 	
 	shoot()
@@ -150,6 +153,8 @@ class Shotgun extends Weapon{
 			shotgun_sound.play();
 			
 			this.lastShot = new Date().getTime();
+			
+			this.gun_fire = new Gun_Fire(this.x,this.y,5,5,this,true)
 		}
 	}
 }
@@ -293,6 +298,103 @@ class Axe extends Weapon{
 	}
 }
 
+class Gun_Fire {
+	constructor (x,y,w,h,gun,show) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		this.img = gun_fire_animation;
+		this.last = new Date().getTime();
+		this.frame = 0;
+		this.show = show;
+		this.gun = gun;
+	}
+	
+	draw_shotgun_fire()
+	{
+		//checking if showing
+		if(!this.show)
+			return;
+		
+		//readjusting position
+		this.x = this.gun.x + this.gun.w;
+		this.y = this.gun.y;
+		
+		
+		//calculating time elapsed
+		let now = new Date().getTime();
+		let delta = now - this.last;
+		
+		//enough time passed
+		if (delta >= 60) {
+			
+			//progressing the animation
+			this.last = new Date().getTime();
+			this.frame++;
+			
+			//ending the animation
+			if(this.frame > 5)
+				{
+					this.show = false;
+					return;
+				}
+		}
+		
+		//drawing
+		image(this.img, this.x+camera.offSetX,this.y+camera.offSetY,this.w*1.8, this.h*1.5,this.w*this.frame,0,this.w, this.h);
+		
+	}
+	
+	draw()
+	{
+		//checking if showing
+		if(!this.show)
+			return;
+		
+		//readjusting position
+		this.x = this.gun.x + 19;
+		this.y = this.gun.y;
+		
+		
+		//calculating time elapsed
+		let now = new Date().getTime();
+		let delta = now - this.last;
+		
+		//enough time passed
+		if (delta >= 60) {
+			
+			//progressing the animation
+			this.last = new Date().getTime();
+			this.frame++;
+			
+			//ending the animation
+			if(this.frame > 5)
+				{
+					this.show = false;
+					return;
+				}
+		}
+		
+		//checks which direction dwight is facing
+		if(dwight.faceX == -1)
+		{
+			
+			//mirroring image
+			push();
+				translate(this.x+camera.offSetX,this.y+camera.offSetY);
+				scale(-1,1);
+			 	image(this.img, 73,0,this.w*1.5, this.h*1.5,this.w*this.frame,0,this.w, this.h);
+			pop();
+		}
+		else
+			image(this.img, this.x+camera.offSetX,this.y+camera.offSetY,this.w*1.5, this.h*1.5,this.w*this.frame,0,this.w, this.h);
+		
+	}
+	
+	
+}
+
 class Bullet {
 	constructor (x,y,w,h,dirX,dirY) {
 		this.x = x;
@@ -347,6 +449,7 @@ class Revolver extends Weapon {
 		this.bulletsNbr= 6;
 		this.bulletsShot = 0;
 		this.lastShot = new Date().getTime();
+		this.gun_fire = new Gun_Fire(0,0,5,5,this,false);
 	}
 	
 	checkCollisionEnv(obj)
@@ -576,8 +679,12 @@ class Revolver extends Weapon {
 		}
 		else
 			image(this.img, this.x+camera.offSetX, this.y+camera.offSetY, this.w, this.h);
-		stroke(255,0,0);
-		line(this.bulletOrigVec.x+20, this.bulletOrigVec.y, this.bulletDestVec.x+20, this.bulletDestVec.y);
+		//stroke(255,0,0);
+		//line(this.bulletOrigVec.x+20, this.bulletOrigVec.y, this.bulletDestVec.x+20, this.bulletDestVec.y);
+		
+		this.gun_fire.draw();
+		
+		//draw ammo text
 		fill(0);
 		textSize(10);
 		text((this.bulletsNbr - this.bulletsShot)+'/'+this.bulletsNbr, this.x+camera.offSetX+10, this.y+camera.offSetY-5);
@@ -612,6 +719,8 @@ class Revolver extends Weapon {
 		this.bulletsShot++;
 		
 		revolver_shot_sound.play();
+		
+		this.gun_fire = new Gun_Fire(this.x,this.y,5,5,this,true)
 		
 	}
 }

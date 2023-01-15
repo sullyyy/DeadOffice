@@ -132,12 +132,18 @@ class DialogBox {
 		if(keys[32] && selected == 0)
 		{
 			if(map.current_floor != 5 && map.current_floor != 0 && map.current_floor != 1 && map.current_floor != 3)
+			{
 				map.travelTo(map.current_floor+1,8,2)
+				door_sound.play();
+			}
 		}
 		if(keys[32] && selected == 1)
 		{
 			if(map.current_floor != 0 && map.current_floor != 1 && map.current_floor != 2 && map.current_floor != 4)
+			{
 				map.travelTo(map.current_floor-1,8,2)
+				door_sound.play();
+			}
 		}
 		if(keys[ESCAPE])
 		{
@@ -229,6 +235,7 @@ class DialogBox {
 		if(keys[32])
 		{
 			map.travelTo(selected+1,5,2)
+			elevator_sound.play();
 		}
 		if(keys[ESCAPE])
 		{
@@ -297,6 +304,8 @@ class Menu {
 			}
 			if(music_sound.isPlaying())
 				music_sound.stop();
+			if(dark_piano_sound.isPlaying())
+				dark_piano_sound.stop();
 		}
 	}
 	
@@ -345,6 +354,41 @@ class Menu {
 		stroke(0, 0, 0);
 		textSize(25);
 		text("current floor : " + floorAliases[map.current_floor],windowWidth/2,50)
+	}
+	
+	static s_drawHud()
+	{
+		fill(0,0,0);
+		stroke(0, 0, 0);
+		textSize(12);
+		text("Floor : " + floorAliases[map.current_floor],windowWidth-100,10)
+		for(let i = 0; i < dwight.life; i++)
+			image(heart, 10+i*20,10,20,16);
+		
+		if(map.floors[map.current_floor].boss != null)
+			{
+				push()
+			        let bit = "";
+					for(let i = 0; i < map.floors[map.current_floor].boss.life; i++)
+						bit += "_"
+				    if(map.floors[map.current_floor].boss.state != STATE.DEAD)
+						{
+							fill(255,0,0);
+							stroke(0, 0, 0);
+							textSize(20);
+							text(map.floors[map.current_floor].boss.name,windowWidth/2,20)
+						}
+					else
+					{
+						fill(0,0,0);
+						stroke(0, 0, 0);
+						textSize(20);
+						text(map.floors[map.current_floor].boss.name + " dead",windowWidth/2,20)
+					}
+					textSize(40);
+					text(bit,windowWidth/2,40)
+				pop()
+			}
 	}
 	
 	static s_drawEnd()
