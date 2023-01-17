@@ -183,13 +183,16 @@ class DialogBox {
 		if(keys[UP_ARROW] && selected != 0)
 		{
 			selected = 0;
+			keys[UP_ARROW] = 0;
 		}
 		if(keys[DOWN_ARROW] && selected != 1)
 		{
 			selected = 1;
+			keys[DOWN_ARROW] = 0;
 		}
 		if(keys[32] && selected == 0)
 		{
+			keys[32] = 0;
 			map.generatorOn = true;
 			gameState = PLAY;
 			message.set(0,0,"GENERATOR IS NOW ON !!!\nTHE ELEVATOR IS NOW WORKING !!!",true)
@@ -197,6 +200,7 @@ class DialogBox {
 		}
 		if(keys[32] && selected == 1)
 		{
+			keys[32] = 0;
 			message.set(0,0,"GENERATOR IS NOW OFF !!!\nTHE ELEVATOR IS NOT WORKING ANYYMORE !!!",true)
 			map.generatorOn = false;
 			gameState = PLAY;
@@ -227,13 +231,16 @@ class DialogBox {
 		if(keys[UP_ARROW] && selected != 0)
 		{
 			selected--;
+			keys[UP_ARROW] = 0;
 		}
 		if(keys[DOWN_ARROW] && selected != 3)
 		{
 			selected++;
+			keys[DOWN_ARROW] = 0;
 		}
 		if(keys[32])
 		{
+			keys[32] = 0;
 			map.travelTo(selected+1,5,2)
 			elevator_sound.play();
 		}
@@ -275,11 +282,13 @@ class Menu {
 		}
 		if(keys[32] && selected == 1)
 		{
+			keys[32] = 0;
 			gameState = HOW_TO_PLAY;
 			showEditorButtons(false)
 		}
 		if(keys[32] && selected == 2)
 		{
+			keys[32] = 0;
 			gameState = EDITOR;
 			showEditorButtons(true);
 		}

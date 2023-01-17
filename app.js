@@ -74,6 +74,9 @@ let showOption = true;
 let lvltransframe = 0;
 
 let gun_fire_animation;
+let dwight_animation;
+let dwight_side;
+let dwight_side_animation;
 
 let shotgun_sound;
 let dwight_hit_sound;
@@ -111,6 +114,7 @@ function preload() {
   cleaning_platform = loadImage('assets/img/cleaning_platform.png');
   cleaning_platform_up = loadImage('assets/img/cleaning_platform_up.png');
   wc_floor = loadImage('assets/img/wc_floor.png');
+  dwight_animation = loadImage('assets/anim/dwight_animation_1.png');
   dwight = new Dwight(500,200,36,70,loadImage('assets/img/dwight.png'),1);
   axe = new Axe(500,200,20,42,loadImage('assets/img/axe.png'));
   revolver = new Revolver(500,200,20,13,loadImage('assets/img/revolver.png'));
@@ -119,6 +123,7 @@ function preload() {
   basement_boss = loadImage('assets/img/basement_boss.png')
   boss_dead = loadImage('assets/img/basement_boss_dead.png');
 	heart = loadImage('assets/img/heart.png');
+  dwight_side = loadImage('assets/img/dwight_side.png');
 	
   ceo_boss = loadImage('assets/img/the_ceo.png');
   ceo_boss_dead = loadImage('assets/img/the_ceo_dead.png');
@@ -133,12 +138,12 @@ function preload() {
   zombie_hit_sound = loadSound('assets/sound/zombie_hit.wav');
   zombie_death_sound = loadSound('assets/sound/zombie_death.mp3');
   bullet_impact_sound = loadSound('assets/sound/bullet_impact.wav');
-  bullet_impact_sound.setVolume(0.15);
+  bullet_impact_sound.setVolume(0.05);
   axe_swing_sound = loadSound('assets/sound/axe_swing.mp3');
   spit_sound = loadSound('assets/sound/spit.wav');
   vomit_sound = loadSound('assets/sound/vomit.wav');
   music_sound = loadSound('assets/sound/music.mp3');
-  music_sound.setVolume(0.35)
+  music_sound.setVolume(0.1)
   gun_click_sound = loadSound('assets/sound/gun_click.wav');
   blink_sound = loadSound('assets/sound/blink.wav');
   dark_piano_sound = loadSound('assets/sound/dark_piano.mp3');
@@ -161,6 +166,8 @@ function preload() {
   impact = loadImage('assets/anim/impact.png');
   explosion_animation =  loadImage('assets/anim/explosion_animation.png');
   explosion_trace =  loadImage('assets/img/explosion_trace.png');
+  dwight_side_animation = loadImage('assets/anim/dwight_side_animation_1.png');
+  
 	
   hank = loadImage('assets/img/hank.png');
   hank_dead = loadImage('assets/img/hank_dead.png');
@@ -195,6 +202,8 @@ function setup() {
   message = new Message(0,0,"");
   
   editor = new Editor();
+	
+	//console.log("dqi ", dwight_animation);
 
 }
 

@@ -89,6 +89,14 @@ let keys = [];
 				return false;
 				
 			}
+			//going into a vending machine
+			if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 45  && this instanceof Dwight)
+			{
+				
+				dwight.life = 3;
+				return false;
+				
+			}
 			//going into elevator
 			if(map.current_floor > 0 && map.current_floor < 5 && this instanceof Dwight)
 			{
@@ -380,6 +388,9 @@ class Dwight extends Character{
 		this.weapon;
 		this.faceX = 1;
 		this.faceXX = 1;
+		this.anim = dwight_animation;
+		this.frame = 0;
+		this.lastFrame = new Date().getTime();
 		
 		this.faceY = 0;
 		this.life = 3;
@@ -497,6 +508,8 @@ class Dwight extends Character{
 			this.weapon.update();
 			keys[CONTROL] = 0;
 		}
+		
+		//left arrow pushed
 		if(keys[LEFT_ARROW])
 		{
 			this.faceX = -1;
@@ -510,6 +523,16 @@ class Dwight extends Character{
 				this.weapon.update();
 				map.resort(this);
 				//this.walkOverVomit()
+				
+				//progressing the walking animation
+				let now = new Date().getTime();
+				let delta = now - this.lastFrame;
+				if (delta >= 70) {
+					this.lastFrame = new Date().getTime();
+					this.frame++;
+					if(this.frame > 7)
+						this.frame = 0;
+				}
 			}
 			
 		}
@@ -527,6 +550,16 @@ class Dwight extends Character{
 				this.weapon.update();
 				map.resort(this);
 				//this.walkOverVomit()
+				
+				//progressing the walking animation
+				let now = new Date().getTime();
+				let delta = now - this.lastFrame;
+				if (delta >= 70) {
+					this.lastFrame = new Date().getTime();
+					this.frame++;
+					if(this.frame > 7)
+						this.frame = 0;
+				}
 			}
 			
 			
@@ -543,6 +576,16 @@ class Dwight extends Character{
 				this.weapon.update();
 				map.resort(this);
 				//this.walkOverVomit()
+				
+				//progressing the walking animation
+				let now = new Date().getTime();
+				let delta = now - this.lastFrame;
+				if (delta >= 70) {
+					this.lastFrame = new Date().getTime();
+					this.frame++;
+					if(this.frame > 7)
+						this.frame = 0;
+				}
 			}
 			
 		}
@@ -558,6 +601,16 @@ class Dwight extends Character{
 				this.weapon.update();
 				map.resort(this);
 				//this.walkOverVomit()
+				
+				//progressing the walking animation
+				let now = new Date().getTime();
+				let delta = now - this.lastFrame;
+				if (delta >= 70) {
+					this.lastFrame = new Date().getTime();
+					this.frame++;
+					if(this.frame > 7)
+						this.frame = 0;
+				}
 			}
 			
 		}
@@ -612,6 +665,14 @@ class Dwight extends Character{
 		}
 	}
 	
+	getSourceY()
+	{
+		if(this.faceY == 1 || this.faceY == 0)
+			return 0;
+		else
+			return 70;
+	}
+	
 	draw()
 	{
 		if(this.invulnerable)
@@ -632,7 +693,35 @@ class Dwight extends Character{
 			}
 			this.speak("AIE !!!");
 		}
-		super.draw();
+		//super.draw();
+		
+		if(this.faceX != 0)
+		{
+			let sourceX = this.frame;
+			if(this.frame >= 4)
+				sourceX = this.frame - 4;
+			if(this.faceX > 0)
+				image(dwight_side_animation, this.x + camera.offSetX, this.y + camera.offSetY, 36, 70, sourceX*36,0,36,70)
+			else
+				{
+					push();
+						let sourceX = this.frame;
+						if(this.frame >= 4)
+							sourceX = this.frame - 4;
+						translate(this.x+camera.offSetX,this.y+camera.offSetY);
+						scale(-1,1);
+						//image(dwight_side_animation, -36, 0, this.w, this.h,0,0,36,70)
+						image(dwight_side_animation, -36, 0, 36, 70,36*sourceX,0,36,70)
+					pop();
+				}
+			
+		}
+		else
+			image(this.anim, this.x + camera.offSetX, this.y + camera.offSetY, this.width, this.height, this.width*this.frame,this.getSourceY(),this.width,this.height)
+		//console.log("this.anim ", this.anim);
+		//image(this.anim, this.x + camera.offSetX, this.y + camera.offSetY, 36, 70, 36*this.frame,0,36,70)
+		this.drawBleeding();
+		
 		this.drawLife();
 		
 	}
