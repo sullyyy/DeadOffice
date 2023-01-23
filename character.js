@@ -37,7 +37,7 @@ let keys = [];
 		this.lastBleed = new Date().getTime(); 
 		//this.bleedX = x - camera.offSetX;
 		this.bleedX = this.x;
-		this.bleedY = y - camera.offSetY;
+		this.bleedY = (y-15) - camera.offSetY;
 		this.bleedFrame = 0;
 		
 		
@@ -439,7 +439,7 @@ class Dwight extends Character{
 		this.life--;
 		//map.floors[map.current_floor].bloods.push(new Blood(this.x + camera.offSetX, this.y + 80 + camera.offSetY))
 		super.takeDmg(this.x+this.width/2 + camera.offSetX,this.y+20+camera.offSetY);
-		dwight_hit_sound.setVolume(0.2);
+		//dwight_hit_sound.setVolume(0.2);
 		dwight_hit_sound.play();
 		if(this.life == 0)
 		{
@@ -527,10 +527,10 @@ class Dwight extends Character{
 				//progressing the walking animation
 				let now = new Date().getTime();
 				let delta = now - this.lastFrame;
-				if (delta >= 70) {
+				if (delta >= 100) {
 					this.lastFrame = new Date().getTime();
 					this.frame++;
-					if(this.frame > 7)
+					if(this.frame > 5)
 						this.frame = 0;
 				}
 			}
@@ -554,10 +554,10 @@ class Dwight extends Character{
 				//progressing the walking animation
 				let now = new Date().getTime();
 				let delta = now - this.lastFrame;
-				if (delta >= 70) {
+				if (delta >= 100) {
 					this.lastFrame = new Date().getTime();
 					this.frame++;
-					if(this.frame > 7)
+					if(this.frame > 5)
 						this.frame = 0;
 				}
 			}
@@ -583,7 +583,7 @@ class Dwight extends Character{
 				if (delta >= 70) {
 					this.lastFrame = new Date().getTime();
 					this.frame++;
-					if(this.frame > 7)
+					if(this.frame > 5)
 						this.frame = 0;
 				}
 			}
@@ -608,7 +608,7 @@ class Dwight extends Character{
 				if (delta >= 70) {
 					this.lastFrame = new Date().getTime();
 					this.frame++;
-					if(this.frame > 7)
+					if(this.frame > 5)
 						this.frame = 0;
 				}
 			}
@@ -698,16 +698,16 @@ class Dwight extends Character{
 		if(this.faceX != 0)
 		{
 			let sourceX = this.frame;
-			if(this.frame >= 4)
-				sourceX = this.frame - 4;
+			//if(this.frame >= 6)
+				//sourceX = this.frame - 6;
 			if(this.faceX > 0)
 				image(dwight_side_animation, this.x + camera.offSetX, this.y + camera.offSetY, 36, 70, sourceX*36,0,36,70)
 			else
 				{
 					push();
 						let sourceX = this.frame;
-						if(this.frame >= 4)
-							sourceX = this.frame - 4;
+						//if(this.frame >= 6)
+							//sourceX = this.frame - 6;
 						translate(this.x+camera.offSetX,this.y+camera.offSetY);
 						scale(-1,1);
 						//image(dwight_side_animation, -36, 0, this.w, this.h,0,0,36,70)
@@ -795,6 +795,7 @@ class Boss extends Character{
 		this.height = 22;
 		//map.floors[map.current_floor].bloods.push(new Blood(this.x, this.y+this.height,40,20))
 		this.bleed(this.x+10, this.y+this.height/2,40,20)
+		boss_death_sound.play();
 	}
 	
 	revive()
@@ -1312,6 +1313,7 @@ class Creed_Boss extends Boss{
 			this.velocity = 2;
 			this.blink();
 			this.img = creed_zombie;
+			boss_death_sound.play();
 			
 		}
 		else if(this.phase == 2)
@@ -1610,6 +1612,10 @@ class Zombie extends Character{
 		this.lastWait = new Date().getTime(); 
 		this.speaking = false;
 		this.lastStunned;
+		this.frame = 0;
+		this.lastFrame = new Date().getTime();
+		this.sourceY = 0;
+		this.sensAnim = 1;
 		
 		
 	}
@@ -1646,7 +1652,7 @@ class Zombie extends Character{
 	{
 		this.zombieState = STATE.DEAD;
 		this.img = dwight_dead;
-		this.y += 50;
+		this.y += 56;
 		this.width = 70;
 		this.height = 14;
 		//map.floors[map.current_floor].bloods.push(new Blood(this.x+10, this.y+this.height/2,40,20))
@@ -1654,15 +1660,53 @@ class Zombie extends Character{
 		this.speaking = false;
 		if(!zombie_death_sound.isPlaying())
 			zombie_death_sound.play();
-		else
-			console.log("playing already ")
 		
 	}
 	
 	
 	draw()
 	{
-		super.draw();
+		if(this.zombieState == STATE.DEAD)
+			{
+				
+				if(this.sourceY == 2)
+					{
+						 push();
+						translate(this.x+camera.offSetX,this.y+camera.offSetY);
+						scale(-1,1);
+						image(this.img,-70,0);
+						pop();
+					}
+				else
+					image(this.img,this.x+camera.offSetX,this.y+camera.offSetY);
+				this.drawBleeding();
+				return;
+			}
+		let now = new Date().getTime();
+		let delta = now - this.lastFrame;
+			if (delta >= 100)
+			{
+				this.frame+=this.sensAnim;
+				
+				if(this.frame == 5 || this.frame == 0)
+					this.sensAnim*=-1;
+				this.lastFrame = new Date().getTime();
+			}
+		
+		   if(this.sourceY == 3)
+			   {
+				   push();
+					translate(this.x+camera.offSetX,this.y+camera.offSetY);
+					scale(-1,1);
+					image(zombie_animation,-36, 0, this.width, this.height,this.frame*this.width,(this.sourceY-1)*this.height,this.width, this.height);
+					pop();
+				   
+			   }
+			else
+				image(zombie_animation,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height,this.frame*this.width,this.sourceY*this.height,this.width, this.height);
+		
+		this.drawBleeding();
+		//super.draw();
 		//this.drawChaseLine();
 		//this.drawLife();
 		//this.drawBleeding();
@@ -1750,6 +1794,24 @@ class Zombie extends Character{
 		}
 	}
 	
+	setSourceY(xVel,yVel)
+	{
+		if(Math.abs(xVel) > Math.abs(yVel))
+			{
+				if(xVel > 0)
+					this.sourceY = 3;
+		  		else
+					this.sourceY = 2;
+			}
+		else
+			{
+				if(yVel > 0)
+				  this.sourceY = 1;
+			    else
+				  this.sourceY = 0;
+			}
+	}
+	
 	roam()
 	{
 		let v1 = createVector(this.x + 36/2 + camera.offSetX, this.y + 70/2 + camera.offSetY);
@@ -1778,6 +1840,12 @@ class Zombie extends Character{
 		  
 		  let xVelocity = this.velocity * cos(angle);
 		  let yVelocity = this.velocity * sin(angle);
+		
+		  /*if(yVelocity > 0)
+			  this.sourceY = 1;
+		  else
+			  this.sourceY = 0;*/
+		  this.setSourceY(xVelocity,yVelocity);
 		  if(this.handleCollision(this.x - xVelocity, this.y))
 		  {
 			this.x-=xVelocity;
@@ -1822,6 +1890,11 @@ class Zombie extends Character{
 		  
 		  let xVelocity = this.velocity * cos(angle);
 		  let yVelocity = this.velocity * sin(angle);
+		/*if(yVelocity > 0)
+			  this.sourceY = 1;
+		  else
+			  this.sourceY = 0;*/
+		  this.setSourceY(xVelocity,yVelocity);
 		  if(this.handleCollision(this.x - xVelocity, this.y))
 		  {
 			this.x-=xVelocity;

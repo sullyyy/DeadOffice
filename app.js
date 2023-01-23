@@ -77,6 +77,7 @@ let gun_fire_animation;
 let dwight_animation;
 let dwight_side;
 let dwight_side_animation;
+let zombie_animation;
 
 let shotgun_sound;
 let dwight_hit_sound;
@@ -95,6 +96,7 @@ let blink_sound;
 let dark_piano_sound;
 let elevator_sound;
 let door_sound;
+let boss_death_sound;
 
 class cpl {
 	 constructor (w, h) {
@@ -132,13 +134,14 @@ function preload() {
   //sounds
   shotgun_sound = loadSound('assets/sound/shotgun_sound.wav');
   dwight_hit_sound = loadSound('assets/sound/dwight_hit.wav');
+  dwight_hit_sound.setVolume(0.1);
   explosion_sound = loadSound('assets/sound/explosion.wav');
   reload_sound = loadSound('assets/sound/reload.wav');
   revolver_shot_sound = loadSound('assets/sound/revolver_shot.wav');
   zombie_hit_sound = loadSound('assets/sound/zombie_hit.wav');
   zombie_death_sound = loadSound('assets/sound/zombie_death.mp3');
   bullet_impact_sound = loadSound('assets/sound/bullet_impact.wav');
-  bullet_impact_sound.setVolume(0.05);
+  bullet_impact_sound.setVolume(0.1);
   axe_swing_sound = loadSound('assets/sound/axe_swing.mp3');
   spit_sound = loadSound('assets/sound/spit.wav');
   vomit_sound = loadSound('assets/sound/vomit.wav');
@@ -149,6 +152,7 @@ function preload() {
   dark_piano_sound = loadSound('assets/sound/dark_piano.mp3');
   elevator_sound = loadSound('assets/sound/elevator.wav');
   door_sound = loadSound('assets/sound/door_open.wav');
+  boss_death_sound = loadSound('assets/sound/boss_death.wav');
   
 	
   creed_boss = loadImage('assets/img/creed.png');
@@ -166,7 +170,8 @@ function preload() {
   impact = loadImage('assets/anim/impact.png');
   explosion_animation =  loadImage('assets/anim/explosion_animation.png');
   explosion_trace =  loadImage('assets/img/explosion_trace.png');
-  dwight_side_animation = loadImage('assets/anim/dwight_side_animation_1.png');
+  dwight_side_animation = loadImage('assets/anim/dwight_side_animation_2.png');
+  zombie_animation = loadImage('assets/anim/zombie_animation.png');
   
 	
   hank = loadImage('assets/img/hank.png');
