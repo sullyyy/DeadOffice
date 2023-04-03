@@ -240,8 +240,8 @@
       "data_id": 3,
       "hitboxX": 0,
       "hitboxY": 90,
-      "hitboxW": 0,
-      "hitboxH": 0,
+      "hitboxW": 100,
+      "hitboxH": 10,
       "decalY": 0
     },
     {
@@ -327,14 +327,14 @@
       "decalY": 0
     },
     {
-      "game_id": 0,
-      "draw_id": 0,
-      "data_id": 0,
-      "hitboxX": 0,
-      "hitboxY": 0,
-      "hitboxW": 0,
-      "hitboxH": 0,
-      "decalY": 0
+      "game_id": 78,
+      "draw_id": 18,
+      "data_id": 3,
+      "hitboxX": 30,
+      "hitboxY": 30,
+      "hitboxW": 40,
+      "hitboxH": 20,
+      "decalY": -50
     },
     {
       "game_id": 0,
@@ -643,54 +643,54 @@
       "decalY": 0
     },
     {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
+      "game_id": 0,
+      "draw_id": 0,
+      "data_id": 0,
+      "hitboxX": 0,
+      "hitboxY": 0,
+      "hitboxW": 0,
+      "hitboxH": 0,
+      "decalY": 0
+    },
+    {
       "game_id": 78,
       "draw_id": 18,
       "data_id": 3,
       "hitboxX": 30,
-      "hitboxY": 80,
+      "hitboxY": 30,
       "hitboxW": 40,
       "hitboxH": 20,
-      "decalY": 0
-    },
-    {
-      "game_id": 0,
-      "draw_id": 0,
-      "data_id": 0,
-      "hitboxX": 0,
-      "hitboxY": 0,
-      "hitboxW": 0,
-      "hitboxH": 0,
-      "decalY": 0
-    },
-    {
-      "game_id": 0,
-      "draw_id": 0,
-      "data_id": 0,
-      "hitboxX": 0,
-      "hitboxY": 0,
-      "hitboxW": 0,
-      "hitboxH": 0,
-      "decalY": 0
-    },
-    {
-      "game_id": 0,
-      "draw_id": 0,
-      "data_id": 0,
-      "hitboxX": 0,
-      "hitboxY": 0,
-      "hitboxW": 0,
-      "hitboxH": 0,
-      "decalY": 0
-    },
-    {
-      "game_id": 0,
-      "draw_id": 0,
-      "data_id": 0,
-      "hitboxX": 0,
-      "hitboxY": 0,
-      "hitboxW": 0,
-      "hitboxH": 0,
-      "decalY": 0
+      "decalY": -50
     },
     {
       "game_id": 0,

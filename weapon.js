@@ -8,6 +8,20 @@ class Weapon {
 		this.img = img;
 	}
 	
+	update(x,y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+	
+	
+	draw()
+	{
+		image(this.img,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height);
+	}
+	
+	
+	
 	
 }
 
@@ -177,6 +191,7 @@ class Axe extends Weapon{
 			this.x = dwight.x+10;
 		this.y = dwight.y+10;
 	}
+	
 	
 	draw()
 	{
@@ -491,11 +506,23 @@ class Revolver extends Weapon {
 			//hitting an explosive barell
 			if(map.map_array[map.current_floor][j][i].game_id == 78)
 			{
-				map.map_array[map.current_floor][j][i].game_id = 79;
+				console.log(" i " , i)
+				console.log(" j " , j)
+				
+					//hitting explosive barell next to grilled wall (opening way)
+					if(i == 2 && j == 3)
+					   {
+						    //openging way by changing hitbow of wall && appearance
+					   		grilledWallOpening.opened = true;
+						   	map.map_array[map.current_floor][j-1][i].hitboxW = 0;
+					   }
+					
+					map.map_array[map.current_floor][j][i].game_id = 79;
 					map.map_array[map.current_floor][j][i].draw_id = 19;
 					//map.explosion = new Explosion(i*100 - 50,j*100,200,200);
 					map.explosion = new Explosion(i*100+50,j*100+50,200,200);
-					map.floors[map.current_floor].bloods.push(new Explosion_Trace(i*100,j*100+50,0,0))
+					let decalY = map.map_array[map.current_floor][j][i].decalY;
+					map.floors[map.current_floor].bloods.push(new Explosion_Trace(i*100,j*100+50+decalY,0,0))
 					map.screenShake = true;
 					map.lastShake = new Date().getTime();
 					explosion_sound.play();
@@ -535,11 +562,14 @@ class Revolver extends Weapon {
 							
 							if(distance < 150)
 								{
-									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
-									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
-									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
-									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
-									map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
+									//if(map.floors[map.current_floor].boss.state != STATE.DEAD)
+									//{
+										map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
+										map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
+										map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
+										map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
+										map.floors[map.current_floor].boss.takeDmg(map.floors[map.current_floor].boss.x,map.floors[map.current_floor].boss.y)
+									//}
 								}
 					
 					

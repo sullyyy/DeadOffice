@@ -174,7 +174,7 @@ function mySelectEvent2() {
 function mouseWheel(event) {
   if(event.deltaY  >  0)
   {
-	   if(editor.decalX!=-7200)
+	   if(editor.decalX!=-7800)
 	      editor.decalX-=100;
   }
   else
@@ -251,6 +251,7 @@ function select_element()
 			{
 				//put tile 
 				map.map_array[map.current_floor][iw_j][iw_i] = assets_array[editor.selected];
+				console.log("info ", map.map_array[map.current_floor][iw_j][iw_i])
 			}
 		}
 		mouseIsPressed = false;

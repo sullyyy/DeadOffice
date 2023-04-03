@@ -249,7 +249,7 @@
       "draw_id": 13,
       "data_id": 2,
       "hitboxX": 90,
-      "hitboxY": 0,
+      "hitboxY": -100,
       "hitboxW": 10,
       "hitboxH": 180,
       "decalY": 0
@@ -332,7 +332,7 @@
       "data_id": 2,
       "hitboxX": 0,
       "hitboxY": 70,
-      "hitboxW": 0,
+      "hitboxW": 100,
       "hitboxH": 10,
       "decalY": -20
     },
@@ -347,9 +347,9 @@
       "decalY": -20
     },
     {
-      "game_id": 51,
-      "draw_id": 11,
-      "data_id": 2,
+      "game_id": 83,
+      "draw_id": 3,
+      "data_id": 4,
       "hitboxX": 0,
       "hitboxY": 70,
       "hitboxW": 100,

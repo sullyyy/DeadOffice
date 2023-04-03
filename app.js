@@ -16,6 +16,18 @@ const DIALOG_BOX = 6;
 const GENERATOR_DIALOG = 7;
 const ELEVATOR_DIALOG = 8;
 const EDITOR = 9;
+const INGAME_MENU = 10;
+const CAKE_DIALOG = 11;
+const CONVERSATION = 12;
+const START_SCRIPT = 13;
+const CLEANING_PLATFORM_SCRIPT = 14;
+const NOTE_DIALOG = 15;
+const NOTE_READING = 16;
+const CEO_CONVERSATION = 17;
+const CREED_CONVERSATION = 18;
+
+let textId = 0;
+let g_noteTexts = ["Im sorry... \nI never wanted this to happen...\nPlease forgive me...","text2"]
 
 let font;
 let fontSize = 40;
@@ -97,6 +109,13 @@ let dark_piano_sound;
 let elevator_sound;
 let door_sound;
 let boss_death_sound;
+let closet_open_sound;
+let generator_sound;
+let indoor_open_sound;
+let indoor_close_sound;
+let cleaning_platform_sound;
+
+let global_volume = 0.3;
 
 class cpl {
 	 constructor (w, h) {
@@ -112,6 +131,7 @@ function preload() {
   data_1 = loadImage('assets/img/data_1.png');
   data_2 = loadImage('assets/img/data_2.png');
   data_3 = loadImage('assets/img/data_3.png');
+  data_4 = loadImage('assets/img/data_4.png');
   bullet_img = loadImage('assets/img/bullet.png');
   cleaning_platform = loadImage('assets/img/cleaning_platform.png');
   cleaning_platform_up = loadImage('assets/img/cleaning_platform_up.png');
@@ -119,13 +139,17 @@ function preload() {
   dwight_animation = loadImage('assets/anim/dwight_animation_1.png');
   dwight = new Dwight(500,200,36,70,loadImage('assets/img/dwight.png'),1);
   axe = new Axe(500,200,20,42,loadImage('assets/img/axe.png'));
-  revolver = new Revolver(500,200,20,13,loadImage('assets/img/revolver.png'));
+  revolver = new Revolver(470,810,20,13,loadImage('assets/img/revolver.png'));
+  empty_weapon = new Weapon(0,0,0,0,loadImage('assets/img/empty_weapon.png'));
   font = loadFont('assets/font/joystix.ttf');
   dwight_dead = loadImage('assets/img/dwight_dead.png');
   basement_boss = loadImage('assets/img/basement_boss.png')
   boss_dead = loadImage('assets/img/basement_boss_dead.png');
 	heart = loadImage('assets/img/heart.png');
   dwight_side = loadImage('assets/img/dwight_side.png');
+  dead_pnj = loadImage('assets/img/dead_pnj.png');
+  notes_png = loadImage('assets/img/notes.png');
+  sniper_img = loadImage('assets/img/sniper_ground.png');
 	
   ceo_boss = loadImage('assets/img/the_ceo.png');
   ceo_boss_dead = loadImage('assets/img/the_ceo_dead.png');
@@ -153,6 +177,11 @@ function preload() {
   elevator_sound = loadSound('assets/sound/elevator.wav');
   door_sound = loadSound('assets/sound/door_open.wav');
   boss_death_sound = loadSound('assets/sound/boss_death.wav');
+  closet_open_sound = loadSound('assets/sound/closet_open.wav');
+  generator_sound = loadSound('assets/sound/generator.wav');
+  indoor_open_sound = loadSound('assets/sound/indoor_open_sound.wav');
+  indoor_close_sound = loadSound('assets/sound/indoor_close_sound.wav');
+  cleaning_platform_sound = loadSound('assets/sound/cleaning_platform_sound.mp3');
   
 	
   creed_boss = loadImage('assets/img/creed.png');
@@ -172,6 +201,8 @@ function preload() {
   explosion_trace =  loadImage('assets/img/explosion_trace.png');
   dwight_side_animation = loadImage('assets/anim/dwight_side_animation_2.png');
   zombie_animation = loadImage('assets/anim/zombie_animation.png');
+  jim_animation = loadImage('assets/anim/jim_animation.png');
+  creed_animation = loadImage('assets/anim/creed_animation.png');
   
 	
   hank = loadImage('assets/img/hank.png');
@@ -208,17 +239,23 @@ function setup() {
   
   editor = new Editor();
 	
+	amp = new p5.Amplitude();
+	
+	closetAnimation = new ClosetAnimation();
+	
+	grilledWallOpening = new GrilledWallOpening();
+	
 	//console.log("dqi ", dwight_animation);
 
 }
 
 function setStartingPoint()
 {
-	dwight.x = 800;
+	dwight.x = 300;
 	dwight.y = 200;
-	map.current_floor = 4;
+	map.current_floor = 3;
 	map.cleaning_platform_pos = 1;
-	map.generatorOn = true;
+	map.generatorOn = false;
 	start = new Date().getTime();
 	game_scale = 1;
 	map.setZombies();
@@ -228,6 +265,13 @@ function setStartingPoint()
 	map.floors[4].boss.revive();
 	map.floors[5].boss.revive();
 	dwight.init();
+	map.floors[3].pnjs[0].state = STATE.IDLE;
+	map.floors[3].enemies[0].zombieState = STATE.IDLE;
+	map.floors[3].enemies[0].show = false;
+	map.floors[3].enemies[0].chaseTarget = map.floors[map.current_floor].pnjs[0];
+	
+	
+	map.floors[3].enemies[1].activeArea = new Area(600,600,900,900)
 	
 	if(!music_sound.isPlaying())
 		music_sound.loop();
@@ -246,6 +290,11 @@ function draw() {
 	  camera.move();
 	  Menu.s_return();
 	  break;
+		  
+	  case INGAME_MENU:
+		  Menu.s_draw_ingame_menu();
+		  Menu.s_select_option_ingame_menu();
+		  break;
 	  
 	  case MENU:
 	  end = 0;
@@ -268,12 +317,68 @@ function draw() {
 	  DialogBox.drawDialogBoxGenerator()
 	  DialogBox.selectOptionGenerator()
 	  break;
+		  
+	  case CAKE_DIALOG:
+	  DialogBox.drawDialogBoxCake()
+	  DialogBox.selectOptionCake()
+	  break;
 	  
 	  case ELEVATOR_DIALOG:
 	  DialogBox.drawDialogBoxElevator()
 	  DialogBox.selectOptionElevator()
 	  break;
-	  
+		  
+	  case CONVERSATION:
+	  map.draw();
+	  map.draw_conv_screen();
+	  map.floors[map.current_floor].updateScript();
+	  Menu.s_return();
+	  break;
+		  
+	  case CREED_CONVERSATION:
+	  map.draw();
+	  map.draw_conv_screen();
+	  map.floors[map.current_floor].boss.updateScript();
+	  Menu.s_return();
+	  break;
+		  
+		  
+	  case CEO_CONVERSATION:
+	  map.draw();
+	  map.draw_conv_screen();
+	  map.floors[map.current_floor].boss.updateScript();
+	  Menu.s_return();
+	  break;
+		  
+	  case START_SCRIPT:
+	  map.draw();
+	  map.draw_conv_screen();
+	  map.floors[map.current_floor].updateScript1();
+	  Menu.s_return();
+	  break;
+		  
+	  case CLEANING_PLATFORM_SCRIPT:
+	  map.cleaning_platform.updateScript();
+	  for(let i = 0; i < map.floors[map.current_floor].enemyNumber; i++)
+	  {
+		  map.floors[map.current_floor].enemies[i].update();
+	  }
+	  map.draw();
+	  map.draw_conv_screen();
+	  Menu.s_return();
+	  camera.update();
+	  break;
+		  
+	  case NOTE_DIALOG:
+		 DialogBox.s_drawNoteDialog();
+		  DialogBox.s_selectOptionNote();
+		  Menu.s_return();
+		  break;
+	  case NOTE_READING:
+		  DialogBox.s_drawNote();
+		  Menu.s_return();
+		  break;
+		  
 	  case PLAY:
 	  dwight.move();
 	  
@@ -283,6 +388,8 @@ function draw() {
 	  {
 		  map.floors[map.current_floor].enemies[i].update();
 	  }
+	  for(let i = 0; i < map.floors[map.current_floor].pnjs.length; i++)
+		  map.floors[map.current_floor].pnjs[i].update();
 	  if(map.current_floor == 0  || map.current_floor == 1 || map.current_floor == 4 || map.current_floor == 5)
 		map.floors[map.current_floor].boss.update();
 	  map.draw();

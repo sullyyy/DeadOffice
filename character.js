@@ -125,6 +125,8 @@ let keys = [];
 				{
 					door_sound.play();
 					map.travelTo(0,7,8);
+					if(map.generatorOn)
+						generator_sound.loop();
 					return false;
 					
 				}
@@ -142,16 +144,23 @@ let keys = [];
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 123)
 				{
 					
-					if(map.cleaning_platform_pos == 0)
+					/*if(map.cleaning_platform_pos == 0)
 					{
-						map.cleaning_platform_pos = 1;
-						map.travelTo(5,2,12)
+						gameState = CLEANING_PLATFORM_SCRIPT
+						//map.cleaning_platform_pos = 1;
+						//map.travelTo(5,2,12)
 					}
 					else
 					{
-						map.cleaning_platform_pos = 0;
-						map.travelTo(5,2,10)
-					}
+						gameState = CLEANING_PLATFORM_SCRIPT
+						//map.cleaning_platform_pos = 0;
+						//map.travelTo(5,2,10)
+					}*/
+					gameState = CLEANING_PLATFORM_SCRIPT;
+					cleaning_platform_sound.play();
+					dwight.faceY = 0;
+					dwight.faceX = 0;
+					dwight.faceXX = 0;
 					return false;
 					
 				}
@@ -163,6 +172,7 @@ let keys = [];
 				if(map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 8 || map.map_array[map.current_floor][floor(y1/100)][floor(x1/100)].game_id == 9)
 				{
 					gameState = GENERATOR_DIALOG;
+					
 					return false;
 					
 				}
@@ -236,8 +246,15 @@ let keys = [];
 				//going into basement outside access door
 				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 7)
 				{
+					generator_sound.stop();
 					door_sound.play();
 					map.travelTo(5,7,15)
+					map.floors[5].boss.state = STATE.WAITING;
+					map.floors[5].boss.phase = 3;
+					map.floors[5].boss.x = 800;
+					map.floors[5].boss.y = 200;
+					
+					//f
 					return false;
 					
 				}
@@ -276,6 +293,14 @@ let keys = [];
 					return false;
 					
 				}
+				//eating cake
+				if(map.map_array[map.current_floor][floor(y1h/100)][floor(x1/100)].game_id == 81)
+				{
+					gameState = CAKE_DIALOG;
+					return false;
+					
+				}
+				
 			}
 			if(map.current_floor == 4  && this instanceof Dwight)
 			{
@@ -378,6 +403,297 @@ let keys = [];
 	
 }
 
+let cop;
+const STATE_01 = 0
+const STATE_02 = 1
+const STATE_03 = 2
+const STATE_04 = 3
+const STATE_05 = 4
+
+class Dead_PNJ extends Character{
+	constructor (x, y, width, height, img,id) {
+		super(x, y, width, height, img, id );
+	}
+	
+	draw(){
+		image(this.img,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height);
+	}
+	
+	update(){
+		
+	}
+}
+
+class PNJ extends Character{
+	constructor (x, y, width, height, img,id) {
+		super(x, y, width, height, img, id );
+		this.anim = jim_animation;
+		this.frame = 0;
+		this.lastFrame = new Date().getTime();
+		
+		this.sensAnim = 1;
+		this.sourceY = 0;
+		this.state = STATE.WAITING;
+		this.moving = false;
+		this.speech = false;
+		this.scriptState = STATE_01;
+		this.life = 1;
+		this.speechList = ["DWIGHT HELP !!!","OMG DWIGHT\nthere's zombies everywhere","We were eating cake and...\nEveryone started to turn into\nZOMBIES !!!", "OH NO !!!","GO AWAY !!!"]
+		this.speechInd = 0;
+		this.lastSpeech = new Date().getTime();
+		this.show = false;
+		this.dirX = 1;
+	}
+	
+	wait()
+	{
+		
+		
+		if(dwight.x > 400 && dwight.y > 300)
+		{
+			//this.STATE = STATE.SCRIPTED;
+			gameState = CONVERSATION;
+			this.state = STATE.SCRIPTED;
+			
+			this.moving = true;
+			this.speech = true;
+			this.show = true;
+		}
+	}
+	
+	roam()
+	{
+		
+	}
+	
+	script()
+	{
+		switch(this.scriptState)
+			{
+				case STATE_01:
+					this.move(3,-2);
+					if(this.x < 650 && this.y + 50 > dwight.y)
+					{
+						this.scriptState = STATE_02;
+						this.moving = false;
+						this.speech = true;
+						//map.floors[map.current_floor].enemies[0].zombieState = STATE.CHASING;
+					}
+					break;
+					
+				case STATE_02:
+					let now = new Date().getTime();
+					let delta = now - this.lastSpeech;
+					if (delta >= 1500) {
+						this.speechInd++;
+						this.lastSpeech = now;
+						if(this.speechInd == 2)
+						{
+							map.floors[map.current_floor].enemies[0].zombieState = STATE.CHASING;
+							map.floors[map.current_floor].enemies[0].show = true;
+						}
+						if(this.speechInd == 4)
+						{
+							//map.floors[map.current_floor].enemies[0].zombieState = STATE.CHASING;
+							this.scriptState = STATE_03;
+							this.speech = false;
+						}
+					}
+					break;
+					
+				case STATE_03:
+					this.move(0,-1.5);
+					this.moving = true;
+					break;
+					
+				case STATE_04:
+					let mov = this.move(this.dirX,0);
+					this.moving = true;
+					if(!mov)
+						this.dirX *=-1;
+					break;
+					
+				case STATE_05:
+					this.moving = false;
+					this.speech = true;
+					let noww = new Date().getTime();
+					let deltaw = noww - this.lastSpeech;
+					if (deltaw >= 2000) {
+						this.scriptState = STATE_04;
+						this.speech = false;
+					}
+					break;
+			}
+		
+	}
+		   
+	speaking()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.lastSpeak;
+		if (delta >= 800) {
+			this.state = STATE.CHASING;
+			this.speach_index++;
+			if(this.speach_index >= this.speach_list.length)
+				this.speach_index = 0;
+		}
+	}
+	
+	
+	
+	move(xVel,yVel)
+	{
+		let xVelocity = xVel;
+		let yVelocity = yVel;
+		 this.setSourceY(xVelocity,yVelocity);
+		let moving = false;
+		  if(this.handleCollision(this.x - xVelocity, this.y))
+		  {
+			this.x-=xVelocity;
+			map.resort(this);
+			  moving = true;
+		  }
+		  if(this.handleCollision(this.x, this.y - yVelocity))
+		  {
+			this.y-=yVelocity;
+			map.resort(this);
+			  //moving = true;
+		  }
+		return moving;
+	}
+	
+	setSourceY(xVel,yVel)
+	{
+		if(Math.abs(xVel) > Math.abs(yVel))
+			{
+				if(xVel > 0)
+					this.sourceY = 3;
+		  		else
+					this.sourceY = 2;
+			}
+		else
+			{
+				if(yVel > 0)
+				  this.sourceY = 1;
+			    else
+				  this.sourceY = 0;
+			}
+	}
+	
+	takeDmg()
+	{
+		this.life--;
+		super.takeDmg(this.x+this.width/2 + camera.offSetX,this.y+20+camera.offSetY);
+		dwight_hit_sound.play();
+		if(this.life == 0)
+			this.die();
+	}
+	
+	die()
+	{
+		this.bleed(this.x, this.y+this.height, 40,20)
+		this.state = STATE.DEAD;
+		map.floors[map.current_floor].enemies[0].chaseTarget = dwight;
+		this.y += 70;
+		this.width = 70;
+		this.height = 14;
+		
+	}
+	
+	
+	update()
+	{
+		switch (this.state) {
+				
+			case STATE.IDLE:
+				
+				this.wait()
+				break;
+				
+			case STATE.SCRIPTED:
+				this.script();
+				break;
+				
+			case STATE.WAITING:
+				this.wait();
+				break;
+			  
+			  case STATE.DEAD:
+			  break;
+				
+			case STATE.ROAMING:
+				this.roam();
+				break;
+			  
+			  default:
+			  break;
+		  }
+	}
+	
+	draw()
+	{
+		if(!this.show)
+			return;
+		if(this.state == STATE.DEAD)
+			{
+				image(this.anim,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height,0,210,this.width, this.height);
+				this.drawBleeding();
+				return;
+			}
+		if(!this.moving)
+			{
+				image(this.anim,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height,0,0,this.width, this.height);
+				this.drawBleeding();
+				//this.drawLife();
+				if(this.speech)
+					//this.speak("OMG DWIGHT\nthere's zombies everywhere");
+					this.speak(this.speechList[this.speechInd]);
+				return;
+			}
+		let now = new Date().getTime();
+		let delta = now - this.lastFrame;
+			if (delta >= 100)
+			{
+				this.frame+=this.sensAnim;
+				
+				if(this.frame == 5 || this.frame == 0)
+					this.sensAnim*=-1;
+				this.lastFrame = new Date().getTime();
+			}
+		
+		   if(this.sourceY == 3)
+			   {
+				   push();
+					translate(this.x+camera.offSetX,this.y+camera.offSetY);
+					scale(-1,1);
+					image(this.anim,-36, 0, this.width, this.height,this.frame*this.width,(this.sourceY-1)*this.height,this.width, this.height);
+					pop();
+				   
+			   }
+			else
+				image(this.anim,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height,this.frame*this.width,this.sourceY*this.height,this.width, this.height);
+		if(this.speech)
+		//this.speak("OMG DWIGHT\nthere's zombies everywhere");
+			this.speak(this.speechList[0]);
+		this.drawBleeding();
+		
+		//this.drawLife();
+		
+	}
+	
+	drawLife()
+	{
+		push();
+			textSize(10);
+			fill(0,0,0);
+			//text('HP : ' + this.life, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
+			textSize(12);
+			text('Jim', this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
+			text('scrsta : '+this.scriptState, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-15);
+		pop();
+	}
+}
+
 
 
 class Dwight extends Character{
@@ -386,16 +702,20 @@ class Dwight extends Character{
 		this.acc = 7;
 		this.alive = true;
 		this.weapon;
-		this.faceX = 1;
-		this.faceXX = 1;
+		this.faceX = 0;
+		this.faceXX = 0;
 		this.anim = dwight_animation;
 		this.frame = 0;
 		this.lastFrame = new Date().getTime();
-		
+		this.items = [];
+		this.currItems = 0;
 		this.faceY = 0;
 		this.life = 3;
 		this.invulnerable = false;
 		this.lastInvulnerable;
+		this.speechList1 = ["PFFFF I HATE CAKE\nAND I HATE PARTIES","I THINK ITS OVER NOW\nI BETTER GET BACK"]
+		this.speechList1_ind = 0;
+		this.moving = false;
 		
 	}
 	
@@ -459,8 +779,13 @@ class Dwight extends Character{
 	
 	init()
 	{
+		dwight.speechList1_ind = 0;
 		dwight.alive = true;
-		dwight.equipWeapon(axe);
+		dwight.addItems(empty_weapon)
+		//dwight.addItems(axe)
+		//dwight.addItems(revolver)
+		dwight.weapon = this.items[0];
+		//dwight.equipWeapon(empty_weapon);
 		this.weapon.update();
 		camera.lookAtObj(this);
 		camera.update();
@@ -477,9 +802,37 @@ class Dwight extends Character{
 		}
 	}
 	
+	addItems(item)
+	{
+		this.items.push(item);
+	}
+	
+	change_item()
+	{
+		this.currItems++;
+		if(this.currItems >= this.items.length)
+			this.currItems = 0;
+			//let copiedPerson = JSON.parse(JSON.stringify(this.items[this.currItems]));
+			//let copiedPerson = Object.assign({}, this.items[this.currItems]);
+			//let copiedPerson = Object.create(this.items[this.currItems]);
+			//this.weapon = copiedPerson;
+			//this.weapon = axe;
+			//cop = new Axe(500,200,20,42,loadImage('assets/img/axe.png'));
+			//if(this.items[this.currItems] instanceof Axe)
+				//console.log("oui")
+			//this.weapon = cop;
+			/*if(this.items[this.currItems] instanceof Axe)
+				this.weapon = axe;
+			if(this.items[this.currItems] instanceof Revolver)
+				this.weapon = revolver;*/
+		this.weapon = this.items[this.currItems];
+		this.weapon.update();
+		keys[CONTROL] = 0;
+	}
+	
 	move()
 	{
-		
+		this.moving = false;
 		this.update_invulnerable();
 		revolver.updateBullets();
 		//if(this.weapon instanceof Revolver) 
@@ -493,6 +846,25 @@ class Dwight extends Character{
 				this.weapon.shoot();
 			keys[32] = 0;
 		}
+		if(keys[69])
+			{
+				//map.floors[3].doors[0].open();
+				for(let i = 0; i < map.floors[map.current_floor].doors.length; i++)
+				{
+					map.floors[map.current_floor].doors[i].tryOpen();
+					//console.log(" dw y ", dwight.y)
+					//console.log(" door j ", map.current_floor == 2 && map.floors[map.current_floor].doors[2].j)
+					
+					//trying to open pnj locked door
+					if(map.current_floor == 2 && map.floors[map.current_floor].doors[2].j == Math.round((dwight.y)/100) && map.floors[map.current_floor].doors[2].i == Math.round((dwight.x)/100))
+						{
+							map.floors[2].pnjs[0].scriptState = STATE_05;
+							map.floors[2].pnjs[0].lastSpeech = new Date().getTime();
+							map.floors[2].pnjs[0].speechInd = 4;
+						}
+				}
+				keys[69] = 0;
+			}
 		if(keys[82])
 		{
 			if(this.weapon instanceof Revolver) 
@@ -501,17 +873,48 @@ class Dwight extends Character{
 		}
 		if(keys[CONTROL])
 		{
-			if(this.weapon instanceof Revolver) 
+			this.change_item();
+			/*if(this.weapon instanceof Revolver) 
+			{
 				this.weapon = axe;
+				//this.weapon = empty_weapon;
+				keys[CONTROL] = 0;
+			}
 			else if(this.weapon instanceof Axe && !this.weapon.swinging) 
 				this.weapon = revolver; 
 			this.weapon.update();
-			keys[CONTROL] = 0;
+			keys[CONTROL] = 0;*/
+			
+			
+			//let copiedPerson = JSON.parse(JSON.stringify(this.items[this.currItems]));
+			//let copiedPerson = Object.assign({}, this.items[this.currItems]);
+			//let copiedPerson = Object.create(this.items[this.currItems]);
+			//this.weapon = copiedPerson;
+			//this.weapon = axe;
+			//cop = new Axe(500,200,20,42,loadImage('assets/img/axe.png'));
+			//if(this.items[this.currItems] instanceof Axe)
+				//console.log("oui")
+			//this.weapon = cop;
+			/*if(this.items[this.currItems] instanceof Axe)
+				this.weapon = axe;
+			if(this.items[this.currItems] instanceof Revolver)
+				this.weapon = revolver;*/
+			
+			/*this.currItems++;
+			if(this.currItems >= this.items.length)
+				this.currItems = 0;
+			this.weapon = this.items[this.currItems];
+			this.weapon.update();
+			keys[CONTROL] = 0;*/
+			
+			//console.log("this.wzapon ", this.weapon)
+			
 		}
 		
 		//left arrow pushed
 		if(keys[LEFT_ARROW])
 		{
+			this.moving = true;
 			this.faceX = -1;
 			this.faceXX = -1;
 			this.faceY = 0;
@@ -538,6 +941,7 @@ class Dwight extends Character{
 		}
 		if(keys[RIGHT_ARROW])
 		{
+			this.moving = true;
 			this.faceX = 1;
 			this.faceXX = 1;
 			
@@ -566,6 +970,7 @@ class Dwight extends Character{
 		}
 		if(keys[UP_ARROW])
 		{
+			this.moving = true;
 			this.faceX = 0;
 			this.faceY = -1;
 			if(this.handleCollision(dwight.x, dwight.y - dwight.acc))
@@ -591,6 +996,7 @@ class Dwight extends Character{
 		}
 		if(keys[DOWN_ARROW])
 		{
+			this.moving = true;
 			this.faceX = 0;
 			this.faceY = 1;
 			if(this.handleCollision(dwight.x, dwight.y + dwight.acc))
@@ -614,6 +1020,40 @@ class Dwight extends Character{
 			}
 			
 		}
+		if(!this.moving)
+			this.frame = 0;
+	}
+	
+	checkItems(item)
+	{
+		/*let x = this.x;
+		let y = this.y;
+		let xw = x + this.width;
+		let yh = y + this.height;
+		let x2 = item.x;
+		let y2 = item.y;
+		let x2w = x2 + item.w;
+		let y2h = y2 + item.h;*/
+		let x2 = this.x;
+		let y2 = this.y;
+		let x2w = x2 + this.width;
+		let y2h = y2 + this.height;
+		let x = item.x;
+		let y = item.y;
+		let xw = x + item.w;
+		let yh = y + item.h;
+		
+		
+		if(x > x2 && x < x2w && y > y2 && y < y2h)
+			return true;
+		if(xw > x2 && xw < x2w && y > y2 && y < y2h)
+			return true;
+		if(x > x2 && x < x2w && yh > y2 && yh < y2h)
+			return true;
+		if(xw > x2 && xw < x2w && yh > y2 && yh < y2h)
+			return true;
+		
+		return false;
 	}
 	
 	checkVomit(x2,y2)
@@ -737,6 +1177,22 @@ class Dwight extends Character{
 		pop();
 	}
 	
+	drawItemsHUD()
+	{
+		push();
+		stroke("black");
+		noFill();
+		for(let i = 0; i < this.items.length; i++)
+			{
+				rect(650+i*50,500,50,50);
+				image(this.items[i].img,650+i*50,500,50,50);
+				
+			}
+		stroke("red");
+		rect(650+this.currItems*50,500,50,50);
+		pop();
+	}
+	
 	
 }
 
@@ -759,7 +1215,8 @@ function keyReleased() {
 	WAITING: 6,
 	SPITTING: 7,
 	RUSHING: 8,
-	 SPEAKING: 9
+	 SPEAKING: 9,
+	 SCRIPTED: 10
  }
  
  
@@ -781,6 +1238,13 @@ class Boss extends Character{
 		this.init_height = height;
 		this.start_x = x;
 		this.start_y = y;
+		
+		this.anim = creed_animation;
+		this.frame = 0;
+		this.lastFrame = new Date().getTime();
+		this.moving = false;
+		this.sensAnim = 1;
+		this.sourceY = 0;
 		
 		//this.lastStunned = new Date().getTime();
 		
@@ -879,6 +1343,7 @@ class Boss extends Character{
 		  
 	    let xVelocity = this.velocity * cos(angle);
 	    let yVelocity = this.velocity * sin(angle);
+		this.setSourceY(xVelocity,yVelocity);
 	  
 	    if(this.handleCollision(this.x - xVelocity, this.y))
 	    {
@@ -913,6 +1378,7 @@ class Boss extends Character{
 		  
 		  let xVelocity = this.velocity * cos(angle);
 		  let yVelocity = this.velocity * sin(angle);
+		this.setSourceY(xVelocity,yVelocity);
 		  if(this.handleCollision(this.x - xVelocity, this.y))
 		  {
 			this.x-=xVelocity;
@@ -945,6 +1411,83 @@ class Boss extends Character{
 		return dist;
 	}
 	
+	move(xVel,yVel)
+	{
+		let xVelocity = xVel;
+		let yVelocity = yVel;
+		 this.setSourceY(xVelocity,yVelocity);
+		let moving = false;
+		  if(this.handleCollision(this.x - xVelocity, this.y))
+		  {
+			this.x-=xVelocity;
+			map.resort(this);
+			  moving = true;
+		  }
+		  if(this.handleCollision(this.x, this.y - yVelocity))
+		  {
+			this.y-=yVelocity;
+			map.resort(this);
+			  //moving = true;
+		  }
+		return moving;
+	}
+	
+	
+	setSourceY(xVel,yVel)
+	{
+		if(Math.abs(xVel) > Math.abs(yVel))
+			{
+				if(xVel > 0)
+					this.sourceY = 3;
+		  		else
+					this.sourceY = 2;
+			}
+		else
+			{
+				if(yVel > 0)
+				  this.sourceY = 1;
+			    else
+				  this.sourceY = 0;
+			}
+	}
+	
+	
+	
+	drawAnim()
+	{
+		if(!this.moving)
+			{
+				image(this.anim,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height,0,0,this.width, this.height);
+				this.drawBleeding();
+				this.drawLife();
+				return;
+			}
+		let now = new Date().getTime();
+		let delta = now - this.lastFrame;
+			if (delta >= 100)
+			{
+				this.frame+=this.sensAnim;
+				
+				if(this.frame == 5 || this.frame == 0)
+					this.sensAnim*=-1;
+				this.lastFrame = new Date().getTime();
+			}
+		
+		   if(this.sourceY == 3)
+			   {
+				   push();
+					translate(this.x+camera.offSetX,this.y+camera.offSetY);
+					scale(-1,1);
+					image(this.anim,-36, 0, this.width, this.height,this.frame*this.width,(this.sourceY-1)*this.height,this.width, this.height);
+					pop();
+				   
+			   }
+			else
+				image(this.anim,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height,this.frame*this.width,this.sourceY*this.height,this.width, this.height);
+		this.drawBleeding();
+		this.drawLife();
+	}
+	
 	draw()
 	{
 		super.draw();
@@ -958,7 +1501,7 @@ class Boss extends Character{
 		push();
 			textSize(10);
 			fill(0,0,0);
-			//text('HP : ' + this.life, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
+			text('STATE : ' + this.state, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-20);
 			textSize(12);
 			text(this.name, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
 		pop();
@@ -978,20 +1521,44 @@ class CEO_Boss extends Boss{
 		this.shot = false;
 		this.speach = false;
 		this.lastSpeak = new Date().getTime();
-		this.speach_list=["TAKE THAT DWIGHT !!", "DIE !!!", "HERE'S YOUR PROMOTION DWIGHT !", "MOUHAHAHAHAHAHA", "YOU WILL DIE TODAY", "EMPLOYEE OF THE MONTH MY ASS", "IM THE CEO IM THE BOSS"]
+		this.speach_list=["DWIGHT YOU WERE\nSUPPOSED TO EAT THE CAKE\nWITH THE OTHERS","NOW I HAVE TO KILL YOU !","TAKE THAT DWIGHT !!", "DIE !!!", "HERE'S YOUR PROMOTION DWIGHT !", "MOUHAHAHAHAHAHA", "YOU WILL DIE TODAY", "EMPLOYEE OF THE MONTH MY ASS", "IM THE CEO IM THE BOSS"]
 		this.speach_index = 0;
+		this.state = STATE.WAITING;
+		this.saveState = this.state;
+	}
+	
+	revive()
+	{
+		super.revive();
+		this.state = STATE.WAITING;
+		//console.log("this.state ", this.state);
 	}
 	
 	speaking()
 	{
 		let now = new Date().getTime();
 		let delta = now - this.lastSpeak;
-		if (delta >= 800) {
-			this.state = STATE.CHASING;
+		if (delta >= 1000) {
+			//this.state = STATE.CHASING;
+			this.lastSpeak = new Date().getTime();
+			this.state = this.saveState;
 			this.speach_index++;
 			if(this.speach_index >= this.speach_list.length)
-				this.speach_index = 0;
+				this.speach_index = 2;
 		}
+	}
+	
+	updateScript()
+	{
+		this.update();
+		if(this.speach_index > 2)
+		{
+			this.state = STATE.CHASING;
+			this.saveState = STATE.CHASING;
+			gameState = PLAY;
+			camera.lookAtObj(dwight);
+		}
+		
 	}
 	
 	update()
@@ -1002,11 +1569,27 @@ class CEO_Boss extends Boss{
 			this.weapon.update();
 		
 		switch (this.state) {
+				
 	  
 			  case STATE.SPEAKING:
 			  //this.speak("HAHAHAHAHA");
 				this.speaking();
 			  break;
+				
+			case STATE.WAITING:
+				if(dwight.y < 430 && dwight.x < 500)
+				{
+					//this.saveState = this.state;
+					this.saveState = STATE.SPEAKING;
+					this.state = STATE.SPEAKING;
+					camera.lookAtObj(this)
+					gameState = CEO_CONVERSATION;
+					this.lastSpeak = new Date().getTime();
+					//this.state = STATE.SPEAKING;
+				}
+				break;
+				
+			
 		}
 		
 		
@@ -1027,6 +1610,8 @@ class CEO_Boss extends Boss{
 	{
 		super.die();
 		this.img = ceo_boss_dead;
+		message.set(0,0,"YOU OBTAINED THE KEY TO THE ROOF",true)
+		
 	}
 	
 	roam()
@@ -1234,11 +1819,45 @@ class Hank_Boss extends Boss{
 class Creed_Boss extends Boss{
 	constructor (x, y, width, height, img,id,life,state,velocity,name) {
 		super(x, y, width, height, img,id,life,state,velocity,name);
-		this.phase = 1;
+		this.phase = 0;
 		this.blinking = false;
 		this.blinkingX;
 		this.blinkingY;
 		this.lastBlink = new Date().getTime();
+		this.scriptState = STATE_01;
+		this.lastSpeak = new Date().getTime();
+		this.speach_list=["Dwight !","What are you doing here ?","Me ? Im just uh...", "enjoying the view !", "Why dont you go to the basement ?\nYou could restore the power", "There's a backup generator\n down there","Dont worry\n there's no zombies down there..", "Y-y you can t-trust me !\n(clears throat)","Im sorry Dwight...", "I cant let you escape.", "Ill make it quick"]
+		this.speach_index = 0;
+		this.weapon = new Weapon(this.x, this.y, 77,15, sniper_img);
+	}
+	
+	speaking()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.lastSpeak;
+		if (delta >= 2000) {
+			//this.state = STATE.CHASING;
+			this.lastSpeak = new Date().getTime();
+			//this.state = this.saveState;
+			this.speach_index++;
+			if(this.speach_index >= 8 && this.phase == 0)
+				//this.speach_index = 0;
+				{
+					//this.state = STATE.IDLE;
+					this.scriptState = STATE_03;
+					gameState = PLAY;
+				}
+			if(this.speach_index >= this.speach_list.length && this.phase == 3)
+				//this.speach_index = 0;
+				{
+					this.moving = true;
+					this.state = STATE.ROAMING;
+					this.phase = 1;
+					this.scriptState = STATE_03;
+					camera.lookAtObj(dwight)
+					gameState = PLAY;
+				}
+		}
 	}
 	
 	blink()
@@ -1255,13 +1874,76 @@ class Creed_Boss extends Boss{
 	revive()
 	{
 		super.revive();
-		this.phase = 1;
+		this.phase = 0;
 		this.name = "CREED";
+		this.state = STATE.WAITING;
+	}
+	
+	updateScript()
+	{
+		this.weapon.update(this.x, this.y+35);
+		switch(this.scriptState)
+			{
+				case STATE_01:
+					//this.x+=2;
+					this.moving = this.move(-2,0);
+					if(this.x > 550)
+					{
+						//this.state = STATE.IDLE;
+						//gameState = PLAY;
+						this.moving = false;
+						this.scriptState = STATE_02;
+						this.lastSpeak = new Date().getTime();
+					}
+					break;
+					
+				case STATE_02:
+					this.speaking();
+					break;
+					
+				case STATE_03:
+					
+					break;
+					
+					case STATE_04:
+					this.speaking();
+					break;
+			}
 	}
 	
 	update()
 	{
+		this.weapon.update(this.x, this.y+35);
+		if(dwight.y > 900)
+			return;
+		
 		super.update();
+		
+		switch(this.state)
+			{
+				case STATE.WAITING:
+					if(dwight.y > 100 && this.phase == 0)
+					{
+						this.lastSpeak = new Date().getTime();
+						this.state = STATE.SCRIPTED;
+						gameState = CREED_CONVERSATION;
+					}
+					if(dwight.y < 450 && this.phase == 3)
+					{
+						camera.lookAtObj(this)
+						this.lastSpeak = new Date().getTime();
+						this.scriptState = STATE_04;
+						this.state = STATE.SCRIPTED;
+						gameState = CREED_CONVERSATION;
+					}
+					return;
+					break;
+					
+				case STATE.SCRIPTED:
+					this.updateScript();
+					return;
+					break;
+			}
 		
 		if(this.phase != 1)
 			return;
@@ -1291,6 +1973,8 @@ class Creed_Boss extends Boss{
 	
 	takeDmg(x,y)
 	{
+		if(this.state == STATE.SCRIPTED)
+			return;
 		super.takeDmg(x,y);
 		if(this.phase == 1)
 		{
@@ -1306,13 +1990,13 @@ class Creed_Boss extends Boss{
 		if(this.phase == 1)
 		{
 			this.phase = 2;	
-			this.width *= 1.5;
-			this.height *= 1.5;
-			this.life = 15;
+			//this.width *= 1.5;
+			//this.height *= 1.5;
+			this.life = 1;
 			this.name = "ZOMBIE CREED";
 			this.velocity = 2;
 			this.blink();
-			this.img = creed_zombie;
+			//this.img = creed_zombie;
 			boss_death_sound.play();
 			
 		}
@@ -1333,7 +2017,17 @@ class Creed_Boss extends Boss{
 	
 	draw()
 	{
-		super.draw();
+		//super.draw();
+		if(this.state == STATE.DEAD)
+		{
+			super.draw();
+			return;
+		}
+		super.drawAnim();
+		if(this.phase == 3 || this.phase == 1)
+			this.weapon.draw();
+		if(this.scriptState == STATE_02 || this.scriptState == STATE_04)
+			this.speak(this.speach_list[this.speach_index],10);
 		
 		if(this.blinking)
 		{
@@ -1349,6 +2043,19 @@ class Creed_Boss extends Boss{
 			pop();
 			
 		}
+	}
+	
+	speak(text_message,text_size)
+	{
+		push();
+			noStroke();
+			fill("white")
+			triangle(this.x+camera.offSetX, this.y+camera.offSetY, this.x+camera.offSetX-20, this.y+camera.offSetY-100,this.x+camera.offSetX-50, this.y+camera.offSetY-100)
+			ellipse(this.x+camera.offSetX, this.y+camera.offSetY-100, 300, 100);
+			fill("black")
+			textSize(text_size);
+			text(text_message,this.x+camera.offSetX, this.y+camera.offSetY-100);
+		pop();
 	}
 }
 
@@ -1478,6 +2185,8 @@ class Basement_Boss extends Boss{
 	
 	takeDmg(x,y)
 	{
+		if(this.state == STATE.DEAD)
+			return;
 		if(this.state == STATE.VOMITING)
 			this.vomitProgression = 0;
 		
@@ -1597,6 +2306,15 @@ class Basement_Boss extends Boss{
 	
 }
 
+class Area{
+	constructor(x,y,w,h){
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+	}
+}
+
 class Zombie extends Character{
     constructor (x, y, width, height, img, id, initX, initY) {
 		super(x, y, width, height, img, id );
@@ -1616,6 +2334,9 @@ class Zombie extends Character{
 		this.lastFrame = new Date().getTime();
 		this.sourceY = 0;
 		this.sensAnim = 1;
+		this.chaseTarget = dwight;
+		this.show = true;
+		this.activeArea = new Area(0,0,1000,1000)
 		
 		
 	}
@@ -1666,6 +2387,8 @@ class Zombie extends Character{
 	
 	draw()
 	{
+		if(!this.show)
+			return;
 		if(this.zombieState == STATE.DEAD)
 			{
 				
@@ -1710,8 +2433,8 @@ class Zombie extends Character{
 		//this.drawChaseLine();
 		//this.drawLife();
 		//this.drawBleeding();
-		if(this.speaking)
-			this.speak("bleuargh ?!?!!")
+		//if(this.speaking)
+			//this.speak("bleuargh ?!?!!")
 	}
 	
 	drawLife()
@@ -1724,13 +2447,14 @@ class Zombie extends Character{
 		text('HP : ' + this.life, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-10);
 		textSize(12);
 		text('ZOMBIE', this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-20);
-		text('ID ' + this.id, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-30);
+		text('AREA ' + this.activeArea.x, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-30);
+		text('AREA ' + this.activeArea.w, this.x+camera.offSetX + this.width/2, this.y+camera.offSetY-30);
 		pop();
 	}
 	
 	setZombieInitPosition()
 	{
-		this.zombieState = STATE.ROAMING;
+		this.zombieState = STATE.IDLE;
 		this.x = this.initX;
 		this.y = this.initY;
 		this.vecRoam = createVector(random(100,900), random(100,900));
@@ -1740,8 +2464,10 @@ class Zombie extends Character{
 	update()
 	{
 		this.move();
-		if(dwight.alive && (this.zombieState == STATE.CHASING || this.zombieState == STATE.ROAMING) )
-			this.detectPlayer(this.x + 36/2, dwight.x + 36/2, this.y+ 70/2, dwight.y+ 70/2);
+		if(dwight.alive && (this.zombieState == STATE.CHASING || this.zombieState == STATE.ROAMING))
+			//this.detectPlayer(this.x + 36/2, map.floors[map.current_floor].pnjs[0].x + 36/2, this.y+ 70/2, map.floors[map.current_floor].pnjs[0].y+ 70/2);
+			//this.detectPlayer(this.x + 36/2, dwight.x + 36/2, this.y+ 70/2, dwight.y+ 70/2);
+			this.detectPlayer(this.x + 36/2, this.chaseTarget.x + 36/2, this.y+ 70/2, this.chaseTarget.y+ 70/2);
 	}
 	
 	move()
@@ -1758,6 +2484,9 @@ class Zombie extends Character{
 			  
 			  case STATE.IDLE:
 			  break;
+				
+			case STATE.SCRIPTED:
+				break;
 				
 			case STATE.WAITING:
 				this.wait();
@@ -1827,11 +2556,14 @@ class Zombie extends Character{
 		if(distance < 5)
 		{
 			
-			this.vecRoam = createVector(random(0,800), random(0,600));
+			/*this.vecRoam = createVector(random(0,800), random(0,600));
+			if(this.id == 101 && map.current_floor == 3)
+				this.vecRoam = createVector(random(this.activeArea.x,this.activeArea.w), random(this.activeArea.y,this.activeArea.h));*/
+			this.vecRoam = createVector(random(this.activeArea.x,this.activeArea.w), random(this.activeArea.y,this.activeArea.h));
 			v2 = createVector(this.vecRoam.x+camera.offSetX, this.vecRoam.y+camera.offSetY)
 			this.zombieState = STATE.WAITING;
 			this.lastWait = new Date().getTime();  
-			this.speaking = true;
+			//this.speaking = true;
 		}
 		
 		  let dx = v1.x - v2.x;
@@ -1853,7 +2585,10 @@ class Zombie extends Character{
 		  }
 		  else
 		  {
-			  this.vecRoam = createVector(random(0,800), random(0,600));
+			  /*this.vecRoam = createVector(random(0,800), random(0,600));
+			  if(this.id == 101 && map.current_floor == 3)
+				this.vecRoam = createVector(random(this.activeArea.x,this.activeArea.w), random(this.activeArea.y,this.activeArea.h));*/
+			  this.vecRoam = createVector(random(this.activeArea.x,this.activeArea.w), random(this.activeArea.y,this.activeArea.h));
 			  this.zombieState = STATE.WAITING;
 			  this.lastWait = new Date().getTime(); 
 			  this.speaking = true;
@@ -1865,7 +2600,10 @@ class Zombie extends Character{
 		  }
 		  else
 		  {
-			   this.vecRoam = createVector(random(0,800), random(0,600));
+			  /* this.vecRoam = createVector(random(0,800), random(0,600));
+			  if(this.id == 101 && map.current_floor == 3)
+				this.vecRoam = createVector(random(this.activeArea.x,this.activeArea.w), random(this.activeArea.y,this.activeArea.h));*/
+			  this.vecRoam = createVector(random(this.activeArea.x,this.activeArea.w), random(this.activeArea.y,this.activeArea.h));
 			   this.zombieState = STATE.WAITING;
 			   this.lastWait = new Date().getTime(); 
 			   this.speaking = true;
@@ -1876,9 +2614,14 @@ class Zombie extends Character{
 	chase()
 	{
 		  let v1 = createVector(this.x + 36/2 + camera.offSetX, this.y + 70/2 + camera.offSetY);
-		  let v2 = createVector(dwight.x + 36/2 + camera.offSetX, dwight.y + 70/2 + camera.offSetY);
+		  //let v2 = createVector(dwight.x + 36/2 + camera.offSetX, dwight.y + 70/2 + camera.offSetY);
+		  //let v2 = createVector(map.floors[map.current_floor].pnjs[0].x + 36/2 + camera.offSetX, map.floors[map.current_floor].pnjs[0].y + 70/2 + camera.offSetY);
+		  let v2 = createVector(this.chaseTarget.x + 36/2 + camera.offSetX, this.chaseTarget.y + 70/2 + camera.offSetY);
 		  this.chaseLine[0].set(v1.x, v1.y);
 		  this.chaseLine[1].set(v2.x, v2.y);
+		  
+		if(!zombie_hit_sound.isPlaying())
+		  zombie_hit_sound.play();
 		  
 		  if(dwight.y > 1000)
 			  return;
@@ -1905,6 +2648,7 @@ class Zombie extends Character{
 			this.y-=yVelocity;
 			map.resort(this);
 		  }
+		 
 	}
 	
 	setState(state)
@@ -1921,13 +2665,19 @@ class Zombie extends Character{
 	detectPlayer(x1,x2,y1,y2)
 	{
 		var dist = Math.sqrt( Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2) );
-		if(dist < 300)
+		
+		if(dist < 300 && x2 > this.activeArea.x && y2 > this.activeArea.y && x2 < this.activeArea.w && y2 < this.activeArea.h)
 		{
 			this.zombieState = STATE.CHASING;
 		}
+		else
+			{
+				this.zombieState = STATE.ROAMING;
+			}
 		if(dist < 30)
 		{
-			dwight.takeDmg();
+			//map.floors[map.current_floor].pnjs[0].takeDmg();
+			this.chaseTarget.takeDmg();
 		}
 	}
 	
