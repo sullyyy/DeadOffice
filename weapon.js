@@ -25,6 +25,71 @@ class Weapon {
 	
 }
 
+class Sniper extends Weapon{
+	 constructor (x,y,w,h,img) {
+		 super(x,y,w,h,img);
+		 this.lastShot  = new Date().getTime();
+		 this.gun_fire  = new Gun_Fire(this.x,this.y,5,5,this,false);
+		 this.bullets = [];
+	 }
+	
+	update(x,y)
+	{
+		super.update(x,y);
+		for(let i = 0; i < this.bullets.length; i++)
+			{
+				if(!this.bullets[i].show)
+					continue;
+				let bullet_hit = this.bullets[i].update();
+				if(!bullet_hit)
+					{
+						
+						this.bullets[i].show = false;
+						
+						map.floors[map.current_floor].shotgun_impact[i] = new Bullet_Impact(this.bullets[i].x,this.bullets[i].y,20,20)
+						map.z_index_map[map.current_floor].push(new Tile_To_Draw(floor(this.bullets[i].x/100),floor(this.bullets[i].y/100),1000+i,false,9));
+						bullet_impact_sound.play();
+						
+					}
+				if(bullet_hit == 2)
+					{
+						this.bullets[i].show = false;
+						dwight.takeDmg(this.x,this.y);
+					}
+			}
+	}
+	
+	shoot()
+	{
+		let now = new Date().getTime();
+		let delta = now - this.lastShot;
+		if (delta >= 1500) {
+			
+			console.log("PAN")
+		
+			this.bullets.push(new Shotgun_Bullet(this.x+this.w,this.y,createVector((dwight.x + (dwight.width/2)), (dwight.y + dwight.height/2))))
+			shotgun_sound.play();
+			
+			this.lastShot = new Date().getTime();
+			
+			this.gun_fire = new Gun_Fire(this.x,this.y,5,5,this,true)
+		}
+	}
+	
+	draw()
+	{
+		super.draw();
+		for(let i = 0; i < this.bullets.length; i++)
+			{
+				if(this.bullets[i].show)
+					this.bullets[i].draw();
+			}
+		this.gun_fire.draw_shotgun_fire();
+	}
+	
+	
+}
+
 class Shotgun_Bullet {
 	 constructor (x,y,dest) {
 		 this.x = x;

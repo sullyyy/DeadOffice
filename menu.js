@@ -500,7 +500,7 @@ class Menu {
 			keys[32] = 0;
 			//gameState = PLAY;
 			gameState = START_SCRIPT;
-			map.floors[3].lastStartScript = new Date().getTime();
+			//map.floors[3].lastStartScript = new Date().getTime();
 			showEditorButtons(false)
 			setStartingPoint();
 			
@@ -615,10 +615,11 @@ class Menu {
 		text('HOW TO PLAY', windowWidth/2, windowHeight/4);
 		textSize(20);
 		text('Move = ← → ↑ ↓', windowWidth/2, (windowHeight/4)+100);
-		text('Action/Attack = Space', windowWidth/2, (windowHeight/4)+120);
-		text('Switch weapon = Ctrl', windowWidth/2, (windowHeight/4)+140);
-		text('Reload weapon = R', windowWidth/2, (windowHeight/4)+160);
-		text('Cancel/Menu = Esc', windowWidth/2, (windowHeight/4)+180);
+		text('Open/close doors = E', windowWidth/2, (windowHeight/4)+120);
+		text('Action/Attack = Space', windowWidth/2, (windowHeight/4)+140);
+		text('Switch weapon = Ctrl', windowWidth/2, (windowHeight/4)+160);
+		text('Reload weapon = R', windowWidth/2, (windowHeight/4)+180);
+		text('Cancel/Menu = Esc', windowWidth/2, (windowHeight/4)+200);
 		
 		textSize(30);
 		text('ESCAPE THE BUILDING !', windowWidth/2, (windowHeight/4)+250);

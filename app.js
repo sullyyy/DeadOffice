@@ -203,6 +203,10 @@ function preload() {
   zombie_animation = loadImage('assets/anim/zombie_animation.png');
   jim_animation = loadImage('assets/anim/jim_animation.png');
   creed_animation = loadImage('assets/anim/creed_animation.png');
+  creed_zombie_animation = loadImage('assets/anim/zombie_creed_animation.png');
+  hank_animation = loadImage('assets/anim/hank_animation.png');
+  ceo_animation = loadImage('assets/anim/ceo_animation.png');
+  basement_boss_animation = loadImage('assets/anim/basement_boss_animation.png');
   
 	
   hank = loadImage('assets/img/hank.png');
@@ -228,6 +232,8 @@ function setup() {
   textFont(font);
   textSize(fontSize);
   textAlign(CENTER, CENTER);
+	
+	//editor = new Editor();
   
   camera = new Camera(0, 0,800,600);
  
@@ -245,12 +251,36 @@ function setup() {
 	
 	grilledWallOpening = new GrilledWallOpening();
 	
+	
+	
 	//console.log("dqi ", dwight_animation);
 
 }
 
 function setStartingPoint()
 {
+	lastEnd = new Date().getTime(); 
+	
+	/*camera = new Camera(0, 0,800,600);
+ 
+	  map = new Map(2,0, map_array2,img_array,z_index_map);
+
+	  loadFloors();
+
+	  message = new Message(0,0,"");
+
+	  editor = new Editor();
+	
+	amp = new p5.Amplitude();
+	
+	closetAnimation = new ClosetAnimation();
+	
+	grilledWallOpening = new GrilledWallOpening();
+	
+	map.floors[3].lastStartScript = new Date().getTime();*/
+	
+	
+	//dwight.items.push(revolver);
 	dwight.x = 300;
 	dwight.y = 200;
 	map.current_floor = 3;
@@ -415,6 +445,22 @@ function draw() {
 	  break;
 	  
 	  case END:
+		  //dwight.x--;
+	  //dwight.move();
+		  
+		 /* let now = new Date().getTime();
+		let delta = now - lastEnd;
+		
+		if (delta >= 50) {
+			camera.offSetY += 10;
+			camera.offSetX += 10;
+		  game_scale -= 0.01;
+			lastEnd = now;
+		}*/
+		  dwight.updateEndScript();
+	  		map.draw();
+		  camera.update();
+		  //image(dwight_dead, 200, 500, dwight_dead.width, dwight_dead.height);
 	  Menu.s_drawEnd();
 	  Menu.s_return();
 	  break;

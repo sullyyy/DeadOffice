@@ -575,7 +575,7 @@ function setupMap()
 function loadFloors()
 {
   //basement
-  map.floors[0] = new Floor(0,0,new Basement_Boss(500,500,40,80,basement_boss,6,1,STATE.ROAMING,1.5,"FATTY FAT BOB"));
+  map.floors[0] = new Floor(0,0,new Basement_Boss(500,500,36,70,basement_boss,6,10,STATE.ROAMING,1.5,"FATTY FAT BOB"));
   /*map.floors[0].enemies.push(new Zombie(500,500,36,70,zombie,100,400,500));
   map.floors[0].enemies.push(new Zombie(500,600,36,70,zombie,101,300,600));
   map.floors[0].enemies.push(new Zombie(500,700,36,70,zombie,102,500,700));
@@ -593,7 +593,7 @@ function loadFloors()
   map.floors[0].enemies.push(new Zombie(400,800,36,70,zombie,114,400,800));*/
 	
   //ground floor
-  map.floors[1] = new Floor(1,1,new Hank_Boss(500,500,40,80,hank,6,15,STATE.ROAMING,1.5,"HANK"));
+  map.floors[1] = new Floor(1,1,new Hank_Boss(500,500,36,70,hank,6,15,STATE.ROAMING,1.5,"HANK"));
   map.floors[1].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
   map.floors[1].doors.push(new Door(0,1,2,3,false))
 	
@@ -632,7 +632,7 @@ function loadFloors()
   map.floors[3].doors.push(new Door(0,3,7,6,false))
 	
   //3r floor
-  map.floors[4] = new Floor(4,1,new CEO_Boss(300,200,40,80,ceo_boss,6,1,STATE.WAITING,1.5,"THE CEO"));
+  map.floors[4] = new Floor(4,1,new CEO_Boss(300,200,36,70,ceo_boss,6,10,STATE.WAITING,1.5,"THE CEO"));
   map.floors[4].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
 	map.floors[4].enemies[0].activeArea = new Area(500,200,900,970)
 	//map.floors[4].items.push(new Revolver(300,700,20,13,loadImage('assets/img/revolver.png')))
@@ -643,7 +643,7 @@ function loadFloors()
   map.floors[4].notes.push(new Note(440,800,0));
 	
   //roof
-  map.floors[5] = new Floor(5,0, new Creed_Boss(300,200,36,70,creed_boss,6,1,STATE.ROAMING,1.5,"CREED"));
+  map.floors[5] = new Floor(5,0, new Creed_Boss(300,200,36,70,creed_boss,6,10,STATE.ROAMING,1.5,"CREED"));
   //map.floors[5].enemies.push(new Zombie(500,500,36,70,zombie,100,500,500));
   //map.floors[5].enemies.push(new Zombie(500,600,36,70,zombie,101,500,600));
   

@@ -274,9 +274,13 @@ let keys = [];
 				{
 					map.travelTo(5,4,14)
 					end = 1;
-					game_scale = 0.5;
-					
-					camera.lookAt(200,700);
+					dwight.acc = 4;
+					//dwight.scale = 0.5;
+					//game_scale = 0.5;
+					//dwight.x = 300;
+					//dwight.y = 1000;
+					camera.lookAtObj(null);
+					camera.lookAt(200,1400);
 					let now = new Date().getTime();
 					time = now - start;
 					return false;
@@ -716,6 +720,9 @@ class Dwight extends Character{
 		this.speechList1 = ["PFFFF I HATE CAKE\nAND I HATE PARTIES","I THINK ITS OVER NOW\nI BETTER GET BACK"]
 		this.speechList1_ind = 0;
 		this.moving = false;
+		this.scale = 1.0;
+		
+		this.endScriptStep = 0;
 		
 	}
 	
@@ -731,6 +738,31 @@ class Dwight extends Character{
 			text("AIE !!!",this.x+camera.offSetX, this.y+camera.offSetY-100);
 		pop();
 	}*/
+	
+	updateEndScript()
+	{
+		if(this.endScriptStep == 0)
+			{
+				keys[DOWN_ARROW] = 1;
+				if(dwight.y > 1430)
+				{
+					keys[DOWN_ARROW] = 0;
+					this.endScriptStep = 1;
+				}
+			}
+		else
+			{
+				keys[LEFT_ARROW] = 1;
+				if(dwight.x < -200)
+				{
+					gameState = MENU;
+				}
+			}
+		
+		
+		//keys[LEFT_ARROW] = 1;
+		this.move();
+	}
 	
 	revive()
 	{
@@ -1141,7 +1173,7 @@ class Dwight extends Character{
 			//if(this.frame >= 6)
 				//sourceX = this.frame - 6;
 			if(this.faceX > 0)
-				image(dwight_side_animation, this.x + camera.offSetX, this.y + camera.offSetY, 36, 70, sourceX*36,0,36,70)
+				image(dwight_side_animation, this.x + camera.offSetX, this.y + camera.offSetY, this.width*this.scale, this.height*this.scale, sourceX*36,0,36,70)
 			else
 				{
 					push();
@@ -1151,13 +1183,13 @@ class Dwight extends Character{
 						translate(this.x+camera.offSetX,this.y+camera.offSetY);
 						scale(-1,1);
 						//image(dwight_side_animation, -36, 0, this.w, this.h,0,0,36,70)
-						image(dwight_side_animation, -36, 0, 36, 70,36*sourceX,0,36,70)
+						image(dwight_side_animation, -36, 0, this.width*this.scale, this.height*this.scale,36*sourceX,0,36,70)
 					pop();
 				}
 			
 		}
 		else
-			image(this.anim, this.x + camera.offSetX, this.y + camera.offSetY, this.width, this.height, this.width*this.frame,this.getSourceY(),this.width,this.height)
+			image(this.anim, this.x + camera.offSetX, this.y + camera.offSetY, this.width*this.scale, this.height*this.scale, this.width*this.frame,this.getSourceY(),this.width,this.height)
 		//console.log("this.anim ", this.anim);
 		//image(this.anim, this.x + camera.offSetX, this.y + camera.offSetY, 36, 70, 36*this.frame,0,36,70)
 		this.drawBleeding();
@@ -1457,7 +1489,7 @@ class Boss extends Character{
 	{
 		if(!this.moving)
 			{
-				image(this.anim,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height,0,0,this.width, this.height);
+				image(this.anim,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height,0,0,this.init_width, this.init_height);
 				this.drawBleeding();
 				this.drawLife();
 				return;
@@ -1478,12 +1510,12 @@ class Boss extends Character{
 				   push();
 					translate(this.x+camera.offSetX,this.y+camera.offSetY);
 					scale(-1,1);
-					image(this.anim,-36, 0, this.width, this.height,this.frame*this.width,(this.sourceY-1)*this.height,this.width, this.height);
+					image(this.anim,-36, 0, this.width, this.height,this.frame*this.init_width,(this.sourceY-1)*this.init_height,this.init_width, this.init_height);
 					pop();
 				   
 			   }
 			else
-				image(this.anim,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height,this.frame*this.width,this.sourceY*this.height,this.width, this.height);
+				image(this.anim,this.x+camera.offSetX, this.y+camera.offSetY, this.width, this.height,this.frame*this.init_width,this.sourceY*this.init_height,this.init_width, this.init_height);
 		this.drawBleeding();
 		this.drawLife();
 	}
@@ -1525,6 +1557,8 @@ class CEO_Boss extends Boss{
 		this.speach_index = 0;
 		this.state = STATE.WAITING;
 		this.saveState = this.state;
+		this.anim = ceo_animation;
+		this.moving = false;
 	}
 	
 	revive()
@@ -1557,6 +1591,7 @@ class CEO_Boss extends Boss{
 			this.saveState = STATE.CHASING;
 			gameState = PLAY;
 			camera.lookAtObj(dwight);
+			this.moving = true;
 		}
 		
 	}
@@ -1597,7 +1632,13 @@ class CEO_Boss extends Boss{
 	
 	draw()
 	{
-		super.draw();
+		if(this.state == STATE.DEAD)
+			{
+				super.draw();
+				return;
+			}
+		super.drawAnim();
+		//super.draw();
 		if(this.state == STATE.SPEAKING)
 			//this.speak("TAKE THAT DWIGHT !!!");
 			this.speak(this.speach_list[this.speach_index]);
@@ -1688,6 +1729,8 @@ class Hank_Boss extends Boss{
 		this.v1;
 		this.v2;
 		this.saveState = this.state;
+		this.anim = hank_animation;
+		this.moving = true;
 	}
 	
 	stunned()
@@ -1801,6 +1844,23 @@ class Hank_Boss extends Boss{
 		}
 	}
 	
+	draw()
+	{
+		if(this.state == STATE.DEAD)
+		{
+			super.draw();
+			return;
+		}
+		if(this.state == STATE.RUSHING)
+			{
+				push();
+				tint(178, 34, 34);
+			}
+		super.drawAnim();
+		if(this.state == STATE.RUSHING)
+			pop();
+	}
+	
 	/*drawLife()
 	{
 		super.drawLife();
@@ -1828,7 +1888,8 @@ class Creed_Boss extends Boss{
 		this.lastSpeak = new Date().getTime();
 		this.speach_list=["Dwight !","What are you doing here ?","Me ? Im just uh...", "enjoying the view !", "Why dont you go to the basement ?\nYou could restore the power", "There's a backup generator\n down there","Dont worry\n there's no zombies down there..", "Y-y you can t-trust me !\n(clears throat)","Im sorry Dwight...", "I cant let you escape.", "Ill make it quick"]
 		this.speach_index = 0;
-		this.weapon = new Weapon(this.x, this.y, 77,15, sniper_img);
+		this.weapon = new Sniper(this.x, this.y, 77,15, sniper_img);
+		this.blink_cnter = 0;
 	}
 	
 	speaking()
@@ -1869,6 +1930,7 @@ class Creed_Boss extends Boss{
 		this.x = random(100,800);
 		this.y = random(100,900);
 		blink_sound.play();
+		//this.blink_cnter++;
 	}
 	
 	revive()
@@ -1894,6 +1956,13 @@ class Creed_Boss extends Boss{
 						this.moving = false;
 						this.scriptState = STATE_02;
 						this.lastSpeak = new Date().getTime();
+						
+						/*this.moving = true;
+						this.state = STATE.ROAMING;
+						this.phase = 1;
+						this.scriptState = STATE_03;
+						camera.lookAtObj(dwight)
+						gameState = PLAY;*/
 					}
 					break;
 					
@@ -1965,9 +2034,18 @@ class Creed_Boss extends Boss{
 				this.blink();
 			}
 		
-		if(dist > 150 && dist < 1000 && delta > 1500)
+		if(dist > 150 && dist < 1000 && delta > 2000)
 			{
-				this.blink();
+				//console.log("this.blink_cnter ", this.blink_cnter)
+				//this.blink_cnter++;
+				this.weapon.shoot();
+				//this.blink();
+				if(this.blink_cnter > 2)
+					{
+						this.blink();
+						this.blink_cnter = 0;
+					}
+				
 			}
 	}
 	
@@ -1990,13 +2068,14 @@ class Creed_Boss extends Boss{
 		if(this.phase == 1)
 		{
 			this.phase = 2;	
-			//this.width *= 1.5;
-			//this.height *= 1.5;
-			this.life = 1;
+			this.width *= 1.5;
+			this.height *= 1.5;
+			this.life = 12;
 			this.name = "ZOMBIE CREED";
 			this.velocity = 2;
 			this.blink();
 			//this.img = creed_zombie;
+			this.anim = creed_zombie_animation;
 			boss_death_sound.play();
 			
 		}
@@ -2167,6 +2246,8 @@ class Basement_Boss extends Boss{
 		this.lastSpit = new Date().getTime();
 		this.spits = [];
 		this.spitCount = 0;
+		this.anim = basement_boss_animation;
+		this.moving = true;
 	}
 	
 	die()
@@ -2288,7 +2369,12 @@ class Basement_Boss extends Boss{
 	
 	draw()
 	{
-		super.draw();
+		if(this.state == STATE.DEAD)
+		{
+			super.draw();
+			return;
+		}
+		super.drawAnim();
 		
 		if(this.state == STATE.VOMITING)
 		{
